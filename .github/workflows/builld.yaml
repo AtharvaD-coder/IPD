@@ -18,10 +18,10 @@ jobs:
       - name: Install Node.js and npm
         uses: actions/setup-node@v2
         with:
-          node-version: '14'  
+          node-version: '18'  
 
       - name: Install Dependencies
-        run: yarn
+        run: yarn install
 
       - name: Build Next.js Project
         run: yarn build

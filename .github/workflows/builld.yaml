@@ -21,7 +21,7 @@ jobs:
           node-version: '16'  
 
       - name: Install Dependencies
-        run: yarn install
+        run: yarn install --verbose
 
       - name: Build Next.js Project
         run: yarn nextbuild

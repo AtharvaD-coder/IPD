@@ -1,12 +1,11 @@
 name: Build Next.js Project
-
 on:
   push:
     branches:
-      - main 
+      - test 
   pull_request:
     branches:
-      - main 
+      - test 
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -26,7 +25,4 @@ jobs:
       - name: Build Next.js Project
         run: yarn nextbuild
 
-
-
-    
-
+   

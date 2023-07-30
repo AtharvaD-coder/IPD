@@ -2,10 +2,10 @@ name: Build Next.js Project
 on:
   push:
     branches:
-      - test 
+      - main 
   pull_request:
     branches:
-      - test 
+      - main 
 jobs:
   build:
     runs-on: ubuntu-latest

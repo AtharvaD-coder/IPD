@@ -17,10 +17,12 @@ contract RealEstateERC1155 is ERC1155 {
      struct RentInfo {
         address rentee;
         uint256 noOfMonths;
+        uint256 rentof1Month;
         uint256 depositAmount;
         uint256 noOfInstallmentsPaid;
         uint256 feesForLateInstallments;
-        
+        uint256 contractStartTimestamp;
+                
         
     }
 
@@ -102,6 +104,7 @@ contract RealEstateERC1155 is ERC1155 {
 
     }
 
+
     function vote(uint256 proposalId,uint256 tokenId, bool isPositiveVote) public {
         Proposals storage proposal = proposals[proposalId];
         RealEstate storage realEstate=realEstates[tokenId];
@@ -134,7 +137,7 @@ contract RealEstateERC1155 is ERC1155 {
             else if(proposal.proposalType == ProposalType.setRentee){
                 require(realEstate.status==RealEstateStatus.Renting,'not for rent');
                 realEstate.status=RealEstateStatus.Rented;
-                realEstate.rentInfo=RentInfo({rentee:proposal.rentProposal.rentee,noOfMonths:proposal.rentProposal.noOfMonths,depositAmount:realEstate.rentInfo.depositAmount,noOfInstallmentsPaid:0,feesForLateInstallments:realEstate.rentInfo.feesForLateInstallments});
+                realEstate.rentInfo=RentInfo({rentee:proposal.rentProposal.rentee,noOfMonths:proposal.rentProposal.noOfMonths,depositAmount:realEstate.rentInfo.depositAmount,noOfInstallmentsPaid:0,feesForLateInstallments:realEstate.rentInfo.feesForLateInstallments,rentof1Month:realEstate.rentInfo.rentof1Month,contractStartTimestamp:block.timestamp});
                 
                 
                
@@ -143,4 +146,68 @@ contract RealEstateERC1155 is ERC1155 {
 
         proposal.executed = true;
     }
+
+    function payRent(uint256 tokenId)payable public{
+           RealEstate storage realEstate=realEstates[tokenId];
+             uint256 noOfMonthsRemaining = ((block.timestamp -realEstate.rentInfo.contractStartTimestamp)/30 days) % 12;
+     
+        uint256 fee=(noOfMonthsRemaining-1)*realEstate.rentInfo.feesForLateInstallments;
+            require(realEstate.status==RealEstateStatus.Rented);
+           require(msg.sender==realEstate.rentInfo.rentee,"You are not rentee");
+            require(msg.value>=realEstate.rentInfo.rentof1Month + fee,"no enough Amount");
+
+            for(uint256 i=0;i<realEstate.owners.length;i++){
+                realEstate.balance[realEstate.owners[i]]+=(balanceOf(realEstate.owners[i],tokenId)/realEstate.noOfTokens)*realEstate.rentInfo.rentof1Month;
+            } 
+
+
+
+    }
+
+    function findIndex(address[] storage array, address element) internal view returns (uint256) {
+    for (uint256 i = 0; i < array.length; i++) {
+        if (array[i] == element) {
+            return i;
+        }
+    }
+    return array.length;
+}
+
+
+
+       function transferTokens(uint256 tokenId, address from, address to, uint256 amount) public {
+        RealEstate storage realEstate = realEstates[tokenId];
+        require(realEstate.status != RealEstateStatus.Rented, "Cannot transfer tokens of a rented property");
+
+        uint256 senderBalance = balanceOf(from, tokenId);
+        require(senderBalance >= amount, "Not enough balance to transfer");
+        uint256 receiverBalance = balanceOf(to, tokenId);
+
+        if(receiverBalance==0){
+            realEstate.owners.push(to);
+        }
+
+        _safeTransferFrom(from, to, tokenId, amount, "");
+         realEstate.balance[from] -= amount;
+        realEstate.balance[to] += amount;
+         if (realEstate.balance[from] == 0) {
+        // Find the index of the 'from' address in the owners array
+        uint256 indexToRemove = findIndex(realEstate.owners, from);
+        if (indexToRemove < realEstate.owners.length - 1) {
+            // Move the last element to the index to remove (to avoid gaps in the array)
+            realEstate.owners[indexToRemove] = realEstate.owners[realEstate.owners.length - 1];
+        }
+        // Remove the last element (which is a duplicate after the previous move)
+        realEstate.owners.pop();
+    }
+
+    }
+
+    
+
+
+
+
+
+
 }

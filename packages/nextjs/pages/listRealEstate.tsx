@@ -16,7 +16,7 @@ export default function ListRealEstate(){
    
 
     const [ListDetails,setListDetails]=useState<ListDetails>({owner:"",initalAmountOfTokens:0,priceOf1Token:0});
-    const { writeAsync, isLoading } = useScaffoldContractWrite({
+    const { writeAsync } = useScaffoldContractWrite({
         contractName: "RealEstateERC1155",
         functionName: "listRealEstate",
         args: [  BigInt(ListDetails.initalAmountOfTokens),

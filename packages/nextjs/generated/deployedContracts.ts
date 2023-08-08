@@ -5,7 +5,7 @@ const contracts = {
       name: "localhost",
       contracts: {
         RealEstateERC1155: {
-          address: "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0",
+          address: "0x5FC8d32690cc91D4c39d9d3abcBD16989F875707",
           abi: [
             {
               inputs: [],
@@ -35,6 +35,68 @@ const contracts = {
                 },
               ],
               name: "ApprovalForAll",
+              type: "event",
+            },
+            {
+              anonymous: false,
+              inputs: [
+                {
+                  indexed: true,
+                  internalType: "uint256",
+                  name: "tokenId",
+                  type: "uint256",
+                },
+                {
+                  indexed: false,
+                  internalType: "address[]",
+                  name: "owners",
+                  type: "address[]",
+                },
+                {
+                  indexed: false,
+                  internalType: "uint256",
+                  name: "noOfTokens",
+                  type: "uint256",
+                },
+                {
+                  indexed: false,
+                  internalType: "uint256",
+                  name: "priceOf1Token",
+                  type: "uint256",
+                },
+              ],
+              name: "RealEstateListed",
+              type: "event",
+            },
+            {
+              anonymous: false,
+              inputs: [
+                {
+                  indexed: true,
+                  internalType: "uint256",
+                  name: "tokenId",
+                  type: "uint256",
+                },
+                {
+                  indexed: true,
+                  internalType: "address",
+                  name: "rentee",
+                  type: "address",
+                },
+                {
+                  indexed: false,
+                  internalType: "uint256",
+                  name: "noOfMonths",
+                  type: "uint256",
+                },
+                {
+                  indexed: false,
+                  internalType: "uint256",
+                  name: "rentof1Month",
+                  type: "uint256",
+                },
+              ],
+              name: "RealEstateRented",
               type: "event",
             },
             {
@@ -190,6 +252,11 @@ const contracts = {
                   name: "tokenId",
                   type: "uint256",
                 },
+                {
+                  internalType: "uint256",
+                  name: "deadline",
+                  type: "uint256",
+                },
               ],
               name: "createProposal",
               outputs: [],
@@ -213,10 +280,15 @@ const contracts = {
                   name: "noOfMonths",
                   type: "uint256",
                 },
+                {
+                  internalType: "uint256",
+                  name: "deadline",
+                  type: "uint256",
+                },
               ],
               name: "createRenteeProposal",
               outputs: [],
-              stateMutability: "nonpayable",
+              stateMutability: "payable",
               type: "function",
             },
             {
@@ -354,10 +426,20 @@ const contracts = {
                       name: "noOfMonths",
                       type: "uint256",
                     },
+                    {
+                      internalType: "uint256",
+                      name: "depositBalance",
+                      type: "uint256",
+                    },
                   ],
                   internalType: "struct RealEstateERC1155.RentProposal",
                   name: "rentProposal",
                   type: "tuple",
+                },
+                {
+                  internalType: "uint256",
+                  name: "deadline",
+                  type: "uint256",
                 },
               ],
               stateMutability: "view",
@@ -392,11 +474,6 @@ const contracts = {
                   internalType: "enum RealEstateERC1155.RealEstateStatus",
                   name: "status",
                   type: "uint8",
-                },
-                {
-                  internalType: "address",
-                  name: "rentee",
-                  type: "address",
                 },
                 {
                   components: [
@@ -439,6 +516,11 @@ const contracts = {
                   internalType: "struct RealEstateERC1155.RentInfo",
                   name: "rentInfo",
                   type: "tuple",
+                },
+                {
+                  internalType: "uint256",
+                  name: "realEstateBalance",
+                  type: "uint256",
                 },
               ],
               stateMutability: "view",
@@ -620,7 +702,7 @@ const contracts = {
           ],
         },
         YourContract: {
-          address: "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9",
+          address: "0x0165878A594ca255338adfa4d48449f69242Eb8F",
           abi: [
             {
               inputs: [

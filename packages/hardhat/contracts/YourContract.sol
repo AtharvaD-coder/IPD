@@ -1,88 +1,87 @@
 //SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
-import "../node_modules/@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
-import "../node_modules/@openzeppelin/contracts/token/ERC1155/extensions/ERC1155URIStorage.sol";
-import "../node_modules/@openzeppelin/contracts/access/Ownable.sol";
-import "../node_modules/@openzeppelin/contracts/utils/Counters.sol";
+pragma solidity >=0.8.0 <0.9.0;
 
-contract RealEstateERC1155 is ERC1155 {
-	mapping(uint256 => address) public tokenCreators;
-	mapping(uint256 => uint256) public tokenSupply;
-	mapping(uint256 => uint256) public tokenPrice;
-	mapping(uint256 => bool) public tokenForSale;
-	mapping(uint256 => bool) public tokenForRent;
-	mapping(uint256 => uint256) public tokenRentPrice;
-	mapping(uint256 => bool) public tokenRented;
-	mapping(uint256 => address) public tokenCurrentRenter;
+// Useful for debugging. Remove when deploying to a live network.
+// import "hardhat/console.sol";
 
-	constructor() ERC1155("OpenEstate,OE") {}
+// Use openzeppelin to inherit battle-tested implementations (ERC20, ERC721, etc)
+// import "@openzeppelin/contracts/access/Ownable.sol";
 
-	function mint(
-		address _creator,
-		uint256 _tokenId,
-		uint256 _initialSupply,
-		uint256 _price
-	) public {
-		require(_creator != address(0), "Creator address cannot be zero.");
-		_mint(_creator, _tokenId, _initialSupply, "");
-		tokenCreators[_tokenId] = _creator;
-		tokenSupply[_tokenId] = _initialSupply;
-		tokenPrice[_tokenId] = _price;
-		tokenForSale[_tokenId] = true;
+/**
+ * A smart contract that allows changing a state variable of the contract and tracking the changes
+ * It also allows the owner to withdraw the Ether in the contract
+ * @author BuidlGuidl
+ */
+contract YourContract {
+	// State Variables
+	address public immutable owner;
+	string public greeting = "Building Unstoppable Apps!!!";
+	bool public premium = false;
+	uint256 public totalCounter = 0;
+	mapping(address => uint) public userGreetingCounter;
+
+	// Events: a way to emit log statements from smart contract that can be listened to by external parties
+	event GreetingChange(
+		address indexed greetingSetter,
+		string newGreeting,
+		bool premium,
+		uint256 value
+	);
+
+	// Constructor: Called once on contract deployment
+	// Check packages/hardhat/deploy/00_deploy_your_contract.ts
+	constructor(address _owner) {
+		owner = _owner;
 	}
 
-	function buyToken(uint256 _tokenId) public payable {
-		require(tokenForSale[_tokenId], "Token is not for sale.");
-		require(msg.value >= tokenPrice[_tokenId], "Insufficient payment.");
-		safeTransferFrom(tokenCreators[_tokenId], msg.sender, _tokenId, 1, "");
-		tokenForSale[_tokenId] = false;
-		payable(tokenCreators[_tokenId]).transfer(msg.value);
+	// Modifier: used to define a set of rules that must be met before or after a function is executed
+	// Check the withdraw() function
+	modifier isOwner() {
+		// msg.sender: predefined variable that represents address of the account that called the current function
+		require(msg.sender == owner, "Not the Owner");
+		_;
 	}
 
-	function setTokenURI(uint256 _tokenId, string memory _tokenURI) public {
-		require(
-			msg.sender == tokenCreators[_tokenId],
-			"Only the creator can set the token URI."
-		);
-		_setURI(_tokenURI);
+	/**
+	 * Function that allows anyone to change the state variable "greeting" of the contract and increase the counters
+	 *
+	 * @param _newGreeting (string memory) - new greeting to save on the contract
+	 */
+	function setGreeting(string memory _newGreeting) public payable {
+		// Print data to the hardhat chain console. Remove when deploying to a live network.
+		// console.log(
+		// 	"Setting new greeting '%s' from %s",
+		// 	_newGreeting,
+		// 	msg.sender
+		// );
+
+		// Change state variables
+		greeting = _newGreeting;
+		totalCounter += 1;
+		userGreetingCounter[msg.sender] += 1;
+
+		// msg.value: built-in global variable that represents the amount of ether sent with the transaction
+		if (msg.value > 0) {
+			premium = true;
+		} else {
+			premium = false;
+		}
+
+		// emit: keyword used to trigger an event
+		emit GreetingChange(msg.sender, _newGreeting, msg.value > 0, 0);
 	}
 
-	function setTokenRent(uint256 _tokenId, uint256 _rentPrice) public {
-		require(
-			msg.sender == tokenCreators[_tokenId],
-			"Only the creator can set the token for rent."
-		);
-		tokenForRent[_tokenId] = true;
-		tokenRentPrice[_tokenId] = _rentPrice;
+	/**
+	 * Function that allows the owner to withdraw all the Ether in the contract
+	 * The function can only be called by the owner of the contract as defined by the isOwner modifier
+	 */
+	function withdraw() public isOwner {
+		(bool success, ) = owner.call{ value: address(this).balance }("");
+		require(success, "Failed to send Ether");
 	}
 
-	function rentToken(uint256 _tokenId) public payable {
-		require(tokenForRent[_tokenId], "Token is not for rent.");
-		require(msg.value >= tokenRentPrice[_tokenId], "Insufficient payment.");
-		tokenRented[_tokenId] = true;
-		tokenCurrentRenter[_tokenId] = msg.sender;
-		payable(tokenCreators[_tokenId]).transfer(msg.value);
-	}
-
-	function endRent(uint256 _tokenId) public {
-		require(tokenRented[_tokenId], "Token is not currently rented.");
-		require(
-			msg.sender == tokenCurrentRenter[_tokenId],
-			"Only the renter can end the rent."
-		);
-		tokenRented[_tokenId] = false;
-		tokenCurrentRenter[_tokenId] = address(0);
-	}
-
-	function transferToken(
-		uint256 _tokenId,
-		address _to,
-		uint256 _amount
-	) public {
-		safeTransferFrom(msg.sender, _to, _tokenId, _amount, "");
-	}
-
-	function getCurrentOwner(uint256 _tokenId) public view returns (address) {
-		return tokenCreators[_tokenId];
-	}
+	/**
+	 * Function that allows the contract to receive ETH
+	 */
+	receive() external payable {}
 }

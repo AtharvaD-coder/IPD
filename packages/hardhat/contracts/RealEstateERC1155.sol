@@ -7,7 +7,7 @@ import "../node_modules/@openzeppelin/contracts/utils/Counters.sol";
 
 contract RealEstateERC1155 is ERC1155 {
 	using Counters for Counters.Counter;
-	Counters.Counter private _tokenIdCounter;
+	Counters.Counter public _tokenIdCounter;
 	event RealEstateListed(
 		uint256 indexed tokenId,
 		address[] owners,

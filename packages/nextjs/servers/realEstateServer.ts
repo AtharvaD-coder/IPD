@@ -28,7 +28,7 @@ async function run() {
     console.log(data)
     try{
       const res=await axios.post('http://localhost:3000/api/postRealEstate',{data});
-      console.log(res.data)
+      console.log(res.data);
       
     }
     catch(error){

@@ -7,7 +7,7 @@ async function run() {
   console.log('hello');
   
   const localhostUrl = `http://127.0.0.1:8545/`; // Update the port if needed
-  const provider = new ethers.providers.JsonRpcProvider(localhostUrl);
+  const provider = new ethers.JsonRpcProvider(localhostUrl);
   
   const contractAddress = contracts[31337][0].contracts.RealEstateERC1155.address;
   const contractAbi = contracts[31337][0].contracts.RealEstateERC1155.abi;

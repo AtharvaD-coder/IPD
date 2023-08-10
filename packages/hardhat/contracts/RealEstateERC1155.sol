@@ -14,6 +14,16 @@ contract RealEstateERC1155 is ERC1155 {
 		uint256 noOfTokens,
 		uint256 priceOf1Token
 	);
+	event RealEstateUpdated(
+		uint256 indexed tokenId,
+		address[] owners,
+		uint256 noOfTokens,
+		uint256 priceOf1Token,
+		RealEstateStatus status,
+		RentInfo rentInfo,
+		uint256 realEstateBalance
+
+	);
 	event RealEstateRented(
 		uint256 indexed tokenId,
 		address indexed rentee,
@@ -90,6 +100,7 @@ contract RealEstateERC1155 is ERC1155 {
 		newProperty.tokenId = tokenId;
 		newProperty.owners.push(owner);
 		newProperty.status = RealEstateStatus.Listed;
+		newProperty.balanceofMemebers[owner]+=initialAmountOfTokens;
 
 		_tokenIdCounter.increment();
 		emit RealEstateListed(
@@ -98,6 +109,11 @@ contract RealEstateERC1155 is ERC1155 {
 			initialAmountOfTokens,
 			priceOf1token
 		);
+	}
+
+	function getOwners(uint256 tokenId)public view returns(address[] memory){
+			RealEstate storage realEstate = realEstates[tokenId];
+			return realEstate.owners;
 	}
 
 	function createProposal(
@@ -252,41 +268,51 @@ contract RealEstateERC1155 is ERC1155 {
 		}
 		return array.length;
 	}
+function transferTokens(
+    uint256 tokenId,
+    address from,
+    address to,
+    uint256 amount
+) public {
+    RealEstate storage realEstate = realEstates[tokenId];
 
-	function transferTokens(
-		uint256 tokenId,
-		address from,
-		address to,
-		uint256 amount
-	) public {
-		RealEstate storage realEstate = realEstates[tokenId];
-		require(
-			realEstate.status != RealEstateStatus.Rented,
-			"Cannot transfer tokens of a rented property"
-		);
+    require(
+        realEstate.status != RealEstateStatus.Rented,
+        "Cannot transfer tokens of a rented property"
+    );
 
-		uint256 senderBalance = balanceOf(from, tokenId);
-		require(senderBalance >= amount, "Not enough balance to transfer");
-		uint256 receiverBalance = balanceOf(to, tokenId);
+    uint256 senderBalance = balanceOf(from, tokenId);
+    require(senderBalance >= amount, "Not enough balance to transfer");
 
-		if (receiverBalance == 0) {
-			realEstate.owners.push(to);
-		}
+    // Update sender and receiver balances
+    realEstate.balanceofMemebers[from] -= amount;
+    realEstate.balanceofMemebers[to] += amount;
 
-		_safeTransferFrom(from, to, tokenId, amount, "");
-		realEstate.balanceofMemebers[from] -= amount;
-		realEstate.balanceofMemebers[to] += amount;
-		if (realEstate.balanceofMemebers[from] == 0) {
-			// Find the index of the 'from' address in the owners array
-			uint256 indexToRemove = findIndex(realEstate.owners, from);
-			if (indexToRemove < realEstate.owners.length - 1) {
-				// Move the last element to the index to remove (to avoid gaps in the array)
-				realEstate.owners[indexToRemove] = realEstate.owners[
-					realEstate.owners.length - 1
-				];
-			}
-			// Remove the last element (which is a duplicate after the previous move)
-			realEstate.owners.pop();
-		}
-	}
+    if (realEstate.balanceofMemebers[from] == 0) {
+        // Find the index of the 'from' address in the owners array
+        uint256 indexToRemove = findIndex(realEstate.owners, from);
+        if (indexToRemove < realEstate.owners.length - 1) {
+            // Move the last element to the index to remove (to avoid gaps in the array)
+            realEstate.owners[indexToRemove] = realEstate.owners[realEstate.owners.length - 1];
+        }
+        // Remove the last element (which is a duplicate after the previous move)
+        realEstate.owners.pop();
+    }
+
+    // Check if the receiver is a new owner
+	uint256 receiverBalance=balanceOf(to, tokenId);
+    if ( receiverBalance== 0) {
+        realEstate.owners.push(to);
+    }
+
+    // Perform the token transfer
+    _safeTransferFrom(from, to, tokenId, amount, "");
+	
+	emit RealEstateUpdated(realEstate.tokenId,realEstate.owners,realEstate.noOfTokens,realEstate.priceOf1Token,realEstate.status,realEstate.rentInfo,realEstate.realEstateBalance);
+	
+
+    // Update property status if needed
+    // (You might need to implement logic to handle changes in property status)
+}
+
 }

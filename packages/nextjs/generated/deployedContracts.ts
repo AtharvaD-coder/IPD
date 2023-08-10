@@ -5,7 +5,7 @@ const contracts = {
       name: "localhost",
       contracts: {
         RealEstateERC1155: {
-          address: "0x9A676e781A523b5d0C0e43731313A708CB607508",
+          address: "0x5FC8d32690cc91D4c39d9d3abcBD16989F875707",
           abi: [
             {
               inputs: [],
@@ -779,6 +779,57 @@ const contracts = {
               inputs: [
                 {
                   internalType: "uint256",
+                  name: "tokenId",
+                  type: "uint256",
+                },
+                {
+                  internalType: "uint256",
+                  name: "numberOfMonths",
+                  type: "uint256",
+                },
+                {
+                  internalType: "uint256",
+                  name: "rentof1Month",
+                  type: "uint256",
+                },
+                {
+                  internalType: "uint256",
+                  name: "depositAmount",
+                  type: "uint256",
+                },
+                {
+                  internalType: "uint256",
+                  name: "feesForLateInstallments",
+                  type: "uint256",
+                },
+              ],
+              name: "updateRentinfo",
+              outputs: [],
+              stateMutability: "nonpayable",
+              type: "function",
+            },
+            {
+              inputs: [
+                {
+                  internalType: "uint256",
+                  name: "tokenId",
+                  type: "uint256",
+                },
+                {
+                  internalType: "enum RealEstateERC1155.RealEstateStatus",
+                  name: "_status",
+                  type: "uint8",
+                },
+              ],
+              name: "updateStatus",
+              outputs: [],
+              stateMutability: "nonpayable",
+              type: "function",
+            },
+            {
+              inputs: [
+                {
+                  internalType: "uint256",
                   name: "",
                   type: "uint256",
                 },
@@ -820,7 +871,7 @@ const contracts = {
           ],
         },
         YourContract: {
-          address: "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",
+          address: "0x0165878A594ca255338adfa4d48449f69242Eb8F",
           abi: [
             {
               inputs: [

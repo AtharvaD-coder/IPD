@@ -111,6 +111,53 @@ contract RealEstateERC1155 is ERC1155 {
 		);
 	}
 
+function updateStatus(
+    uint256 tokenId,
+	RealEstateStatus _status
+ 
+) public  {
+    RealEstate storage realEstate = realEstates[tokenId];
+
+    require(balanceOf(msg.sender, tokenId)==realEstate.balanceofMemebers[msg.sender], "You are not the sole owner create proposals");
+
+    realEstate.status = _status;
+   
+    emit RealEstateUpdated(
+        realEstate.tokenId,
+        realEstate.owners,
+        realEstate.noOfTokens,
+        realEstate.priceOf1Token,
+        realEstate.status,
+        realEstate.rentInfo,
+        realEstate.realEstateBalance
+    );
+}
+
+function updateRentinfo(uint256 tokenId,uint256 numberOfMonths,uint256 rentof1Month,uint256 depositAmount,uint256 feesForLateInstallments) public {
+	 RentInfo storage rentinfo = realEstates[tokenId].rentInfo;
+	  RealEstate storage realEstate = realEstates[tokenId];
+	 require(balanceOf(msg.sender, tokenId)==realEstate.balanceofMemebers[msg.sender], "You are not the sole owner create proposals");
+	rentinfo.noOfMonths=numberOfMonths;
+	rentinfo.rentof1Month=rentof1Month;
+	rentinfo.depositAmount=depositAmount;
+	rentinfo.feesForLateInstallments=feesForLateInstallments;
+
+emit RealEstateUpdated(
+        realEstate.tokenId,
+        realEstate.owners,
+        realEstate.noOfTokens,
+        realEstate.priceOf1Token,
+        realEstate.status,
+        realEstate.rentInfo,
+        realEstate.realEstateBalance
+    );
+
+
+
+}
+
+	
+
 	function getOwners(uint256 tokenId)public view returns(address[] memory){
 			RealEstate storage realEstate = realEstates[tokenId];
 			return realEstate.owners;
@@ -299,20 +346,19 @@ function transferTokens(
         realEstate.owners.pop();
     }
 
-    // Check if the receiver is a new owner
+ 
 	uint256 receiverBalance=balanceOf(to, tokenId);
     if ( receiverBalance== 0) {
         realEstate.owners.push(to);
     }
 
-    // Perform the token transfer
+
     _safeTransferFrom(from, to, tokenId, amount, "");
 	
 	emit RealEstateUpdated(realEstate.tokenId,realEstate.owners,realEstate.noOfTokens,realEstate.priceOf1Token,realEstate.status,realEstate.rentInfo,realEstate.realEstateBalance);
 	
 
-    // Update property status if needed
-    // (You might need to implement logic to handle changes in property status)
+
 }
 
 }

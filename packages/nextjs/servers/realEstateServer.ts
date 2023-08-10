@@ -1,6 +1,7 @@
 import contracts from '../generated/deployedContracts';
 import { ethers } from 'ethers';
 import axios from 'axios'
+import Rentinfo from '../classes/RentInfo';
 
 async function run() {
   console.log('hello');
@@ -12,12 +13,13 @@ async function run() {
   const contractAbi = contracts[31337][0].contracts.RealEstateERC1155.abi;
   
   const contract = new ethers.Contract(contractAddress, contractAbi, provider);
-  const eventName = 'RealEstateListed';
+
 
   // Subscribe to the event
-  contract.on(eventName, async (tokenId, owners, noOfTokens, priceOf1Token, event) => {
-    // Log event data
-    console.log(`Event ${eventName} received:`);
+  
+  contract.on('RealEstateListed', async (tokenId, owners, noOfTokens, priceOf1Token, event) => {
+
+  
     console.log(`Token ID: ${tokenId}`);
     console.log(`Owners: ${owners}`);
     console.log(`Number of Tokens: ${noOfTokens}`);
@@ -38,8 +40,32 @@ async function run() {
    
 
 
-    // Log the entire event object for additional details
-    // console.log('Full Event Object:', event);
+    
+  });
+
+  contract.on('RealEstateUpdated', async (tokenId, owners, noOfTokens, priceOf1Token,status,rentInfo,realEstateBalance, event) => {
+
+  
+ 
+        const rentInfoObj=new Rentinfo(rentInfo);
+        console.log({...rentInfoObj},'onj')
+    const data={
+      tokenId:Number(tokenId), owners, noOfTokens:Number(noOfTokens), priceOf1Token:Number(priceOf1Token),realEstateBalance:Number(realEstateBalance),status:Number(status),rentInfo:{...rentInfoObj}
+    }
+
+    try{
+      const res=await axios.post('http://localhost:3000/api/updateRealEstate',{data:data});
+      console.log(res.data);
+    }
+    catch(error){
+      console.log(error);
+    }
+   
+   
+   
+
+
+  
   });
 }
 

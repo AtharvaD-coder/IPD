@@ -2,6 +2,7 @@ import axios from "axios";
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react";
 import { useAccount } from "wagmi";
+import RentComponent from "~~/components/custom_components/RentComponent";
 import Button from "~~/components/custom_components/button";
 import Input from "~~/components/custom_components/input";
 import { AddressInput } from "~~/components/scaffold-eth";
@@ -73,7 +74,7 @@ export default function RealEstate(){
         }
       
      },[realEstate])
-     console.log(realEstate)
+     console.log(data.tokenId,'tokenId')
     
     
     return(
@@ -83,6 +84,9 @@ export default function RealEstate(){
             <AddressInput value={tranferinfo.to} onChange={(newAddress)=>{setTranferInfo({...tranferinfo,to:newAddress})}} />
             <Input label={"enter amount to tranfer"} type="number" value={tranferinfo.amount} onChange={(newValue)=>{setTranferInfo({...tranferinfo,amount:Number(newValue)})}} />
            <Button label="Trnafer OwnerShip " onClick={()=>writeAsync()}/> 
+           <div className="mt-6"></div>
+          {data?.tokenId!==undefined &&  <RentComponent tokenId={data.tokenId} />}
+        
 
         </div>
     )

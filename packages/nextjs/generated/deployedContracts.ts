@@ -5,7 +5,7 @@ const contracts = {
       name: "localhost",
       contracts: {
         RealEstateERC1155: {
-          address: "0xa513E6E4b8f2a923D98304ec87F64353C4D5C853",
+          address: "0x8A791620dd6260079BF849Dc5567aDC3F2FdC318",
           abi: [
             {
               inputs: [],
@@ -35,6 +35,127 @@ const contracts = {
                 },
               ],
               name: "ApprovalForAll",
+              type: "event",
+            },
+            {
+              anonymous: false,
+              inputs: [
+                {
+                  indexed: false,
+                  internalType: "uint256",
+                  name: "proposalId",
+                  type: "uint256",
+                },
+                {
+                  indexed: false,
+                  internalType: "address",
+                  name: "proposalCreator",
+                  type: "address",
+                },
+                {
+                  indexed: false,
+                  internalType: "uint256",
+                  name: "positiveVotes",
+                  type: "uint256",
+                },
+                {
+                  indexed: false,
+                  internalType: "uint256",
+                  name: "negativeVotes",
+                  type: "uint256",
+                },
+                {
+                  indexed: false,
+                  internalType: "enum RealEstateERC1155.ProposalType",
+                  name: "proposalType",
+                  type: "uint8",
+                },
+                {
+                  indexed: false,
+                  internalType: "uint256",
+                  name: "tokenId",
+                  type: "uint256",
+                },
+                {
+                  indexed: false,
+                  internalType: "bool",
+                  name: "executed",
+                  type: "bool",
+                },
+                {
+                  components: [
+                    {
+                      internalType: "address",
+                      name: "rentee",
+                      type: "address",
+                    },
+                    {
+                      internalType: "uint256",
+                      name: "noOfMonths",
+                      type: "uint256",
+                    },
+                    {
+                      internalType: "uint256",
+                      name: "depositBalance",
+                      type: "uint256",
+                    },
+                  ],
+                  indexed: false,
+                  internalType: "struct RealEstateERC1155.RentProposal",
+                  name: "rentProposal",
+                  type: "tuple",
+                },
+                {
+                  indexed: false,
+                  internalType: "uint256",
+                  name: "deadline",
+                  type: "uint256",
+                },
+                {
+                  components: [
+                    {
+                      internalType: "address",
+                      name: "rentee",
+                      type: "address",
+                    },
+                    {
+                      internalType: "uint256",
+                      name: "noOfMonths",
+                      type: "uint256",
+                    },
+                    {
+                      internalType: "uint256",
+                      name: "rentof1Month",
+                      type: "uint256",
+                    },
+                    {
+                      internalType: "uint256",
+                      name: "depositAmount",
+                      type: "uint256",
+                    },
+                    {
+                      internalType: "uint256",
+                      name: "noOfInstallmentsPaid",
+                      type: "uint256",
+                    },
+                    {
+                      internalType: "uint256",
+                      name: "feesForLateInstallments",
+                      type: "uint256",
+                    },
+                    {
+                      internalType: "uint256",
+                      name: "contractStartTimestamp",
+                      type: "uint256",
+                    },
+                  ],
+                  indexed: false,
+                  internalType: "struct RealEstateERC1155.RentInfo",
+                  name: "rentInfo",
+                  type: "tuple",
+                },
+              ],
+              name: "ProposalAdded",
               type: "event",
             },
             {
@@ -559,6 +680,48 @@ const contracts = {
                   name: "deadline",
                   type: "uint256",
                 },
+                {
+                  components: [
+                    {
+                      internalType: "address",
+                      name: "rentee",
+                      type: "address",
+                    },
+                    {
+                      internalType: "uint256",
+                      name: "noOfMonths",
+                      type: "uint256",
+                    },
+                    {
+                      internalType: "uint256",
+                      name: "rentof1Month",
+                      type: "uint256",
+                    },
+                    {
+                      internalType: "uint256",
+                      name: "depositAmount",
+                      type: "uint256",
+                    },
+                    {
+                      internalType: "uint256",
+                      name: "noOfInstallmentsPaid",
+                      type: "uint256",
+                    },
+                    {
+                      internalType: "uint256",
+                      name: "feesForLateInstallments",
+                      type: "uint256",
+                    },
+                    {
+                      internalType: "uint256",
+                      name: "contractStartTimestamp",
+                      type: "uint256",
+                    },
+                  ],
+                  internalType: "struct RealEstateERC1155.RentInfo",
+                  name: "rentInfo",
+                  type: "tuple",
+                },
               ],
               stateMutability: "view",
               type: "function",
@@ -802,6 +965,11 @@ const contracts = {
                   name: "feesForLateInstallments",
                   type: "uint256",
                 },
+                {
+                  internalType: "uint256",
+                  name: "deadline",
+                  type: "uint256",
+                },
               ],
               name: "updateRentinfo",
               outputs: [],
@@ -871,7 +1039,7 @@ const contracts = {
           ],
         },
         YourContract: {
-          address: "0x0165878A594ca255338adfa4d48449f69242Eb8F",
+          address: "0x610178dA211FEF7D417bC0e6FeD39F05609AD788",
           abi: [
             {
               inputs: [

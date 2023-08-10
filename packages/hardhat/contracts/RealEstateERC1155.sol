@@ -22,7 +22,6 @@ contract RealEstateERC1155 is ERC1155 {
 		RealEstateStatus status,
 		RentInfo rentInfo,
 		uint256 realEstateBalance
-
 	);
 	event RealEstateRented(
 		uint256 indexed tokenId,
@@ -42,7 +41,8 @@ contract RealEstateERC1155 is ERC1155 {
 	enum ProposalType {
 		ListForRent,
 		UnlistForRent,
-		setRentee
+		setRentee,
+		updateRentInfo
 	}
 	struct RentInfo {
 		address rentee;
@@ -70,7 +70,20 @@ contract RealEstateERC1155 is ERC1155 {
 		bool executed;
 		RentProposal rentProposal;
 		uint256 deadline;
+		RentInfo rentInfo;
 	}
+	event ProposalAdded(
+		uint256 proposalId,
+		address proposalCreator,
+		uint256 positiveVotes,
+		uint256 negativeVotes,
+		ProposalType proposalType,
+		uint256 tokenId,
+		bool executed,
+		RentProposal rentProposal,
+		uint256 deadline,
+		RentInfo rentInfo
+	);
 
 	struct RealEstate {
 		uint256 noOfTokens;
@@ -100,7 +113,7 @@ contract RealEstateERC1155 is ERC1155 {
 		newProperty.tokenId = tokenId;
 		newProperty.owners.push(owner);
 		newProperty.status = RealEstateStatus.Listed;
-		newProperty.balanceofMemebers[owner]+=initialAmountOfTokens;
+		newProperty.balanceofMemebers[owner] += initialAmountOfTokens;
 
 		_tokenIdCounter.increment();
 		emit RealEstateListed(
@@ -111,56 +124,120 @@ contract RealEstateERC1155 is ERC1155 {
 		);
 	}
 
-function updateStatus(
-    uint256 tokenId,
-	RealEstateStatus _status
- 
-) public  {
-    RealEstate storage realEstate = realEstates[tokenId];
+	function updateStatus(uint256 tokenId, RealEstateStatus _status) public {
+		RealEstate storage realEstate = realEstates[tokenId];
 
-    require(balanceOf(msg.sender, tokenId)==realEstate.noOfTokens, "You are not the sole owner create proposals");
+		require(
+			balanceOf(msg.sender, tokenId) == realEstate.noOfTokens,
+			"You are not the sole owner create proposals"
+		);
 
-    realEstate.status = _status;
-   
-    emit RealEstateUpdated(
-        realEstate.tokenId,
-        realEstate.owners,
-        realEstate.noOfTokens,
-        realEstate.priceOf1Token,
-        realEstate.status,
-        realEstate.rentInfo,
-        realEstate.realEstateBalance
-    );
-}
+		realEstate.status = _status;
 
-function updateRentinfo(uint256 tokenId,uint256 numberOfMonths,uint256 rentof1Month,uint256 depositAmount,uint256 feesForLateInstallments) public {
-	 RentInfo storage rentinfo = realEstates[tokenId].rentInfo;
-	  RealEstate storage realEstate = realEstates[tokenId];
-	 require(balanceOf(msg.sender, tokenId)==realEstate.noOfTokens, "You are not the sole owner create proposals");
-	rentinfo.noOfMonths=numberOfMonths;
-	rentinfo.rentof1Month=rentof1Month;
-	rentinfo.depositAmount=depositAmount;
-	rentinfo.feesForLateInstallments=feesForLateInstallments;
+		emit RealEstateUpdated(
+			realEstate.tokenId,
+			realEstate.owners,
+			realEstate.noOfTokens,
+			realEstate.priceOf1Token,
+			realEstate.status,
+			realEstate.rentInfo,
+			realEstate.realEstateBalance
+		);
+	}
 
-emit RealEstateUpdated(
-        realEstate.tokenId,
-        realEstate.owners,
-        realEstate.noOfTokens,
-        realEstate.priceOf1Token,
-        realEstate.status,
-        realEstate.rentInfo,
-        realEstate.realEstateBalance
-    );
+	function updateRentinfo(
+		uint256 tokenId,
+		uint256 numberOfMonths,
+		uint256 rentof1Month,
+		uint256 depositAmount,
+		uint256 feesForLateInstallments,
+		uint256 deadline
+	) public {
+		RentInfo storage rentinfo = realEstates[tokenId].rentInfo;
+		RealEstate storage realEstate = realEstates[tokenId];
+		if (balanceOf(msg.sender, tokenId) == realEstate.noOfTokens) {
+			rentinfo.noOfMonths = numberOfMonths;
+			rentinfo.rentof1Month = rentof1Month;
+			rentinfo.depositAmount = depositAmount;
+			rentinfo.feesForLateInstallments = feesForLateInstallments;
+		} else {
+			uint256 proposalId = proposals[tokenId].proposalId + 1;
 
+			proposals[tokenId] = Proposals({
+				proposalId: proposalId,
+				proposalCreator: msg.sender,
+				positiveVotes: 0,
+				negativeVotes: 0,
+				proposalType: ProposalType.updateRentInfo,
+				tokenId: tokenId,
+				executed: false,
+				deadline: deadline,
+				rentProposal: RentProposal({
+					rentee: address(0),
+					noOfMonths: 0,
+					depositBalance: 0
+				}),
+				rentInfo: RentInfo({
+					rentee: rentinfo.rentee,
+					noOfMonths: numberOfMonths,
+					rentof1Month: rentof1Month,
+					depositAmount: depositAmount,
+					noOfInstallmentsPaid: 0,
+					feesForLateInstallments: feesForLateInstallments,
+					contractStartTimestamp: 0
+				})
+			});
+			//  uint256 proposalId,
+			// 	address proposalCreator,
+			// 	uint256 positiveVotes,
+			// 	uint256 negativeVotes,
+			// 	ProposalType proposalType,
+			// 	uint256 tokenId,
+			// 	bool executed,
+			// 	RentProposal rentProposal,
+			// 	uint256 deadline,
+			// 	RentInfo rentInfo
 
+			emit ProposalAdded(
+				proposalId,
+				msg.sender,
+				0,
+				0,
+				ProposalType.updateRentInfo,
+				tokenId,
+				false,
+				RentProposal({
+					rentee: address(0),
+					noOfMonths: 0,
+					depositBalance: 0
+				}),
+				deadline,
+				RentInfo({
+					rentee: rentinfo.rentee,
+					noOfMonths: proposals[tokenId].rentInfo.noOfMonths,
+					rentof1Month: rentof1Month,
+					depositAmount: depositAmount,
+					noOfInstallmentsPaid: 0,
+					feesForLateInstallments: feesForLateInstallments,
+					contractStartTimestamp: 0
+				})
+			);
+		}
 
-}
+		emit RealEstateUpdated(
+			realEstate.tokenId,
+			realEstate.owners,
+			realEstate.noOfTokens,
+			realEstate.priceOf1Token,
+			realEstate.status,
+			realEstate.rentInfo,
+			realEstate.realEstateBalance
+		);
+	}
 
-	
-
-	function getOwners(uint256 tokenId)public view returns(address[] memory){
-			RealEstate storage realEstate = realEstates[tokenId];
-			return realEstate.owners;
+	function getOwners(uint256 tokenId) public view returns (address[] memory) {
+		RealEstate storage realEstate = realEstates[tokenId];
+		return realEstate.owners;
 	}
 
 	function createProposal(
@@ -182,6 +259,15 @@ emit RealEstateUpdated(
 				rentee: address(0),
 				noOfMonths: 0,
 				depositBalance: 0
+			}),
+			rentInfo: RentInfo({
+				rentee: address(0),
+				noOfMonths: 0,
+				rentof1Month: 0,
+				depositAmount: 0,
+				noOfInstallmentsPaid: 0,
+				feesForLateInstallments: 0,
+				contractStartTimestamp: 0
 			})
 		});
 	}
@@ -212,6 +298,15 @@ emit RealEstateUpdated(
 				rentee: rentee,
 				noOfMonths: noOfMonths,
 				depositBalance: msg.value
+			}),
+			rentInfo: RentInfo({
+				rentee: address(0),
+				noOfMonths: 0,
+				rentof1Month: 0,
+				depositAmount: 0,
+				noOfInstallmentsPaid: 0,
+				feesForLateInstallments: 0,
+				contractStartTimestamp: 0
 			})
 		});
 	}
@@ -280,8 +375,6 @@ emit RealEstateUpdated(
 		proposal.executed = true;
 	}
 
-   
-
 	function payRent(uint256 tokenId) public payable {
 		RealEstate storage realEstate = realEstates[tokenId];
 		uint256 noOfMonthsRemaining = ((block.timestamp -
@@ -315,50 +408,55 @@ emit RealEstateUpdated(
 		}
 		return array.length;
 	}
-function transferTokens(
-    uint256 tokenId,
-    address from,
-    address to,
-    uint256 amount
-) public {
-    RealEstate storage realEstate = realEstates[tokenId];
 
-    require(
-        realEstate.status != RealEstateStatus.Rented,
-        "Cannot transfer tokens of a rented property"
-    );
+	function transferTokens(
+		uint256 tokenId,
+		address from,
+		address to,
+		uint256 amount
+	) public {
+		RealEstate storage realEstate = realEstates[tokenId];
 
-    uint256 senderBalance = balanceOf(from, tokenId);
-    require(senderBalance >= amount, "Not enough balance to transfer");
+		require(
+			realEstate.status != RealEstateStatus.Rented,
+			"Cannot transfer tokens of a rented property"
+		);
 
-    // Update sender and receiver balances
-    realEstate.balanceofMemebers[from] -= amount;
-    realEstate.balanceofMemebers[to] += amount;
+		uint256 senderBalance = balanceOf(from, tokenId);
+		require(senderBalance >= amount, "Not enough balance to transfer");
 
-    if (realEstate.balanceofMemebers[from] == 0) {
-        // Find the index of the 'from' address in the owners array
-        uint256 indexToRemove = findIndex(realEstate.owners, from);
-        if (indexToRemove < realEstate.owners.length - 1) {
-            // Move the last element to the index to remove (to avoid gaps in the array)
-            realEstate.owners[indexToRemove] = realEstate.owners[realEstate.owners.length - 1];
-        }
-        // Remove the last element (which is a duplicate after the previous move)
-        realEstate.owners.pop();
-    }
+		// Update sender and receiver balances
+		realEstate.balanceofMemebers[from] -= amount;
+		realEstate.balanceofMemebers[to] += amount;
 
- 
-	uint256 receiverBalance=balanceOf(to, tokenId);
-    if ( receiverBalance== 0) {
-        realEstate.owners.push(to);
-    }
+		if (realEstate.balanceofMemebers[from] == 0) {
+			// Find the index of the 'from' address in the owners array
+			uint256 indexToRemove = findIndex(realEstate.owners, from);
+			if (indexToRemove < realEstate.owners.length - 1) {
+				// Move the last element to the index to remove (to avoid gaps in the array)
+				realEstate.owners[indexToRemove] = realEstate.owners[
+					realEstate.owners.length - 1
+				];
+			}
+			// Remove the last element (which is a duplicate after the previous move)
+			realEstate.owners.pop();
+		}
 
+		uint256 receiverBalance = balanceOf(to, tokenId);
+		if (receiverBalance == 0) {
+			realEstate.owners.push(to);
+		}
 
-    _safeTransferFrom(from, to, tokenId, amount, "");
-	
-	emit RealEstateUpdated(realEstate.tokenId,realEstate.owners,realEstate.noOfTokens,realEstate.priceOf1Token,realEstate.status,realEstate.rentInfo,realEstate.realEstateBalance);
-	
+		_safeTransferFrom(from, to, tokenId, amount, "");
 
-
-}
-
+		emit RealEstateUpdated(
+			realEstate.tokenId,
+			realEstate.owners,
+			realEstate.noOfTokens,
+			realEstate.priceOf1Token,
+			realEstate.status,
+			realEstate.rentInfo,
+			realEstate.realEstateBalance
+		);
+	}
 }

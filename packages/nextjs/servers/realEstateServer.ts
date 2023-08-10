@@ -2,6 +2,7 @@ import contracts from '../generated/deployedContracts';
 import { ethers } from 'ethers';
 import axios from 'axios'
 import Rentinfo from '../classes/RentInfo';
+import Rentproposal from '../classes/rentProposal';
 
 async function run() {
   console.log('hello');
@@ -67,6 +68,56 @@ async function run() {
 
   
   });
+  // uint256 proposalId,
+  // address proposalId,
+  // uint256 positiveVotes,
+  // uint256 negativeVotes,
+  // ProposalType proposalType,
+  // uint256 tokenId,
+  // bool executed,
+  // RentProposal rentProposal,
+  // uint256 deadline,
+  // RentInfo rentInfo
+  
+  contract.on('ProposalAdded', async (proposalId, proposalCreator, positiveVotes, negativeVotes, proposalType, tokenId, executed, rentProposal, deadline, rentInfo,event) => {
+    console.log(`Proposal Added - Proposal ID: ${proposalId}`);
+    console.log(`Proposal Creator: ${proposalCreator}`);
+    console.log(`Positive Votes: ${positiveVotes}`);
+    console.log(`Negative Votes: ${negativeVotes}`);
+    console.log(`Proposal Type: ${proposalType}`);
+    console.log(`Token ID: ${tokenId}`);
+    console.log(`Executed: ${executed}`);
+    console.log(`Rent Proposal: `, rentProposal);
+    console.log(`Deadline: ${deadline}`);
+    console.log(`Rent Info: `, rentInfo);
+    const rentinfo=new Rentinfo(rentInfo);
+    const rentproposal=new Rentproposal(rentProposal)
+    const proposalData={
+      proposalId:Number(proposalId),
+      proposalCreator:proposalCreator,
+      positiveVotes:Number(positiveVotes),
+      negativeVotes:Number(negativeVotes),
+      proposalType:Number(proposalType),
+      tokenId:Number(tokenId),
+      executed:executed,
+      deadline:Number(deadline),
+      Rentinfo:{...rentinfo},
+      rentproposal:{...rentproposal}
+    }
+    try{
+      console.log('hello');
+      const res=await axios.post('http://localhost:3000/api/upsertProposal',{data:proposalData});
+      console.log(res.data);
+    }
+    catch(error){
+      console.log(error);
+    }
+
+
+
+
+
+});
 }
 
 run();

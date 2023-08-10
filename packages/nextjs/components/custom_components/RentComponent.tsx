@@ -13,11 +13,17 @@ export default function RentComponent({ tokenId }: { tokenId: number }) {
     functionName: 'realEstates',
     args: [BigInt(tokenId)],
   }) as any;
+  const {data:owners}=useScaffoldContractRead({
+    contractName:'RealEstateERC1155',
+    functionName:'getOwners',
+    args:[BigInt(tokenId)],
+    watch:true
+  }) 
 //   uint256 tokenId,uint256 numberOfMonths,uint256 rentof1Month,uint256 depositAmount,uint256 feesForLateInstallments
-  const {writeAsync}=useScaffoldContractWrite({
+  const {writeAsync:updateRentInfo}=useScaffoldContractWrite({
     contractName:'RealEstateERC1155',
     functionName:'updateRentinfo',
-    args:[BigInt(tokenId),BigInt(rentInfo?.noOfMonths||0),BigInt(rentInfo?.rentof1Month||0),BigInt(rentInfo?.depositAmount||0),BigInt(rentInfo?.feesForLateInstallments||0)]
+    args:[BigInt(tokenId),BigInt(rentInfo?.noOfMonths||0),BigInt(rentInfo?.rentof1Month||0),BigInt(rentInfo?.depositAmount||0),BigInt(rentInfo?.feesForLateInstallments||0),BigInt(rentInfo?.deadline||0)]
   })
 
   useEffect(() => {
@@ -32,7 +38,7 @@ export default function RentComponent({ tokenId }: { tokenId: number }) {
     }
   }, [data]);
 
-  console.log(rentInfo);
+  console.log(data);
 
   return (
     <>
@@ -70,7 +76,21 @@ export default function RentComponent({ tokenId }: { tokenId: number }) {
               setRentInfo({ ...rentInfo, feesForLateInstallments: Number(newValue) });
             }}
           />
-          <Button label="change" onClick={()=>{writeAsync()}} />
+          {
+            owners && owners?.length>1?
+             <Input
+            label={'enter deadline'}
+            type='date'
+            value={rentInfo?.feesForLateInstallments}
+            onChange={(newValue:any) => {
+                const timestamp = Date.parse(newValue) / 1000; // Convert to seconds
+                setRentInfo({ ...rentInfo, deadline: timestamp });
+            }}
+          />
+          :
+          null
+          }
+          <Button label={"Submit"} onClick={()=>{updateRentInfo()}} />
         </div>
       )}
     </>

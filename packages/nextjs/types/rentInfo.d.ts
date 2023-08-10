@@ -8,6 +8,7 @@ interface RentInfo {
     noOfInstallmentsPaid: number;
     feesForLateInstallments: number;
     contractStartTimestamp: number;
+    deadline?:number
 }
 
 export { RentInfo };

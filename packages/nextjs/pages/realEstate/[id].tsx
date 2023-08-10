@@ -6,6 +6,7 @@ import Button from "~~/components/custom_components/button";
 import Input from "~~/components/custom_components/input";
 import { AddressInput } from "~~/components/scaffold-eth";
 import {  useScaffoldContractRead, useScaffoldContractWrite } from "~~/hooks/scaffold-eth";
+import { RealEstate } from "~~/types/realEstate";
 
 
 export default function RealEstate(){
@@ -14,7 +15,7 @@ export default function RealEstate(){
     console.log(id);
     const {address}=useAccount();
     const [data,setData]=useState<any>({});
-    const [RealEstateData,setRealEstateData]=useState([]);
+    const [RealEstateData,setRealEstateData]=useState<RealEstate|null>(null);
     const [tranferinfo,setTranferInfo]=useState({amount:0,to:''});
     useEffect(()=>{
         async function getData(){
@@ -56,7 +57,7 @@ export default function RealEstate(){
       });
      useEffect(()=>{
         if(realEstate){
-            const newData:any={
+            const newData:RealEstate={
         
                 noOfTokens:realEstate[0],
                 priceOf1Token:realEstate[1],

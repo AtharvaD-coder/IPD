@@ -48,7 +48,7 @@ export const ContractData = () => {
   } = useScaffoldEventHistory({
     contractName: "YourContract",
     eventName: "GreetingChange",
-    fromBlock: process.env.NEXT_PUBLIC_DEPLOY_BLOCK ? BigInt(process.env.NEXT_PUBLIC_DEPLOY_BLOCK) : 0n,
+    fromBlock: process.env.NEXT_PUBLIC_DEPLOY_BLOCK ? BigInt(process.env.NEXT_PUBLIC_DEPLOY_BLOCK) : BigInt(0),
     filters: { greetingSetter: address },
     blockData: true,
   });

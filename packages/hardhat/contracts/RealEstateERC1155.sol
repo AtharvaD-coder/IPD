@@ -118,7 +118,7 @@ function updateStatus(
 ) public  {
     RealEstate storage realEstate = realEstates[tokenId];
 
-    require(balanceOf(msg.sender, tokenId)==realEstate.balanceofMemebers[msg.sender], "You are not the sole owner create proposals");
+    require(balanceOf(msg.sender, tokenId)==realEstate.noOfTokens, "You are not the sole owner create proposals");
 
     realEstate.status = _status;
    
@@ -136,7 +136,7 @@ function updateStatus(
 function updateRentinfo(uint256 tokenId,uint256 numberOfMonths,uint256 rentof1Month,uint256 depositAmount,uint256 feesForLateInstallments) public {
 	 RentInfo storage rentinfo = realEstates[tokenId].rentInfo;
 	  RealEstate storage realEstate = realEstates[tokenId];
-	 require(balanceOf(msg.sender, tokenId)==realEstate.balanceofMemebers[msg.sender], "You are not the sole owner create proposals");
+	 require(balanceOf(msg.sender, tokenId)==realEstate.noOfTokens, "You are not the sole owner create proposals");
 	rentinfo.noOfMonths=numberOfMonths;
 	rentinfo.rentof1Month=rentof1Month;
 	rentinfo.depositAmount=depositAmount;

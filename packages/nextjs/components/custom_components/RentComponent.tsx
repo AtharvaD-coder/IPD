@@ -28,7 +28,7 @@ export default function RentComponent({ tokenId }: { tokenId: number }) {
       rentinfo.noOfMonths = Number(rentinfo.noOfMonths);
       rentinfo.rentof1Month = Number(rentinfo.rentof1Month);
       console.log(rentinfo);
-      setRentInfo(rentinfo); // Update the state once after processing the data
+      setRentInfo(rentinfo); 
     }
   }, [data]);
 

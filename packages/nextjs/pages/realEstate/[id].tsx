@@ -1,4 +1,5 @@
 import axios from "axios";
+import Link from "next/link";
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react";
 import { useAccount } from "wagmi";
@@ -86,6 +87,8 @@ export default function RealEstate(){
            <Button label="Trnafer OwnerShip " onClick={()=>writeAsync()}/> 
            <div className="mt-6"></div>
           {data?.tokenId!==undefined &&  <RentComponent tokenId={data.tokenId} />}
+
+          {data?.tokenId!==undefined && <Link href={'/proposals/'+data?.tokenId}><Button  label="View Proposals" onClick={()=>{}} /></Link>}
         
 
         </div>

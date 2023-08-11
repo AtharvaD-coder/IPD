@@ -79,7 +79,7 @@ async function run() {
   // uint256 deadline,
   // RentInfo rentInfo
   
-  contract.on('ProposalAdded', async (proposalId, proposalCreator, positiveVotes, negativeVotes, proposalType, tokenId, executed, rentProposal, deadline, rentInfo,event) => {
+  contract.on('ProposalUpserted', async (proposalId, proposalCreator, positiveVotes, negativeVotes, proposalType, tokenId, executed, rentProposal, deadline, rentInfo,event) => {
     console.log(`Proposal Added - Proposal ID: ${proposalId}`);
     console.log(`Proposal Creator: ${proposalCreator}`);
     console.log(`Positive Votes: ${positiveVotes}`);

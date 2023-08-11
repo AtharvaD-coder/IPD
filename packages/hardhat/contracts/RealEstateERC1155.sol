@@ -133,15 +133,44 @@ contract RealEstateERC1155 is ERC1155 {
 		);
 	}
 
-	function updateStatus(uint256 tokenId, RealEstateStatus _status) public {
+
+
+	function getaddress() public view returns(address){
+		return msg.sender;
+	}
+	function isSoleOwner(uint256 tokenId,address owner) public view returns (bool) {
+		 RealEstate storage realEstate = realEstates[tokenId];
+		 if(balanceOf(owner,tokenId)==0){
+			return false;
+		 }
+    
+    if (balanceOf(owner, tokenId) == realEstate.noOfTokens) {
+        return true;
+    }
+    
+    return false;
+	}
+
+	function updateStatus(uint256 tokenId, RealEstateStatus _status,uint256 deadline) public {
 		RealEstate storage realEstate = realEstates[tokenId];
 
-		require(
-			balanceOf(msg.sender, tokenId) == realEstate.noOfTokens,
-			"You are not the sole owner create proposals"
-		);
+			if(balanceOf(msg.sender, tokenId) == realEstate.noOfTokens){
+				realEstate.status = _status;
 
-		realEstate.status = _status;
+			}
+			else{
+				if(_status==RealEstateStatus.Renting){
+					createProposal(ProposalType.ListForRent, tokenId, deadline);
+				}
+				else if(_status==RealEstateStatus.Listed){
+					createProposal(ProposalType.UnlistForRent, tokenId, deadline);
+
+				}
+		
+			}
+		
+
+
 
 		emit RealEstateUpdated(
 			realEstate.tokenId,
@@ -324,15 +353,12 @@ contract RealEstateERC1155 is ERC1155 {
 	) public {
 		Proposals storage proposal = proposals[proposalId];
 		RealEstate storage realEstate = realEstates[proposal.tokenId];
-		// require(block.timestamp <= proposal.deadline, "Proposal Expired");
+		require(block.timestamp <= proposal.deadline, "Proposal Expired");
 		require(
 			realEstate.proposalExists[proposalId] == true,
 			"proposal does not exits"
 		);
-		// require(
-		// 	proposal.proposalCreator != address(0),
-		// 	"Proposal does not exist"
-		// );
+
 		require(balanceOf(msg.sender,proposal.tokenId)>0,'you cant vote');
 		require(proposal.executed==false, "Proposal already executed");
 		require(!(proposal.voteStatus[msg.sender]==voteStatusEnum.positiveVote && isPositiveVote),'Already Voted');
@@ -452,15 +478,13 @@ contract RealEstateERC1155 is ERC1155 {
 		realEstate.balanceofMemebers[to] += amount;
 
 		if (realEstate.balanceofMemebers[from] == 0) {
-			// Find the index of the 'from' address in the owners array
 			uint256 indexToRemove = findIndex(realEstate.owners, from);
 			if (indexToRemove < realEstate.owners.length - 1) {
-				// Move the last element to the index to remove (to avoid gaps in the array)
 				realEstate.owners[indexToRemove] = realEstate.owners[
 					realEstate.owners.length - 1
 				];
 			}
-			// Remove the last element (which is a duplicate after the previous move)
+			
 			realEstate.owners.pop();
 		}
 

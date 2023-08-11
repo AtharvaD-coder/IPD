@@ -81,7 +81,7 @@ export default function RentComponent({ tokenId }: { tokenId: number }) {
              <Input
             label={'enter deadline'}
             type='date'
-            value={rentInfo?.feesForLateInstallments}
+            value={''}
             onChange={(newValue:any) => {
                 const timestamp = Date.parse(newValue) / 1000; // Convert to seconds
                 setRentInfo({ ...rentInfo, deadline: timestamp });

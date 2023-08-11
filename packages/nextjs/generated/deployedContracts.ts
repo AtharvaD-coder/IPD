@@ -5,7 +5,7 @@ const contracts = {
       name: "localhost",
       contracts: {
         RealEstateERC1155: {
-          address: "0x2279B7A0a67DB372996a5FaB50D91eAA73d2eBe6",
+          address: "0xc5a5C42992dECbae36851359345FE25997F5C42d",
           abi: [
             {
               inputs: [],
@@ -549,6 +549,19 @@ const contracts = {
               type: "function",
             },
             {
+              inputs: [],
+              name: "getaddress",
+              outputs: [
+                {
+                  internalType: "address",
+                  name: "",
+                  type: "address",
+                },
+              ],
+              stateMutability: "view",
+              type: "function",
+            },
+            {
               inputs: [
                 {
                   internalType: "address",
@@ -562,6 +575,30 @@ const contracts = {
                 },
               ],
               name: "isApprovedForAll",
+              outputs: [
+                {
+                  internalType: "bool",
+                  name: "",
+                  type: "bool",
+                },
+              ],
+              stateMutability: "view",
+              type: "function",
+            },
+            {
+              inputs: [
+                {
+                  internalType: "uint256",
+                  name: "tokenId",
+                  type: "uint256",
+                },
+                {
+                  internalType: "address",
+                  name: "owner",
+                  type: "address",
+                },
+              ],
+              name: "isSoleOwner",
               outputs: [
                 {
                   internalType: "bool",
@@ -1001,6 +1038,11 @@ const contracts = {
                   name: "_status",
                   type: "uint8",
                 },
+                {
+                  internalType: "uint256",
+                  name: "deadline",
+                  type: "uint256",
+                },
               ],
               name: "updateStatus",
               outputs: [],
@@ -1047,7 +1089,7 @@ const contracts = {
           ],
         },
         YourContract: {
-          address: "0x0165878A594ca255338adfa4d48449f69242Eb8F",
+          address: "0x67d269191c92Caf3cD7723F116c85e6E9bf55933",
           abi: [
             {
               inputs: [

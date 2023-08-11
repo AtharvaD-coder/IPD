@@ -7,6 +7,7 @@ import "../node_modules/@openzeppelin/contracts/utils/Counters.sol";
 
 contract RealEstateERC1155 is ERC1155 {
 	using Counters for Counters.Counter;
+	uint256 public proposalCounter=0;
 	Counters.Counter public _tokenIdCounter;
 	event RealEstateListed(
 		uint256 indexed tokenId,
@@ -29,9 +30,16 @@ contract RealEstateERC1155 is ERC1155 {
 		uint256 noOfMonths,
 		uint256 rentof1Month
 	);
+	enum voteStatusEnum{
+			 notVoted,
+		 positiveVote,
+		 negativeVote
+	
+	}
 
 	mapping(uint256 => RealEstate) public realEstates;
 	mapping(uint256 => Proposals) public proposals;
+	
 
 	enum RealEstateStatus {
 		Listed,
@@ -71,8 +79,9 @@ contract RealEstateERC1155 is ERC1155 {
 		RentProposal rentProposal;
 		uint256 deadline;
 		RentInfo rentInfo;
+		mapping(address => voteStatusEnum)  voteStatus;
 	}
-	event ProposalAdded(
+	event ProposalUpserted(
 		uint256 proposalId,
 		address proposalCreator,
 		uint256 positiveVotes,
@@ -161,23 +170,23 @@ contract RealEstateERC1155 is ERC1155 {
 			rentinfo.depositAmount = depositAmount;
 			rentinfo.feesForLateInstallments = feesForLateInstallments;
 		} else {
-			uint256 proposalId = proposals[tokenId].proposalId + 1;
+			uint256 proposalId = proposalCounter;
 
-			proposals[tokenId] = Proposals({
-				proposalId: proposalId,
-				proposalCreator: msg.sender,
-				positiveVotes: 0,
-				negativeVotes: 0,
-				proposalType: ProposalType.updateRentInfo,
-				tokenId: tokenId,
-				executed: false,
-				deadline: deadline,
-				rentProposal: RentProposal({
+			
+				proposals[proposalCounter].proposalId=proposalId;
+				proposals[proposalCounter].proposalCreator=msg.sender;
+				proposals[proposalCounter].positiveVotes=0;
+				proposals[proposalCounter].negativeVotes=0;
+				proposals[proposalCounter].proposalType=ProposalType.updateRentInfo;
+				proposals[proposalCounter].tokenId=tokenId;
+				proposals[proposalCounter].executed=false;
+				proposals[proposalCounter].deadline=deadline;
+				proposals[proposalCounter].rentProposal=RentProposal({
 					rentee: address(0),
 					noOfMonths: 0,
 					depositBalance: 0
-				}),
-				rentInfo: RentInfo({
+				});
+				proposals[proposalCounter].rentInfo=RentInfo({
 					rentee: rentinfo.rentee,
 					noOfMonths: numberOfMonths,
 					rentof1Month: rentof1Month,
@@ -185,20 +194,13 @@ contract RealEstateERC1155 is ERC1155 {
 					noOfInstallmentsPaid: 0,
 					feesForLateInstallments: feesForLateInstallments,
 					contractStartTimestamp: 0
-				})
-			});
-			//  uint256 proposalId,
-			// 	address proposalCreator,
-			// 	uint256 positiveVotes,
-			// 	uint256 negativeVotes,
-			// 	ProposalType proposalType,
-			// 	uint256 tokenId,
-			// 	bool executed,
-			// 	RentProposal rentProposal,
-			// 	uint256 deadline,
-			// 	RentInfo rentInfo
+				});
+					realEstate.proposalExists[proposalId]=true;
+					proposalCounter++;
+				
+		
 
-			emit ProposalAdded(
+			emit ProposalUpserted(
 				proposalId,
 				msg.sender,
 				0,
@@ -245,22 +247,23 @@ contract RealEstateERC1155 is ERC1155 {
 		uint256 tokenId,
 		uint256 deadline
 	) public {
-		uint256 proposalId = proposals[tokenId].proposalId + 1;
-		proposals[tokenId] = Proposals({
-			proposalId: proposalId,
-			proposalCreator: msg.sender,
-			positiveVotes: 0,
-			negativeVotes: 0,
-			proposalType: proposalType,
-			tokenId: tokenId,
-			executed: false,
-			deadline: deadline,
-			rentProposal: RentProposal({
+			RealEstate storage realEstate = realEstates[tokenId];
+		uint256 proposalId = proposalCounter;
+
+			proposals[proposalId].proposalId= proposalId;
+			proposals[proposalId].proposalCreator=msg.sender;
+			proposals[proposalId].positiveVotes=0;
+			proposals[proposalId].negativeVotes=0;
+			proposals[proposalId].proposalType=proposalType;
+			proposals[proposalId].tokenId=tokenId;
+			proposals[proposalId].executed=false;
+			proposals[proposalId].deadline=deadline;
+			proposals[proposalId].rentProposal=RentProposal({
 				rentee: address(0),
 				noOfMonths: 0,
 				depositBalance: 0
-			}),
-			rentInfo: RentInfo({
+			});
+			proposals[proposalId].rentInfo=RentInfo({
 				rentee: address(0),
 				noOfMonths: 0,
 				rentof1Month: 0,
@@ -268,8 +271,10 @@ contract RealEstateERC1155 is ERC1155 {
 				noOfInstallmentsPaid: 0,
 				feesForLateInstallments: 0,
 				contractStartTimestamp: 0
-			})
-		});
+			});
+			realEstate.proposalExists[proposalId]=true;
+			proposalCounter++;
+		
 	}
 
 	function createRenteeProposal(
@@ -278,28 +283,28 @@ contract RealEstateERC1155 is ERC1155 {
 		uint256 noOfMonths,
 		uint256 deadline
 	) public payable {
-		uint256 proposalId = proposals[tokenId].proposalId + 1;
+		uint256 proposalId = proposalCounter;
 		RealEstate storage realEstate = realEstates[tokenId];
 
 		require(
 			msg.value >= realEstate.rentInfo.depositAmount,
 			"deposit amount less"
 		);
-		proposals[tokenId] = Proposals({
-			proposalId: proposalId,
-			proposalCreator: msg.sender,
-			positiveVotes: 0,
-			negativeVotes: 0,
-			proposalType: ProposalType.setRentee,
-			tokenId: tokenId,
-			executed: false,
-			deadline: deadline,
-			rentProposal: RentProposal({
+	
+			proposals[tokenId].proposalId=proposalId;
+			proposals[tokenId].proposalCreator=msg.sender;
+			proposals[tokenId].positiveVotes= 0;
+			proposals[tokenId].negativeVotes= 0;
+			proposals[tokenId].proposalType=ProposalType.setRentee;
+			proposals[tokenId].tokenId= tokenId;
+			proposals[tokenId].executed=false;
+			proposals[tokenId].deadline= deadline;
+			proposals[tokenId].rentProposal= RentProposal({
 				rentee: rentee,
 				noOfMonths: noOfMonths,
 				depositBalance: msg.value
-			}),
-			rentInfo: RentInfo({
+			});
+			proposals[tokenId].rentInfo=RentInfo({
 				rentee: address(0),
 				noOfMonths: 0,
 				rentof1Month: 0,
@@ -307,33 +312,50 @@ contract RealEstateERC1155 is ERC1155 {
 				noOfInstallmentsPaid: 0,
 				feesForLateInstallments: 0,
 				contractStartTimestamp: 0
-			})
-		});
+			});
+				realEstate.proposalExists[proposalId]=true;
+				proposalCounter++;
+
 	}
 
 	function vote(
 		uint256 proposalId,
-		uint256 tokenId,
 		bool isPositiveVote
 	) public {
 		Proposals storage proposal = proposals[proposalId];
-		RealEstate storage realEstate = realEstates[tokenId];
-		require(block.timestamp <= proposal.deadline, "Proposal Expired");
+		RealEstate storage realEstate = realEstates[proposal.tokenId];
+		// require(block.timestamp <= proposal.deadline, "Proposal Expired");
 		require(
 			realEstate.proposalExists[proposalId] == true,
 			"proposal does not exits"
 		);
-		require(
-			proposal.proposalCreator != address(0),
-			"Proposal does not exist"
-		);
-		require(!proposal.executed, "Proposal already executed");
+		// require(
+		// 	proposal.proposalCreator != address(0),
+		// 	"Proposal does not exist"
+		// );
+		require(balanceOf(msg.sender,proposal.tokenId)>0,'you cant vote');
+		require(proposal.executed==false, "Proposal already executed");
+		require(!(proposal.voteStatus[msg.sender]==voteStatusEnum.positiveVote && isPositiveVote),'Already Voted');
+		require(!(proposal.voteStatus[msg.sender]==voteStatusEnum.negativeVote && !isPositiveVote),'Already Voted');
+
+		
+	
 
 		if (isPositiveVote) {
+			if(proposal.voteStatus[msg.sender]==voteStatusEnum.negativeVote){
+				proposal.negativeVotes -= 1;
+			}
+			proposal.voteStatus[msg.sender]=voteStatusEnum.positiveVote;
 			proposal.positiveVotes += 1;
 		} else {
+			if(proposal.voteStatus[msg.sender]==voteStatusEnum.positiveVote){
+				proposal.positiveVotes -= 1;
+			}
+			proposal.voteStatus[msg.sender]=voteStatusEnum.negativeVote;
 			proposal.negativeVotes += 1;
 		}
+
+		emit ProposalUpserted(proposalId, proposal.proposalCreator, proposal.positiveVotes, proposal.negativeVotes, proposal.proposalType, proposal.tokenId, proposal.executed, proposal.rentProposal, proposal.deadline, proposal.rentInfo);
 	}
 
 	function executeProposal(uint256 proposalId, uint256 tokenId) public {

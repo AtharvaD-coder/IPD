@@ -5,7 +5,7 @@ const contracts = {
       name: "localhost",
       contracts: {
         RealEstateERC1155: {
-          address: "0x8A791620dd6260079BF849Dc5567aDC3F2FdC318",
+          address: "0x2279B7A0a67DB372996a5FaB50D91eAA73d2eBe6",
           abi: [
             {
               inputs: [],
@@ -155,7 +155,7 @@ const contracts = {
                   type: "tuple",
                 },
               ],
-              name: "ProposalAdded",
+              name: "ProposalUpserted",
               type: "event",
             },
             {
@@ -609,6 +609,19 @@ const contracts = {
               type: "function",
             },
             {
+              inputs: [],
+              name: "proposalCounter",
+              outputs: [
+                {
+                  internalType: "uint256",
+                  name: "",
+                  type: "uint256",
+                },
+              ],
+              stateMutability: "view",
+              type: "function",
+            },
+            {
               inputs: [
                 {
                   internalType: "uint256",
@@ -1021,11 +1034,6 @@ const contracts = {
                   type: "uint256",
                 },
                 {
-                  internalType: "uint256",
-                  name: "tokenId",
-                  type: "uint256",
-                },
-                {
                   internalType: "bool",
                   name: "isPositiveVote",
                   type: "bool",
@@ -1039,7 +1047,7 @@ const contracts = {
           ],
         },
         YourContract: {
-          address: "0x610178dA211FEF7D417bC0e6FeD39F05609AD788",
+          address: "0x0165878A594ca255338adfa4d48449f69242Eb8F",
           abi: [
             {
               inputs: [

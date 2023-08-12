@@ -24,6 +24,7 @@ const config: HardhatUserConfig = {
         // https://docs.soliditylang.org/en/latest/using-the-compiler.html#optimizer-options
         runs: 200,
       },
+      viaIR: true,
     },
   },
   defaultNetwork: "localhost",
@@ -38,7 +39,7 @@ const config: HardhatUserConfig = {
     // If the network you are looking for is not here you can add new network settings
     hardhat: {
       forking: {
-        url: `https://eth-mainnet.alchemyapi.io/v2/${providerApiKey}`,
+        url: `http://localhost:8545`,
         enabled: process.env.MAINNET_FORKING_ENABLED === "true",
       },
     },

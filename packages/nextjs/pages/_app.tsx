@@ -14,6 +14,8 @@ import { useGlobalState } from "~~/services/store/store";
 import { wagmiConfig } from "~~/services/web3/wagmiConfig";
 import { appChains } from "~~/services/web3/wagmiConnectors";
 import "~~/styles/globals.css";
+import Navbar from "../pages/custompages/navbar"
+
 
 const ScaffoldEthApp = ({ Component, pageProps }: AppProps) => {
   const price = useNativeCurrencyPrice();
@@ -41,7 +43,8 @@ const ScaffoldEthApp = ({ Component, pageProps }: AppProps) => {
         theme={isDarkTheme ? darkTheme() : lightTheme()}
       >
         <div className="flex flex-col min-h-screen">
-          <Header />
+          {/* <Header /> */}
+            <Navbar/>
           <main className="relative flex flex-col flex-1">
             <Component {...pageProps} />
           </main>

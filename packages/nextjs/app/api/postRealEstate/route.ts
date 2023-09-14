@@ -1,9 +1,9 @@
 import { ObjectId } from 'mongodb';
 import { NextApiRequest, NextApiResponse } from 'next';
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { connectToDatabase } from '~~/servers/connect';
 
-export async function POST(req: NextResponse) {
+export async function POST(req: NextRequest) {
     try {
         let {data}=await req.json();
    

@@ -1,12 +1,16 @@
+'use client'
 import Link from "next/link";
 import type { NextPage } from "next";
 import { BugAntIcon, MagnifyingGlassIcon, SparklesIcon } from "@heroicons/react/24/outline";
 import { MetaHeader } from "~~/components/MetaHeader";
+import { useState } from "react";
 
 const Home: NextPage = () => {
+  const [val,setVal]=useState(true);
   return (
     <>
       <MetaHeader />
+
       <div className="flex items-center flex-col flex-grow pt-10">
         <div className="px-5">
           <h1 className="text-center mb-8">
@@ -17,6 +21,12 @@ const Home: NextPage = () => {
             Get started by editing{" "}
             <code className="italic bg-base-300 text-base font-bold">packages/nextjs/pages/index.tsx</code>
           </p>
+          <div className="form-control">
+  <label className="label cursor-pointer">
+    <span className="label-text">Remember me</span> 
+    <input type="checkbox" onChange={(e)=>{setVal(e.target.checked)}} checked={val} className="checkbox checkbox-primary" />
+  </label>
+</div>
           <p className="text-center text-lg">
             Edit your smart contract <code className="italic bg-base-300 text-base font-bold">YourContract.sol</code> in{" "}
             <code className="italic bg-base-300 text-base font-bold">packages/hardhat/contracts</code>

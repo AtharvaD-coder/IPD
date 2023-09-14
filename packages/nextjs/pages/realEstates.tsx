@@ -1,30 +1,29 @@
 import React from 'react';
 import Button from '~~/components/custom_components/button';
-// import Box from '@mui/material/Box';
-// import Slider from '@mui/material/Slider';
+import Box from '@mui/material/Box';
+import Slider from '@mui/material/Slider';
+import RangeSlider from '~~/components/custom_components/rangeSlider';
 
-// const marks = [
-//   {
-//     value: 0,
-//     label: '0',
-//   },
-//   {
-//     value: 20,
-//     label: '20k',
-//   },
-//   {
-//     value: 50,
-//     label: '50k',
-//   },
-//   {
-//     value: 10000000,
-//     label: '1Cr+',
-//   },
-// ];
+const marks = [
+  {
+    value: 0,
+    label: '0',
+  },
+  {
+    value: 20,
+    label: '20k',
+  },
+  {
+    value: 50,
+    label: '50k',
+  },
+  {
+    value: 10000000,
+    label: '1Cr+',
+  },
+];
 
-// function valuetext(value: number) {
-//   return `${value}`;
-// }
+
 
 
 const realEstates = () => {
@@ -86,6 +85,7 @@ const titleStyle = {
     
     console.log('Button Clicked');
   };
+  
 
   return (
     <div style={containerStyle}>
@@ -104,17 +104,8 @@ const titleStyle = {
       <hr style={hrStyle}/>
       <p style={titleStyle}>Price Range</p>
       
-
-      {/* <Box sx={{ width: 300 }}>
-      <Slider
-        aria-label="Always visible"
-        defaultValue={80}
-        getAriaValueText={valuetext}
-        step={10}
-        marks={marks}
-        valueLabelDisplay="on"
-      />
-    </Box> */}
+      <RangeSlider/>
+    
 
     
       <p style={titleStyle}>Bedrooms</p>
@@ -131,7 +122,12 @@ const titleStyle = {
       <Button style={bedsnbath} label="5" onClick={handleButtonClick} />
 
       <p style={titleStyle}>Amenities</p>
-      <input type="checkbox" aria-label="shared" className="btn" />
+      <div className="form-control">
+  <label className="label cursor-pointer">
+    <span className="label-text">Remember me</span> 
+    <input type="checkbox"  className="checkbox checkbox-success" />
+  </label>
+</div>
       <input type="checkbox" aria-label="shared" className="btn" />
       <input type="checkbox" aria-label="shared" className="btn" />
       <button className="btn btn-primary">Button</button>

@@ -1,10 +1,17 @@
-import { ReactNode } from "react";
+import React, { ReactNode, CSSProperties } from "react";
 
+interface CardProps {
+  children: ReactNode;
+  style?: CSSProperties; 
+}
 
-export default function Card({children}:{children:ReactNode}) {
-    return (
-        <div className="card w-80 bg-primary text-primary-content">
-            {children}
-        </div>
-    )
+export default function Card({ children, style }: CardProps) {
+  return (
+    <div
+      className="card "
+      style={style} 
+    >
+      {children}
+    </div>
+  );
 }

@@ -1,4 +1,7 @@
+<<<<<<< HEAD:packages/nextjs/app/proposals/[tokenId].tsx
 'use client'
+=======
+>>>>>>> ea9fd035d5848b26d81b67f16874d36f5f24ce4e:packages/nextjs/pages/proposals/[tokenId].tsx
 import axios from "axios"
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react"

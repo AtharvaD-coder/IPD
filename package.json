@@ -28,10 +28,12 @@
     "precommit": "lint-staged",
     "vercel": "yarn workspace @se-2/nextjs vercel",
     "vercel:yolo": "yarn workspace @se-2/nextjs vercel:yolo",
-    "nextbuild": "yarn workspace @se-2/nextjs build"
+    "nextbuild": "yarn workspace @se-2/nextjs build",
+    "backend": "  concurrently \" ts-node packages/nextjs/servers/realEstateServer.ts \" "
   },
   "packageManager": "yarn@3.2.3",
   "devDependencies": {
+    "concurrently": "^8.2.0",
     "husky": "^8.0.1",
     "lint-staged": "^13.0.3"
   },
@@ -39,6 +41,10 @@
     "usehooks-ts@^2.7.2": "patch:usehooks-ts@npm:^2.7.2#./.yarn/patches/usehooks-ts-npm-2.7.2-fceffe0e43.patch"
   },
   "dependencies": {
-    "@openzeppelin/contracts": "^4.9.2"
+    "@openzeppelin/contracts": "^4.9.2",
+    "axios": "^1.4.0",
+    "concurrently": "^8.2.0",
+    "ethers": "^6.7.0",
+    "mongodb": "^5.7.0"
   }
 }

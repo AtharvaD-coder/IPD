@@ -3,7 +3,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { NextRequest, NextResponse } from 'next/server';
 import { connectToDatabase } from '~~/servers/connect';
 
-export async function handler(req: NextRequest, ) {
+export async function handler(req: NextRequest ) {
     try {
         const {data } = await req.json();
 

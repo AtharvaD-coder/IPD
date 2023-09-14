@@ -1,4 +1,7 @@
+<<<<<<< HEAD:packages/nextjs/app/realEstate/[id].tsx
 'use client'
+=======
+>>>>>>> ea9fd035d5848b26d81b67f16874d36f5f24ce4e:packages/nextjs/pages/realEstate/[id].tsx
 import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/router"

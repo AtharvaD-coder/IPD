@@ -1,19 +1,20 @@
 import { ObjectId } from 'mongodb';
 import { NextApiRequest, NextApiResponse } from 'next';
+import { NextRequest, NextResponse } from 'next/server';
 import { connectToDatabase } from '~~/servers/connect';
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+export async function POST(req: NextRequest) {
     try {
-        const { id } = req.body;
+        const { id } = await req.json();
         console.log(id,'id')
         // Check if ID is provided
         if (!id) {
-            return res.status(400).json({ error: 'ID is required' });
+            return NextResponse.json({ error: 'ID is required' },{status:400});
         }
 
         const db = await connectToDatabase('OpenEstate_properties');
         if (!db) {
-            return res.status(400).json({ error: 'Not connected to the database' });
+            return NextResponse.json({ error: 'Not connected to the database' },{status:400});
         }
         
         const coll = db.collection('properties');
@@ -24,15 +25,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         const document = await coll.findOne({ _id: objectId });
 
         if (!document) {
-            return res.status(404).json({ error: 'Document not found' });
+            return NextResponse.json({ error: 'Document not found' },{status:400});
         }
 
         console.log('Document:', document);
       
-        res.status(200).json({ data: document });
+            return NextResponse.json({ data:document },{status:200});
 
     } catch (error) {
         console.error(error);
-        res.status(500).json({ error: 'Internal Server Error' });
+        return NextResponse.json({ error: 'Internal Server Error' },{status:500});
     }
 }

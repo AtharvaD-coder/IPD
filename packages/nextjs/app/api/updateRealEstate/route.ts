@@ -1,15 +1,16 @@
 import { ObjectId } from 'mongodb';
 import { NextApiRequest, NextApiResponse } from 'next';
+import { NextRequest, NextResponse } from 'next/server';
 import { connectToDatabase } from '~~/servers/connect';
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+export  async function POST(req: NextRequest) {
     try {
         console.log(req.body);
-        let {data}=req.body;
+        let {data}=await req.json();
    
         const db=await connectToDatabase('OpenEstate_properties');
         if(!db){
-            return   res.status(400).json({ error: 'not connected to db' });
+            return   NextResponse.json({ error: 'not connected to db' },{status:400});
         }
         const coll=db.collection('properties');
         const query = { tokenId: data.tokenId };
@@ -19,10 +20,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         const result = await coll.updateOne(query, update);
         console.log('done');
       
-        res.status(200).json({ messsge:'done' });
+        return NextResponse.json({ messsge:'done' },{status:200});
 
     } catch (error) {
         console.error(error);
-        res.status(500).json({ error: 'Internal Server Error' });
+        return NextResponse.json({ error: 'Internal Server Error' },{status:500});
     }
 }

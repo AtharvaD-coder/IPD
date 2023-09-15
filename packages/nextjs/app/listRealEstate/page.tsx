@@ -1,3 +1,4 @@
+'use client'
 import { useState } from "react";
 import Button from "~~/components/custom_components/button";
 import Input from "~~/components/custom_components/input";

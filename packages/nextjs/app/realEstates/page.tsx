@@ -8,6 +8,7 @@ import { Flex, Box, Text, Select } from '@chakra-ui/react';
 import Property from '../../components/custom_components/Property';
 import { baseUrl, fetchApi } from '../../app/utils/fetchAPI';
 import {filterData,getFilterValues } from '../../app/utils/filterData';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 interface HomeProps {
   propertiesForSale: Array<any>;
@@ -115,6 +116,11 @@ const applyStyle = {
     const [loading, setLoading] = useState(true);
 
     const [filters,setFilters] = useState(filterData);
+    const router = useRouter();
+    const path = usePathname();
+    // const searchParams = useSearchParams();
+    const searchParams = new URLSearchParams();
+
   
     useEffect(() => {
       const fetchData = async () => {
@@ -137,6 +143,20 @@ const applyStyle = {
     }
 
     const searchProperties = (filterValues: any) => {
+
+
+    const values: { name: string; value: any }[] = getFilterValues(filterValues)
+
+    values.forEach((item) => {
+      if(item.value && filterValues?.[item.name]) {
+        searchParams.set(item.name, item.value);
+      }
+    });
+
+    const newPath = `${path}?${searchParams.toString()}`;
+
+    router.replace(newPath);
+    console.log(newPath);
 
     }
    

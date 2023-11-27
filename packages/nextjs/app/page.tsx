@@ -40,7 +40,7 @@ const Home: React.FC = () => (
         desc1=' Explore flats, bunglows, villas'
         desc2='and more'
         buttonText='Explore Renting'
-        linkName='/search?purpose=for-rent'
+        linkName='/realEstates?purpose=for-rent'
         imageUrl='https://media.istockphoto.com/id/1294492188/video/slow-pan-of-beautiful-custom-home-and-for-rent-real-estate-sign.jpg?s=640x640&k=20&c=RKac7HEnbbOKbAU57yHnTR8aJlrxCQhfJVeC1U6GuTM='
       />
       <Banner
@@ -50,7 +50,7 @@ const Home: React.FC = () => (
         desc1=' Explore from Apartments, land, builder floors,'
         desc2=' villas and more'
         buttonText='Explore Buying'
-        linkName='/search?purpose=for-sale'
+        linkName='/realEstates?purpose=for-sale'
         imageUrl='https://media.istockphoto.com/id/1269776313/photo/suburban-house.jpg?s=612x612&w=0&k=20&c=iNaSdrxJt7H37rjQZumXYScrmSTRm2fDJrqZzxpDL_k='
       />
       <Banner
@@ -60,7 +60,7 @@ const Home: React.FC = () => (
         desc1=' Choose between various types of listing:'
         desc2=' selling, renting, tokenising'
         buttonText='Explore Listing'
-        linkName='/search?purpose=listing'
+        linkName='/realEstates?purpose=listing'
         imageUrl='https://media.istockphoto.com/id/1269776313/photo/suburban-house.jpg?s=612x612&w=0&k=20&c=iNaSdrxJt7H37rjQZumXYScrmSTRm2fDJrqZzxpDL_k='
       />
     </Flex>

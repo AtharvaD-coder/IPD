@@ -1,6 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: ["./pages/**/*.{js,ts,jsx,tsx}", "./components/**/*.{js,ts,jsx,tsx}", "./utils/**/*.{js,ts,jsx,tsx}"],
+  content: ["./app/**/*.{js,ts,jsx,tsx}", "./components/**/*.{js,ts,jsx,tsx}", "./utils/**/*.{js,ts,jsx,tsx}"],
   plugins: [require("daisyui")],
   darkTheme: "scaffoldEthDark",
   // DaisyUI theme colors
@@ -30,6 +30,12 @@ module.exports = {
           ".tooltip": {
             "--tooltip-tail": "6px",
           },
+          ".link": {
+            textUnderlineOffset: "2px",
+          },
+          ".link:hover": {
+            opacity: "80%",
+          },
         },
       },
       {
@@ -56,6 +62,12 @@ module.exports = {
           ".tooltip": {
             "--tooltip-tail": "6px",
             "--tooltip-color": "hsl(var(--p))",
+          },
+          ".link": {
+            textUnderlineOffset: "2px",
+          },
+          ".link:hover": {
+            opacity: "80%",
           },
         },
       },

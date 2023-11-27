@@ -118,7 +118,6 @@ const applyStyle = {
     const [filters,setFilters] = useState(filterData);
     const router = useRouter();
     const path = usePathname();
-    // const searchParams = useSearchParams();
     const searchParams = new URLSearchParams();
 
   
@@ -144,7 +143,7 @@ const applyStyle = {
 
     const searchProperties = (filterValues: any) => {
 
-
+      
     const values: { name: string; value: any }[] = getFilterValues(filterValues)
 
     values.forEach((item) => {

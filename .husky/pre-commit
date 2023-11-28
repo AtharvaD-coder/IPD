@@ -1,4 +1,8 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
+<<<<<<< HEAD
 # yarn lint-staged --verbose
+=======
+yarn lint-staged --verbose
+>>>>>>> f071b9523efeaf77afbae5588792e9a80cbf9e70

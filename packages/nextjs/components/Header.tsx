@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useCallback, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -104,7 +106,6 @@ export const Header = () => {
       </div>
       <div className="navbar-end flex-grow mr-4">
         <RainbowKitCustomConnectButton />
-
         <FaucetButton />
       </div>
     </div>

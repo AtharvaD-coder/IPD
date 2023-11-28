@@ -27,13 +27,10 @@
     "postinstall": "husky install",
     "precommit": "lint-staged",
     "vercel": "yarn workspace @se-2/nextjs vercel",
-    "vercel:yolo": "yarn workspace @se-2/nextjs vercel:yolo",
-    "nextbuild": "yarn workspace @se-2/nextjs build",
-    "backend": "  concurrently \" ts-node packages/nextjs/servers/realEstateServer.ts \" "
+    "vercel:yolo": "yarn workspace @se-2/nextjs vercel:yolo"
   },
   "packageManager": "yarn@3.2.3",
   "devDependencies": {
-    "concurrently": "^8.2.0",
     "husky": "^8.0.1",
     "lint-staged": "^13.0.3"
   },

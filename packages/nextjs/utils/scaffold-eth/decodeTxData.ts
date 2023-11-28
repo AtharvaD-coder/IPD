@@ -1,7 +1,7 @@
 import { TransactionWithFunction } from "./block";
 import { GenericContractsDeclaration } from "./contract";
 import { Abi, decodeFunctionData, getAbiItem } from "viem";
-import { hardhat } from "wagmi/chains";
+import { hardhat } from "viem/chains";
 import contractData from "~~/generated/deployedContracts";
 
 type ContractsInterfaces = Record<string, Abi>;
@@ -17,7 +17,7 @@ const interfaces = chainMetaData
   : {};
 
 export const decodeTransactionData = (tx: TransactionWithFunction) => {
-  if (tx.input.length >= 10) {
+  if (tx.input.length >= 10 && !tx.input.startsWith("0x60e06040")) {
     for (const [, contractAbi] of Object.entries(interfaces)) {
       try {
         const { functionName, args } = decodeFunctionData({

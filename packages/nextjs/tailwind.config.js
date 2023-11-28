@@ -1,6 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: ["./pages/**/*.{js,ts,jsx,tsx}", "./components/**/*.{js,ts,jsx,tsx}", "./utils/**/*.{js,ts,jsx,tsx}"],
+  content: ["./app/**/*.{js,ts,jsx,tsx}", "./components/**/*.{js,ts,jsx,tsx}", "./utils/**/*.{js,ts,jsx,tsx}"],
   plugins: [require("daisyui")],
   darkTheme: "scaffoldEthDark",
   // DaisyUI theme colors
@@ -8,16 +8,16 @@ module.exports = {
     themes: [
       {
         scaffoldEth: {
-          primary: "#93BBFB",
-          "primary-content": "#212638",
-          secondary: "#DAE8FF",
+          primary: "#495464",
+          "primary-content": "#F7F3E9",
+          secondary: "#F7F3E9",
           "secondary-content": "#212638",
-          accent: "#93BBFB",
+          accent: "#F7F3E9",
           "accent-content": "#212638",
-          neutral: "#212638",
+          neutral: "#F7F3E9",
           "neutral-content": "#ffffff",
-          "base-100": "#ffffff",
-          "base-200": "#f4f8ff",
+          "base-100": "#F5F7F8",
+          "base-200": "#F5F7F8",
           "base-300": "#DAE8FF",
           "base-content": "#212638",
           info: "#93BBFB",
@@ -29,6 +29,12 @@ module.exports = {
 
           ".tooltip": {
             "--tooltip-tail": "6px",
+          },
+          ".link": {
+            textUnderlineOffset: "2px",
+          },
+          ".link:hover": {
+            opacity: "80%",
           },
         },
       },
@@ -56,6 +62,12 @@ module.exports = {
           ".tooltip": {
             "--tooltip-tail": "6px",
             "--tooltip-color": "hsl(var(--p))",
+          },
+          ".link": {
+            textUnderlineOffset: "2px",
+          },
+          ".link:hover": {
+            opacity: "80%",
           },
         },
       },
@@ -92,6 +104,9 @@ module.exports = {
     extend: {
       fontFamily: {
         "bai-jamjuree": ["Bai Jamjuree", "sans-serif"],
+      },
+      boxShadow: {
+        center: "0 0 12px -2px rgb(0 0 0 / 0.05)",
       },
       keyframes: {
         grow: {

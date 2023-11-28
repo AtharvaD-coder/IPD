@@ -22,7 +22,7 @@ export default function Input({ value, onChange, type,label }: InputProps) {
 
 
   return (
-    <div className="form-control w-full max-w-xs">
+    <div className="form-control w-full max-w-xs my-2">
     <label className="label">
       <span className="label-text">{label}</span>
    

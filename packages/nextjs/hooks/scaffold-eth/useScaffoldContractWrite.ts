@@ -1,10 +1,8 @@
 import { useState } from "react";
 import { Abi, ExtractAbiFunctionNames } from "abitype";
-import { parseEther } from "viem";
 import { useContractWrite, useNetwork } from "wagmi";
-import { getParsedError } from "~~/components/scaffold-eth";
 import { useDeployedContractInfo, useTransactor } from "~~/hooks/scaffold-eth";
-import { getTargetNetwork, notification } from "~~/utils/scaffold-eth";
+import { getParsedError, getTargetNetwork, notification } from "~~/utils/scaffold-eth";
 import { ContractAbi, ContractName, UseScaffoldWriteConfig } from "~~/utils/scaffold-eth/contract";
 
 type UpdatedArgs = Parameters<ReturnType<typeof useContractWrite<Abi, string, undefined>>["writeAsync"]>[0];
@@ -41,7 +39,7 @@ export const useScaffoldContractWrite = <
     abi: deployedContractData?.abi as Abi,
     functionName: functionName as any,
     args: args as unknown[],
-    value: value ? parseEther(value) : undefined,
+    value: value,
     ...writeConfig,
   });
 
@@ -54,7 +52,7 @@ export const useScaffoldContractWrite = <
     value?: UseScaffoldWriteConfig<TContractName, TFunctionName>["value"];
   } & UpdatedArgs = {}) => {
     if (!deployedContractData) {
-      notification.error("Target Contract is not deployed, did you forgot to run `yarn deploy`?");
+      notification.error("Target Contract is not deployed, did you forget to run `yarn deploy`?");
       return;
     }
     if (!chain?.id) {
@@ -62,7 +60,7 @@ export const useScaffoldContractWrite = <
       return;
     }
     if (chain?.id !== configuredNetwork.id) {
-      notification.error("You on the wrong network");
+      notification.error("You are on the wrong network");
       return;
     }
 
@@ -73,7 +71,7 @@ export const useScaffoldContractWrite = <
           () =>
             wagmiContractWrite.writeAsync({
               args: newArgs ?? args,
-              value: newValue ? parseEther(newValue) : value && parseEther(value),
+              value: newValue ?? value,
               ...otherConfig,
             }),
           { onBlockConfirmation, blockConfirmations },

@@ -52,6 +52,8 @@
     "ethers": "^6.7.0",
     "framer-motion": "^10.16.4",
     "millify": "^6.1.0",
-    "mongodb": "^5.7.0"
+    "mongodb": "^5.7.0",
+    "react-horizontal-scrolling-menu": "^4.1.1",
+    "react-icons": "^4.12.0"
   }
 }

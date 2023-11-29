@@ -269,7 +269,7 @@ export async function getData() {
   try {
     const propertyForSale = await fetchApi(`${baseUrl}/properties/list?locationExternalIDs=5002&purpose=for-sale&hitsPerPage=6`);
     const propertyForRent = await fetchApi(`${baseUrl}/properties/list?locationExternalIDs=5002&purpose=for-rent&hitsPerPage=6`);
-
+    console.log(propertyForRent,propertyForSale)
     return {
       propertiesForSale: propertyForSale?.hits || [],
       propertiesForRent: propertyForRent?.hits || [],

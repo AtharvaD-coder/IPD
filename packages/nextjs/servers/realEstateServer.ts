@@ -3,6 +3,7 @@ import { ethers } from 'ethers';
 import axios from 'axios'
 import Rentinfo from '../classes/RentInfo';
 import Rentproposal from '../classes/rentProposal';
+import { baseUrl, fetchApi } from '../app/utils/fetchApi';
 
 async function run() {
   console.log('hello');
@@ -14,8 +15,23 @@ async function run() {
   const contractAbi = contracts[31337][0].contracts.RealEstateERC1155.abi;
   
   const contract = new ethers.Contract(contractAddress, contractAbi, provider);
+  const propertyForSale = await fetchApi(`${baseUrl}/properties/list?locationExternalIDs=5002&purpose=for-sale&hitsPerPage=6`);
+//   const propertyForRent = await fetchApi(`${baseUrl}/properties/list?locationExternalIDs=5002&purpose=for-rent&hitsPerPage=6`);
+// function newRun (){
+//   propertyForSale.hits.map(async (data:any)=>{
+//     console.log(data,"scd")
+//     // const res=await axios.post('http://localhost:3000/api/postRealEstate',{data});
 
+//   })
+//   propertyForRent.hits.map(async (data:any)=>{
+//     console.log(data,"ss")
+//     const res=await axios.post('http://localhost:3000/api/postRealEstate',{data});
 
+//   })
+  
+// }
+
+// newRun();
   // Subscribe to the event
   
   contract.on('RealEstateListed', async (tokenId, owners, noOfTokens, priceOf1Token, event) => {

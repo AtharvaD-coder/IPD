@@ -27,8 +27,8 @@ interface PropertyProps {
 const Property: React.FC<PropertyProps> = ({ property: { title, externalID, coverPhoto, price, rentFrequency, rooms, baths, area, isVerified } }) => (
   <Link href={`/property/${externalID}`} passHref>
     <Flex flexWrap='wrap' w='420px' p='5' paddingTop='0px' justifyContent='flex-start' cursor='pointer'>
-      <Box>
-        <Image src={coverPhoto ? coverPhoto.url : DefaultImage} width={400} height={260} alt='' />
+      <Box >
+        <Image src={coverPhoto ? coverPhoto.url : DefaultImage} width={200} height={200} alt='' />
       </Box>
 
       <Box w='full'>
@@ -69,7 +69,7 @@ export async function getData({query}: { query: NextApiRequest['query'] }) {
 
   const data = await fetchApi(`${baseUrl}/properties/list?locationExternalIDs=${locationExternalIDs}&purpose=${purpose}&categoryExternalID=${categoryExternalID}&bathsMin=${bathsMin}&rentFrequency=${rentFrequency}&priceMin=${minPrice}&priceMax=${maxPrice}&roomsMin=${roomsMin}&sort=${sort}&areaMax=${areaMax}`);
 
-
+  console.log(data,"data");
     return {
       props: {
         properties: data?.hits,

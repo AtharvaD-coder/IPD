@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { Box, Flex, Spacer, Text } from '@chakra-ui/layout';
 import { Avatar } from '@chakra-ui/avatar';
 import millify from 'millify';
-import { baseUrl, fetchApi } from '~~/app/utils/fetchAPI';
+import { baseUrl, fetchApi } from '../app/utils/fetchAPI';
 
 const PropertyDetails = ({ params }:any) => {
   const [data,setData]=useState<any>({});

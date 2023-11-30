@@ -23,7 +23,7 @@ const realEstates: React.FC<HomeProps> = () => {
   const containerStyle:React.CSSProperties = {
     display: 'flex',
     flexDirection: 'row', 
-    minHeight: '90vh',      
+    minHeight: '95vh',      
   };
 
   const sidebarStyle:React.CSSProperties = {

@@ -4,6 +4,10 @@ import { Box, Flex, Spacer, Text } from '@chakra-ui/layout';
 import { Avatar } from '@chakra-ui/avatar';
 import millify from 'millify';
 import { baseUrl, fetchApi} from '../../utils/fetchApi';
+import VerifiedOutlinedIcon from '@mui/icons-material/VerifiedOutlined';
+import BedroomChildOutlinedIcon from '@mui/icons-material/BedroomChildOutlined';
+import BathroomOutlinedIcon from '@mui/icons-material/BathroomOutlined';
+import CompareArrowsOutlinedIcon from '@mui/icons-material/CompareArrowsOutlined';
 
 const PropertyDetails = ({ params }:any) => {
   const [data,setData]=useState<any>({});
@@ -39,20 +43,22 @@ const PropertyDetails = ({ params }:any) => {
   return (
     <Box maxWidth='1000px' margin='auto' p='4'>
       {/* {photos && <ImageScrollbar data={photos} />}   */}
-      {/* {photos[0]} */}
+      {/* {photos} */}
       <Box w='full' p='6'>
+
         <Flex paddingTop='2' alignItems='center'>
-          <Box paddingRight='3' color='green.400'>
+          <Box paddingRight='3' color='green.400' paddingTop='200'>
             {isVerified ? 'Verified' : 'Not Verified'}
+            <VerifiedOutlinedIcon/>
           </Box>
-          <Text fontWeight='bold' fontSize='lg'>
+          <Text  paddingTop='200' paddingLeft='100' fontWeight='bold' fontSize='lg'>
             Rs {price} {rentFrequency && `/${rentFrequency}`}
           </Text>
           <Spacer />
-          <Avatar size='sm' src={agency?.logo?.url}></Avatar>
+          <Avatar size='sm' w='200px' src={agency?.logo?.url}></Avatar>
         </Flex>
         <Flex alignItems='center' p='1' justifyContent='space-between' w='250px' color='blue.400'>
-          {rooms} | {baths} | {millify(area)} sqft
+          <BedroomChildOutlinedIcon/>{rooms}  | <BathroomOutlinedIcon/>{baths}  |  {millify(area)} sqft
         </Flex>
       </Box>
       <Box marginTop='2'>
@@ -65,8 +71,8 @@ const PropertyDetails = ({ params }:any) => {
       </Box>
       <Flex flexWrap='wrap' textTransform='uppercase' justifyContent='space-between'>
         <Flex justifyContent='space-between' w='400px' borderBottom='1px' borderColor='gray.100' p='3'>
-          <Text>Type</Text>
-          <Text fontWeight='bold'>{type}</Text>
+          <Text>Type:</Text>
+          <Text fontWeight='bold' marginLeft='0.1rem'>{type}</Text>
         </Flex>
         <Flex justifyContent='space-between' w='400px' borderBottom='1px' borderColor='gray.100' p='3'>
           <Text>Purpose</Text>

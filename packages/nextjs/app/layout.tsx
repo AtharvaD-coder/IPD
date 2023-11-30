@@ -2,6 +2,7 @@ import "@rainbow-me/rainbowkit/styles.css";
 import { Metadata } from "next";
 import { AppComponent } from "~~/components/AppComponent";
 import "~~/styles/globals.css";
+import { ChakraProvider } from '@chakra-ui/react';
 
 const baseUrl = process.env.NEXT_PUBLIC_VERCEL_URL
   ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`
@@ -42,11 +43,23 @@ export const metadata: Metadata = {
 
 const ScaffoldEthApp = ({ children }: { children: React.ReactNode }) => {
   return (
-    <html>
-      <body>
+    // <ChakraProvider >
+
+    //     <AppComponent>{children}</AppComponent>
+
+    // </ChakraProvider>
+    <ChakraProvider >
+      <html>
         <AppComponent>{children}</AppComponent>
-      </body>
-    </html>
+        </html>
+    </ChakraProvider>
+
+    // <html>
+    //   <body>
+    //     <AppComponent>{children}</AppComponent>
+    //   </body>
+    // </html>
+
   );
 };
 

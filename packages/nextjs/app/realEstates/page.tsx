@@ -6,7 +6,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Flex, Box, Text, Select } from '@chakra-ui/react';
 import Property from '../../components/custom_components/Property';
-import { baseUrl, fetchApi } from '../../app/utils/fetchAPI';
+import { baseUrl, fetchApi } from '../../app/utils/fetchApi';
 import {filterData,getFilterValues } from '../../app/utils/filterData';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
@@ -172,7 +172,7 @@ const applyStyle = {
           
       {filters?.map((filter) => (
         <Box key={filter.queryName}>
-          <Select onChange={(e) => searchProperties({ [filter.queryName]: e.target.value })} placeholder={filter.placeholder} w='fit-content' p='2' >
+          <Select onChange={(e) => searchProperties({ [filter.queryName]: e.target.value })} placeholder={filter.placeholder} w='fit-content' p='2' paddingBottom='5' >
             {filter?.items?.map((item) => (
               <option value={item.value} key={item.value}>
                 {item.name}
@@ -184,7 +184,7 @@ const applyStyle = {
    
 
 
-            <Button style={btnstyle} label="Buy" onClick={handleButtonClick} />
+            {/* <Button style={btnstyle} label="Buy" onClick={handleButtonClick} />
           <Button style={btnstyle} label="Rent" onClick={handleButtonClick} />
           <Button style={btnstyle} label="Sold" onClick={handleButtonClick} />
           <input type="text" placeholder="Search..." style={inputStyle} />
@@ -229,7 +229,7 @@ const applyStyle = {
           <span className="label-text"> Swimming Pool</span> 
           </div>
      
-          <button style={applyStyle} className="btn btn-primary">Apply</button>
+          <button style={applyStyle} className="btn btn-primary">Apply</button> */}
 
 
 

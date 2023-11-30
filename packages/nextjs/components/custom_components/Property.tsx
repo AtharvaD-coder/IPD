@@ -24,11 +24,11 @@ interface PropertyProps {
   };
 }
 
-const Property: React.FC<PropertyProps> = ({ property: { title, externalID, coverPhoto, price, rentFrequency, rooms, baths, area, isVerified } }) => (
+const Property: React.FC<any> = ({ property: { _id,title, externalID, coverPhoto, price, rentFrequency, rooms, baths, area, isVerified } }:any) => (
   <Link href={`/property/${externalID}`} passHref>
     <Flex flexWrap='wrap' w='420px' p='5' paddingTop='0px' justifyContent='flex-start' cursor='pointer'>
       <Box >
-        <Image src={coverPhoto ? coverPhoto.url : DefaultImage} width={200} height={200} alt='' />
+        <Image src={coverPhoto ? coverPhoto.url : DefaultImage} className='rounded-xl' width={300}  height={300} alt='' />
       </Box>
 
       <Box w='full'>
@@ -40,10 +40,10 @@ const Property: React.FC<PropertyProps> = ({ property: { title, externalID, cove
         </Flex>
         <Flex alignItems='center' p='1' justifyContent='space-between' w='250px' color='blue.400'>
           {rooms}
-           | {baths} | {millify(area)} sqft
+           | {baths} | {area} sqft
         </Flex>
         <Text fontSize='lg'>
-          {title && title.length > 30 ? title.substring(0, 30) + '...' : title}
+          {title && title.length > 30 ? title.substring(0, 60) + '...' : title}
         </Text>
       </Box>
 

@@ -94,7 +94,8 @@ const applyStyle = {
     overflowY: 'scroll',
     height: '80vh',
     width: '100%',
-    margin: 3,
+    // margin: 3,
+    margin: '3px 3px 3px 83px',
     paddingRight: '15px', // Adjust as needed based on your design
   };
   
@@ -108,7 +109,9 @@ const applyStyle = {
     boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
     cursor: "pointer",
     backgroundColor:"#4F709C",
-    height:'150px'
+    height:'150px',
+    // margin: '0 10px 10px 0',
+    marginRight:'20px'
   
   };
   
@@ -177,12 +180,14 @@ const applyStyle = {
     <div style={containerStyle} >
  
        <FilterComponent filterValues={filterValues} setFilterValues={setFilterValues} />
-      <div style={cardContainerStyle} className="[&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none']">
+      <div style={cardContainerStyle} className="[&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none'] ">
         <Flex>
-          <Flex flexWrap='wrap'>
-      
-            {properties  && properties.map((property:any) => <Property property={property} key={property._id} />)}
-
+        <Flex flexWrap='wrap'>
+            {properties && properties.map((property: any) => (
+              <Box key={property._id} width={['100%', '48%', '30%']} mb="20px">
+                <Property property={property} />
+              </Box>
+            ))}
           </Flex>
         </Flex>
       </div>

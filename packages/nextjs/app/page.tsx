@@ -2,7 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Flex, Box, Text, Button } from '@chakra-ui/react';
-
+import buy from '../public/buy.png'
 interface BannerProps {
   purpose: string;
   title1: string;
@@ -51,7 +51,7 @@ const Home: React.FC = () => (
         desc2=' villas and more'
         buttonText='Explore Buying'
         linkName='/realEstates?purpose=for-sale'
-        imageUrl='https://media.istockphoto.com/id/1269776313/photo/suburban-house.jpg?s=612x612&w=0&k=20&c=iNaSdrxJt7H37rjQZumXYScrmSTRm2fDJrqZzxpDL_k='
+        imageUrl={buy}
       />
       <Banner
         purpose='List a  HOME'

@@ -4,24 +4,26 @@ import Button from '~~/components/custom_components/button';
 import RangeSlider from '~~/components/custom_components/rangeSlider';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Flex, Box, Text, Select } from '@chakra-ui/react';
+import { Flex, Box, Text, Select, cookieStorageManager } from '@chakra-ui/react';
 import Property from '../../components/custom_components/Property';
-import { baseUrl, fetchApi } from '../../app/utils/fetchAPI';
+import { baseUrl, fetchApi } from '../../app/utils/fetchApi';
 import {filterData,getFilterValues } from '../../app/utils/filterData';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import axios from 'axios';
+import FilterComponent from './components/filterComponent';
 
 interface HomeProps {
   propertiesForSale: Array<any>;
   propertiesForRent: Array<any>;
 }
 
-const realEstates: React.FC<HomeProps> = ({ propertiesForSale: initialPropertiesForSale, propertiesForRent: initialPropertiesForRent }) => {
+const realEstates: React.FC<HomeProps> = () => {
   
 
   const containerStyle:React.CSSProperties = {
     display: 'flex',
     flexDirection: 'row', 
-    minHeight: '100vh',      
+    minHeight: '90vh',      
   };
 
   const sidebarStyle:React.CSSProperties = {
@@ -82,14 +84,22 @@ const applyStyle = {
     console.log('Button Clicked');
   };
 
-  const cardContainerStyle:React.CSSProperties = {
+  const cardContainerStyle: React.CSSProperties = {
     display: "flex",
     justifyContent: "center",
     gap: "80px",
-    flex: 6,               
-    padding: '20px', 
-    flexWrap:'wrap',
+    flex: 6,
+    padding: '20px',
+    flexWrap: 'wrap',
+    overflowY: 'scroll',
+    height: '80vh',
+    width: '100%',
+    margin: 3,
+    paddingRight: '15px', // Adjust as needed based on your design
   };
+  
+  // For Webkit browsers like Chrome and Safari
+  
 
   const cardStyle = {
     border: "1px solid #ccc",
@@ -112,13 +122,10 @@ const applyStyle = {
     fontSize: "1.25rem",
   };
   
-    const [propertiesForSale, setPropertiesForSale] = useState(initialPropertiesForSale);
-    const [propertiesForRent, setPropertiesForRent] = useState(initialPropertiesForRent);
+    const [properties, setProperties] = useState<any>([]);
     const [loading, setLoading] = useState(true);
-    const [filterValues, setFilterValues] = useState<any>([]);
+    const [filterValues, setFilterValues] = useState<any>({price:[0,100],area:[0,100]});
     const [filters,setFilters] = useState(filterData);
-    const router = useRouter();
-    const path = usePathname();
 
     const searchParams =  useSearchParams();
     // console.log(searchParams)
@@ -128,22 +135,22 @@ const applyStyle = {
       // You can now use the current URL
       // ...
     }, [ searchParams])
-    useEffect(()=>{
-      filterValues?.map((fv:any)=>{
+    // useEffect(()=>{
+    //   filterValues?.map((fv:any)=>{
 
-        const newData=propertiesForSale.filter((property)=>property[fv.fv]===fv.value)
-        console.log(newData);
-      })
-      console.log(filterValues,'filterValues')
-    },[filterValues])
+    //     const newData=properties.filter((property:any)=>property[fv.fv]===fv.value)
+    //     console.log(newData);
+    //   })
+    //   console.log(filterValues,'filterValues')
+    // },[filterValues])
 
   
     useEffect(() => {
       const fetchData = async () => {
         try {
-          const { propertiesForSale, propertiesForRent } = await getData();
-          setPropertiesForSale(propertiesForSale);
-          setPropertiesForRent(propertiesForRent);
+          const { properties } = await getData();
+          setProperties(properties);
+   
           setLoading(false);
         } catch (error) {
           console.error('Error fetching data:', error);
@@ -160,15 +167,15 @@ const applyStyle = {
 
     const searchProperties = (fv: any) => {
 
-      setFilterValues((prevVal:any)=>[...prevVal,fv]);
+      // setFilterValues((prevVal:any)=>[...prevVal,fv]);
       console.log(filterValues,fv);
     }
 
     
    
   return (
-    <div style={containerStyle}>
-      <div style={sidebarStyle}>
+    <div style={containerStyle} >
+      {/* <div style={sidebarStyle}>
           
       {filters?.map((filter) => (
         <Box key={filter.queryName}>
@@ -233,23 +240,15 @@ const applyStyle = {
 
 
 
-        </div>
-       
-      <div style={cardContainerStyle}>
+        </div> */}
+       <FilterComponent filterValues={filterValues} setFilterValues={setFilterValues} />
+      <div style={cardContainerStyle} className="[&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none']">
         <Flex>
           <Flex flexWrap='wrap'>
       
-            {propertiesForRent && propertiesForRent.map((property) => <Property property={property} key={property.id} />)}
+            {properties  && properties.map((property:any) => <Property property={property} key={property._id} />)}
 
           </Flex>
-
-
-          <Flex flexWrap='wrap'>
-
-            {propertiesForSale && propertiesForSale.map((property) => <Property property={property} key={property.id} />)}
-
-          </Flex>
-
         </Flex>
       </div>
       
@@ -259,20 +258,13 @@ const applyStyle = {
 };
 
 
-const initialPropertiesState = {
-  propertiesForSale: [],
-  propertiesForRent: [],
-};
-
 
 export async function getData() {
-  try {
-    const propertyForSale = await fetchApi(`${baseUrl}/properties/list?locationExternalIDs=5002&purpose=for-sale&hitsPerPage=6`);
-    const propertyForRent = await fetchApi(`${baseUrl}/properties/list?locationExternalIDs=5002&purpose=for-rent&hitsPerPage=6`);
-    console.log(propertyForRent,propertyForSale)
+  try { 
+    const properties=await axios.get('http://localhost:3000/api/getAllRealEstates')
+    console.log(properties.data.data,"properties")
     return {
-      propertiesForSale: propertyForSale?.hits || [],
-      propertiesForRent: propertyForRent?.hits || [],
+      properties:properties.data.data
     };
   } catch (error) {
     console.error('Error fetching data:', error);

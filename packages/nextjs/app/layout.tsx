@@ -1,10 +1,12 @@
+import { ChakraProvider } from "@chakra-ui/react";
+import { config } from "@fortawesome/fontawesome-svg-core";
+import "@fortawesome/fontawesome-svg-core/styles.css";
 import "@rainbow-me/rainbowkit/styles.css";
 import { Metadata } from "next";
 import { AppComponent } from "~~/components/AppComponent";
 import "~~/styles/globals.css";
-import { config } from '@fortawesome/fontawesome-svg-core'
-import '@fortawesome/fontawesome-svg-core/styles.css'
-config.autoAddCss = false
+
+config.autoAddCss = false;
 
 const baseUrl = process.env.NEXT_PUBLIC_VERCEL_URL
   ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`
@@ -45,9 +47,24 @@ export const metadata: Metadata = {
 
 const ScaffoldEthApp = ({ children }: { children: React.ReactNode }) => {
   return (
+    // <ChakraProvider >
+
+    //     <AppComponent>{children}</AppComponent>
+
+    // </ChakraProvider>
+    // <ChakraProvider>
+    //   <html>
+    //     <body>
+    //       <AppComponent>{children}</AppComponent>
+    //     </body>
+    //   </html>
+    // </ChakraProvider>
+
     <html>
       <body>
+      <ChakraProvider>
         <AppComponent>{children}</AppComponent>
+        </ChakraProvider>
       </body>
     </html>
   );

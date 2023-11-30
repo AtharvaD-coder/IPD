@@ -175,72 +175,7 @@ const applyStyle = {
    
   return (
     <div style={containerStyle} >
-      {/* <div style={sidebarStyle}>
-          
-      {filters?.map((filter) => (
-        <Box key={filter.queryName}>
-          <Select onChange={(e) => searchProperties({ [filter.queryName]: e.target.value })} placeholder={filter.placeholder} w='fit-content' p='2' >
-            {filter?.items?.map((item) => (
-              <option value={item.value} key={item.value}>
-                {item.name}
-              </option>
-            ))}
-          </Select>
-        </Box>
-      ))}
-   
-
-
-            <Button style={btnstyle} label="Buy" onClick={handleButtonClick} />
-          <Button style={btnstyle} label="Rent" onClick={handleButtonClick} />
-          <Button style={btnstyle} label="Sold" onClick={handleButtonClick} />
-          <input type="text" placeholder="Search..." style={inputStyle} />
-          <hr style={hrStyle}/>
-          <p style={titleStyle}>Property Type</p>
-          <Button style={btnstyle} label="House" onClick={handleButtonClick} />
-          <Button style={btnstyle} label="Commercial" onClick={handleButtonClick} />
-          <Button style={btnstyle} label="Apartment" onClick={handleButtonClick} />
-          <Button style={btnstyle} label="Landplot" onClick={handleButtonClick} />
-          <hr style={hrStyle}/>
-          <p style={titleStyle}>Price Range</p>
-          
-          <RangeSlider/>
-        
-          <p style={titleStyle}>Bedrooms</p>
-          <Button style={bedsnbath} label="1" onClick={handleButtonClick} />
-          <Button style={bedsnbath} label="2" onClick={handleButtonClick} />
-          <Button style={bedsnbath} label="3" onClick={handleButtonClick} />
-          <Button style={bedsnbath} label="4" onClick={handleButtonClick} />
-          <Button style={bedsnbath} label="5" onClick={handleButtonClick} />
-          <p style={titleStyle}>Bathrooms</p>
-          <Button style={bedsnbath} label="1" onClick={handleButtonClick} />
-          <Button style={bedsnbath} label="2" onClick={handleButtonClick} />
-          <Button style={bedsnbath} label="3" onClick={handleButtonClick} />
-          <Button style={bedsnbath} label="4" onClick={handleButtonClick} />
-          <Button style={bedsnbath} label="5" onClick={handleButtonClick} />
-
-          <p style={titleStyle}>Amenities</p>
-      
-          <div>
-          <input type="checkbox"  className="checkbox rounded-lg checkbox-success" />
-          <span className="label-text"> Furnished</span>
-          </div>
-
-          <div>
-          <input type="checkbox"  className="checkbox rounded-lg checkbox-success" />
-          <span className="label-text"> Gym</span> 
-          </div>  
-
-          <div> 
-          <input type="checkbox"  className="checkbox rounded-lg checkbox-success" />
-          <span className="label-text"> Swimming Pool</span> 
-          </div>
-     
-          <button style={applyStyle} className="btn btn-primary">Apply</button>
-
-
-
-        </div> */}
+ 
        <FilterComponent filterValues={filterValues} setFilterValues={setFilterValues} />
       <div style={cardContainerStyle} className="[&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none']">
         <Flex>

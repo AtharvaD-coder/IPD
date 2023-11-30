@@ -15,6 +15,7 @@ export async function GET(req:Request) {
         const coll=db.collection('properties');
         const documents = await coll.find({}).toArray();
         console.log('documents',documents);
+   
       
           return NextResponse.json({ data:documents },{status:200});
 

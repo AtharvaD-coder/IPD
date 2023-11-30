@@ -8,6 +8,7 @@ import VerifiedOutlinedIcon from '@mui/icons-material/VerifiedOutlined';
 import BedroomChildOutlinedIcon from '@mui/icons-material/BedroomChildOutlined';
 import BathroomOutlinedIcon from '@mui/icons-material/BathroomOutlined';
 import CompareArrowsOutlinedIcon from '@mui/icons-material/CompareArrowsOutlined';
+import Image from 'next/image';
 
 const PropertyDetails = ({ params }:any) => {
   const [data,setData]=useState<any>({});
@@ -15,7 +16,7 @@ const PropertyDetails = ({ params }:any) => {
  async  function getData(){
     const d = await fetchApi(`${baseUrl}/properties/detail?externalID=${params.id}`);
     setData(d);
-    console.log(d);
+    console.log(d,"dataaaaaa");
 
   }
   useEffect(()=>{
@@ -38,28 +39,39 @@ const PropertyDetails = ({ params }:any) => {
     furnishingStatus,
     amenities,
     photos,
+    coverPhoto
   } = data;
-
+// console.log(coverPhoto)
   return (
     <Box maxWidth='1000px' margin='auto' p='4'>
       {/* {photos && <ImageScrollbar data={photos} />}   */}
       {/* {photos} */}
-      <Box w='full' p='6'>
 
-        <Flex paddingTop='2' alignItems='center'>
-          <Box paddingRight='3' color='green.400' paddingTop='200'>
+      <Box w='full' p='6'>
+        <div className='horizontal-1 flex justify-between items-center'>
+        <Image src={coverPhoto?.url} height={500} width={500} alt='' />
+        <div>
+
+        <Image alt='' width={200} height={200} src={agency?.logo?.url}></Image>
+        </div>
+
+        </div>
+        <div className='flex justify-around pt-5'>
+
+        <Flex  alignItems='center' >
+          <Box paddingRight='3' color='green.400' >
             {isVerified ? 'Verified' : 'Not Verified'}
             <VerifiedOutlinedIcon/>
           </Box>
-          <Text  paddingTop='200' paddingLeft='100' fontWeight='bold' fontSize='lg'>
+          <Text  paddingLeft='100' fontWeight='bold' fontSize='lg' color='blue.400'>
             Rs {price} {rentFrequency && `/${rentFrequency}`}
           </Text>
           <Spacer />
-          <Avatar size='sm' w='200px' src={agency?.logo?.url}></Avatar>
         </Flex>
-        <Flex alignItems='center' p='1' justifyContent='space-between' w='250px' color='blue.400'>
-          <BedroomChildOutlinedIcon/>{rooms}  | <BathroomOutlinedIcon/>{baths}  |  {millify(area)} sqft
+        <Flex alignItems='center' p='1'  justifyContent='space-between' w='250px' color='blue.400'>
+          <BedroomChildOutlinedIcon/>{rooms} <div className='mr-2'></div>  |<div className='mr-2'></div> <BathroomOutlinedIcon/>{baths} <div className='mr-2'></div> |  <div className='mr-2'></div>{millify(area)} sqft
         </Flex>
+        </div>
       </Box>
       <Box marginTop='2'>
         <Text fontSize='lg' marginBottom='2' fontWeight='bold'>

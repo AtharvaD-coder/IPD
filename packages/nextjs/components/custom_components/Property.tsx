@@ -5,6 +5,9 @@ import millify from 'millify';
 import VerifiedOutlinedIcon from '@mui/icons-material/VerifiedOutlined';
 import { baseUrl, fetchApi } from '../../app/utils/fetchAPI';
 import { NextApiRequest } from 'next';
+import BedroomChildOutlinedIcon from '@mui/icons-material/BedroomChildOutlined';
+import BathroomOutlinedIcon from '@mui/icons-material/BathroomOutlined';
+import CompareArrowsOutlinedIcon from '@mui/icons-material/CompareArrowsOutlined';
 
 const DefaultImage = 'https://media.istockphoto.com/id/1269776313/photo/suburban-house.jpg?s=612x612&w=0&k=20&c=iNaSdrxJt7H37rjQZumXYScrmSTRm2fDJrqZzxpDL_k=';
 
@@ -35,12 +38,12 @@ const Property: React.FC<any> = ({ property: { _id,title, externalID, coverPhoto
         <Flex paddingTop='2' alignItems='center' justifyContent='space-between'>
           <Flex alignItems='center'>
             <Box paddingRight='3' color='green.400'>{isVerified && <VerifiedOutlinedIcon />}</Box>
-            <Text fontWeight='bold' fontSize='lg'>Rs {price}{rentFrequency && `/${rentFrequency}`}</Text>
+            <Text fontWeight='bold' fontSize='lg'>Rs {millify(price)}{rentFrequency && `/${rentFrequency}`}</Text>
           </Flex>
         </Flex>
         <Flex alignItems='center' p='1' justifyContent='space-between' w='250px' color='blue.400'>
-          {rooms}
-           | {baths} | {area} sqft
+        <BedroomChildOutlinedIcon  />{rooms}  <div className='mr-3'></div>  
+        | <div className='mr-3'></div>    <BathroomOutlinedIcon  /> {baths}   | <div ></div>   <CompareArrowsOutlinedIcon className='mr-2'/>{Math.floor(area)} sq.ft.
         </Flex>
         <Text fontSize='lg'>
           {title && title.length > 30 ? title.substring(0, 60) + '...' : title}

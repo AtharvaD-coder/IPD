@@ -2,6 +2,9 @@ import "@rainbow-me/rainbowkit/styles.css";
 import { Metadata } from "next";
 import { AppComponent } from "~~/components/AppComponent";
 import "~~/styles/globals.css";
+import { config } from '@fortawesome/fontawesome-svg-core'
+import '@fortawesome/fontawesome-svg-core/styles.css'
+config.autoAddCss = false
 
 const baseUrl = process.env.NEXT_PUBLIC_VERCEL_URL
   ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`

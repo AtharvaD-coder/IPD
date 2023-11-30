@@ -43,7 +43,7 @@ const Property: React.FC<PropertyProps> = ({ property: { title, externalID, cove
            | {baths} | {millify(area)} sqft
         </Flex>
         <Text fontSize='lg'>
-          {title.length > 30 ? title.substring(0, 30) + '...' : title}
+          {title && title.length > 30 ? title.substring(0, 30) + '...' : title}
         </Text>
       </Box>
 

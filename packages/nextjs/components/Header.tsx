@@ -4,7 +4,7 @@ import React, { useCallback, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Bars3Icon, SparklesIcon } from "@heroicons/react/24/outline";
+import { Bars3Icon, MagnifyingGlassIcon, SparklesIcon } from "@heroicons/react/24/outline";
 import { HomeIcon } from "@heroicons/react/20/solid";
 import { UserIcon } from "@heroicons/react/24/solid";
 import { FaucetButton, RainbowKitCustomConnectButton } from "~~/components/scaffold-eth";
@@ -42,29 +42,24 @@ export const Header = () => {
   const navLinks = (
     <>
       <li>
-        <NavLink href="/home">
+        <NavLink href="/">
         <UserIcon className="h-4 w-4" />
           Home
         </NavLink>
       </li>
       <li>
-        <NavLink href="/realEstates">
+        <NavLink href="/listRealEstate">
           <HomeIcon className="h-4 w-4" />
-          Real Estates
+          List Real Estates
         </NavLink>
       </li>
+    
       <li>
-        <NavLink href="/estateDetails">
-          <SparklesIcon className="h-4 w-4" />
-          Estate Details
+        <NavLink href="/realEstates">
+          <MagnifyingGlassIcon className="h-4 w-4" />
+        Search Estates
         </NavLink>
       </li>
-      {/* <li>
-        <NavLink href="/blockexplorer">
-          <MagnifyingGlassIcon className="h-4 w-4" />
-          Block Explorer
-        </NavLink>
-      </li> */}
     </>
   );
 

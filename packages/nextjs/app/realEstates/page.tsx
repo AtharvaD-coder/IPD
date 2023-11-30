@@ -11,6 +11,7 @@ import {filterData,getFilterValues } from '../../app/utils/filterData';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import axios from 'axios';
 import FilterComponent from './components/filterComponent';
+import { useFetch, useLocalStorage } from 'usehooks-ts';
 
 interface HomeProps {
   propertiesForSale: Array<any>;
@@ -122,10 +123,16 @@ const applyStyle = {
     fontSize: "1.25rem",
   };
   
-    const [properties, setProperties] = useState<any>([]);
-    const [loading, setLoading] = useState(true);
+  const { data, error } = useFetch<any>('http://localhost:3000/api/getAllRealEstates')   
+  console.log(data);
+   const [loading, setLoading] = useState(true);
     const [filterValues, setFilterValues] = useState<any>({price:[0,100],area:[0,100]});
     const [filters,setFilters] = useState(filterData);
+    useEffect(()=>{
+      if(data?.data?.length>0){
+        setLoading(false)
+      }
+    },[data])
 
     const searchParams =  useSearchParams();
     // console.log(searchParams)
@@ -145,25 +152,27 @@ const applyStyle = {
     // },[filterValues])
 
   
-    useEffect(() => {
-      const fetchData = async () => {
-        try {
-          const { properties } = await getData();
-          setProperties(properties);
+    // useEffect(() => {
+    //   const fetchData = async () => {
+    //     console.log(Properties)
+    //     try {
+    //       if(Properties.length>0){
+    //         return
+    //       }
+    //       const { properties } = await getData();
+    //       setProperties(properties);
    
-          setLoading(false);
-        } catch (error) {
-          console.error('Error fetching data:', error);
-          setLoading(false);
-        }
-      };
+    //       setLoading(false);
+    //     } catch (error) {
+    //       console.error('Error fetching data:', error);
+    //       setLoading(false);
+    //     }
+    //   };
   
-      fetchData();
-    }, []);
+    //   fetchData();
+    // }, []);
   
-    if (loading) {
-      return <div>Loading...</div>; 
-    }
+  
 
     const searchProperties = (fv: any) => {
 
@@ -177,15 +186,20 @@ const applyStyle = {
     <div style={containerStyle} >
  
        <FilterComponent filterValues={filterValues} setFilterValues={setFilterValues} />
-      <div style={cardContainerStyle} className="[&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none']">
+      { !loading?<div style={cardContainerStyle} className="[&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none']">
         <Flex>
           <Flex flexWrap='wrap' className='w-[70vw] flex justify-between'>
       
-            {properties  && properties.map((property:any) => <Property property={property} key={property._id} />)}
+            {data?.data  && data.data?.map((property:any) => <Property property={property} key={property._id} />)}
 
           </Flex>
         </Flex>
       </div>
+      :
+      <div className='flex justify-center items-center'>
+        Loading...
+      </div>
+}
       
      </div>
 
@@ -194,18 +208,18 @@ const applyStyle = {
 
 
 
-export async function getData() {
-  try { 
-    const properties=await axios.get('http://localhost:3000/api/getAllRealEstates')
-    console.log(properties.data.data,"properties")
-    return {
-      properties:properties.data.data
-    };
-  } catch (error) {
-    console.error('Error fetching data:', error);
-    throw error; 
-  }
-}
+// export async function getData() {
+//   try { 
+//     const properties=await axios.get('http://localhost:3000/api/getAllRealEstates')
+//     console.log(properties.data.data,"properties")
+//     return {
+//       properties:properties.data.data
+//     };
+//   } catch (error) {
+//     console.error('Error fetching data:', error);
+//     throw error; 
+//   }
+// }
 
 export default realEstates;
 

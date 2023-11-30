@@ -179,7 +179,7 @@ const applyStyle = {
        <FilterComponent filterValues={filterValues} setFilterValues={setFilterValues} />
       <div style={cardContainerStyle} className="[&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none']">
         <Flex>
-          <Flex flexWrap='wrap'>
+          <Flex flexWrap='wrap' className='w-[70vw] flex justify-between'>
       
             {properties  && properties.map((property:any) => <Property property={property} key={property._id} />)}
 

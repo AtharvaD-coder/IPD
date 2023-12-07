@@ -1,4 +1,5 @@
 // reducers.ts
+
 import { createReducer } from '@reduxjs/toolkit';
 import { setFilterValues, setLoading } from './actions';
 
@@ -21,3 +22,5 @@ export const rootReducer = createReducer(initialState, (builder) => {
       state.loading = action.payload;
     });
 });
+
+export type RootState = ReturnType<typeof rootReducer>;

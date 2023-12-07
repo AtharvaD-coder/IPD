@@ -53,11 +53,9 @@ const ScaffoldEthApp = ({ children }: { children: React.ReactNode }) => {
   return (
     <html>
       <body>
-        <Provider store={store}>
-          <ChakraProvider>
+       
             <AppComponent>{children}</AppComponent>
-          </ChakraProvider>
-        </Provider>
+     
       </body>
     </html>
   );

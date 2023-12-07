@@ -13,6 +13,9 @@ import { useDarkMode } from "~~/hooks/scaffold-eth/useDarkMode";
 import { useGlobalState } from "~~/services/store/store";
 import { wagmiConfig } from "~~/services/web3/wagmiConfig";
 import { appChains } from "~~/services/web3/wagmiConnectors";
+import { Provider } from "react-redux";
+import { ChakraProvider } from "@chakra-ui/react";
+import store from "~~/app/redux/store";
 
 export const AppComponent = ({ children }: { children: React.ReactNode }) => {
   const price = useNativeCurrencyPrice();
@@ -34,12 +37,17 @@ export const AppComponent = ({ children }: { children: React.ReactNode }) => {
         avatar={BlockieAvatar}
         theme={isDarkMode ? darkTheme() : lightTheme()}
       >
+         <Provider store={store}>
+          <ChakraProvider>
+
         <div className="flex flex-col min-h-screen">
           <Header />
           <main className="relative flex flex-col flex-1">{children}</main>
           {/* <Footer /> */}
         </div>
         <Toaster />
+          </ChakraProvider>
+          </Provider>
       </RainbowKitProvider>
     </WagmiConfig>
   );

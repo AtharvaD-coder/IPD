@@ -1,4 +1,5 @@
 // ScaffoldEthApp.tsx
+
 import { Provider } from "react-redux";
 import { ChakraProvider } from "@chakra-ui/react";
 import store from "./redux/store"; 
@@ -52,11 +53,11 @@ const ScaffoldEthApp = ({ children }: { children: React.ReactNode }) => {
   return (
     <html>
       <body>
-          <ChakraProvider>
         <Provider store={store}>
+          <ChakraProvider>
             <AppComponent>{children}</AppComponent>
-        </Provider>
           </ChakraProvider>
+        </Provider>
       </body>
     </html>
   );

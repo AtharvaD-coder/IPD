@@ -15,6 +15,7 @@ import FilterComponent from './components/filterComponent';
 import { useFetch, useLocalStorage } from 'usehooks-ts';
 import { setFilterValues, setLoading } from '../redux/actions';
 import { RootState } from '../redux/reducers'; 
+import { setPropertiesForSale, setPropertiesForRent } from '../redux/actions';
 
 interface HomeProps {
   propertiesForSale: Array<any>;
@@ -83,10 +84,9 @@ const applyStyle = {
 }
 
 
-  const handleButtonClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    
-    console.log('Button Clicked');
-  };
+const handleButtonClick = (event: React.MouseEvent<HTMLButtonElement>, purpose: string) => {
+  dispatch(setFilterValues({ ...filterValues, purpose }));
+};
 
   const cardContainerStyle: React.CSSProperties = {
     display: "flex",
@@ -127,17 +127,38 @@ const applyStyle = {
 
   const filterValues = useSelector((state: RootState) => state.filterValues);
   const loading = useSelector((state: RootState) => state.loading);
+  const propertiesForSale = useSelector((state: RootState) => state.propertiesForSale);
+  const propertiesForRent = useSelector((state: RootState) => state.propertiesForRent);
+
 
   const { data, error } = useFetch<any>('http://localhost:3000/api/getAllRealEstates');
+
+
 
   useEffect(() => {
     dispatch(setLoading(true));
     if (data?.data?.length > 0) {
-      dispatch(setFilterValues(data.data));
+
+      const propertiesForSale = data.data.filter((property: any) => property.purpose === 'for-sale');
+      const propertiesForRent = data.data.filter((property: any) => property.purpose === 'for-rent');
+
+      dispatch(setPropertiesForSale(propertiesForSale));
+      dispatch(setPropertiesForRent(propertiesForRent));
+
+      // Set default filter for properties for sale
+      dispatch(setFilterValues({ ...filterValues, purpose: 'for-sale' }));
     }
 
-    dispatch(setLoading(false)); 
+    dispatch(setLoading(false));
   }, [data, dispatch]);
+  // useEffect(() => {
+  //   dispatch(setLoading(true));
+  //   if (data?.data?.length > 0) {
+  //     dispatch(setFilterValues(data.data));
+  //   }
+
+  //   dispatch(setLoading(false)); 
+  // }, [data, dispatch]);
     
    
   return (
@@ -147,9 +168,10 @@ const applyStyle = {
         <div style={cardContainerStyle} className="[&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none']">
           <Flex>
             <Flex flexWrap='wrap' className='w-[70vw] flex justify-between'>
-              {data?.data && data.data?.map((property: any) => (
-                <Property property={property} key={property._id} />
-              ))}
+            {filterValues.purpose === 'for-sale'
+                ? propertiesForSale.map((property: any) => <Property property={property} key={property._id} />)
+                : propertiesForRent.map((property: any) => <Property property={property} key={property._id} />)
+              }
             </Flex>
           </Flex>
         </div>

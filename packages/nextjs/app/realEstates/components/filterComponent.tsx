@@ -1,12 +1,13 @@
 'use client'
 
+
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import ToggleButtonSizes from './selectToggle';
 import RangeSlider from '~~/components/custom_components/rangeSlider';
 import NumberInput from '~~/app/listRealEstate/components/numberInputs';
 import { setFilterValues } from '../../redux/actions';
-import { RootState } from '../../redux/reducers'; 
+import { RootState } from '../../redux/reducers';
 
 interface FilterComponentProps {}
 
@@ -18,6 +19,10 @@ const FilterComponent: React.FC<FilterComponentProps> = () => {
     dispatch(setFilterValues({ ...filterValues, [keyValue]: value }));
   };
 
+  const handleButtonClick = (value: string) => {
+    dispatch(setFilterValues({ ...filterValues, purpose: value }));
+  };
+
   return (
     <div className="w-[20vw] h-[85vh] overflow-y-scroll [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none']">
       <div className="horizontal-1 p-3">
@@ -27,6 +32,7 @@ const FilterComponent: React.FC<FilterComponentProps> = () => {
           setFilterValues={handleFilterChange}
           filterValues={filterValues}
           options={[{ text: 'Buy', value: 'for-sale' }, { text: 'Rent', value: 'for-rent' }]}
+          handleButtonClick={handleButtonClick}
         />
       </div>
       <div className="horizontal-1 p-3 ">
@@ -56,6 +62,6 @@ const FilterComponent: React.FC<FilterComponentProps> = () => {
       </div>
     </div>
   );
-}
+};
 
 export default FilterComponent;

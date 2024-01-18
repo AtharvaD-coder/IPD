@@ -6,7 +6,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Bars3Icon, MagnifyingGlassIcon, SparklesIcon } from "@heroicons/react/24/outline";
 import { HomeIcon } from "@heroicons/react/20/solid";
-import { UserIcon } from "@heroicons/react/24/solid";
+import { UserIcon, UserGroupIcon } from "@heroicons/react/24/solid";
 import { FaucetButton, RainbowKitCustomConnectButton } from "~~/components/scaffold-eth";
 import { useOutsideClick } from "~~/hooks/scaffold-eth";
 
@@ -58,6 +58,13 @@ export const Header = () => {
         <NavLink href="/realEstates">
           <MagnifyingGlassIcon className="h-4 w-4" />
         Search Estates
+        </NavLink>
+      </li>
+
+      <li>
+        <NavLink href="/about">
+          <UserGroupIcon className="h-4 w-4" />
+        About us
         </NavLink>
       </li>
     </>

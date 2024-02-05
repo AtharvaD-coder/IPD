@@ -1,7 +1,6 @@
 import Label from "~~/components/custom_components/labels";
 import {useState} from "react";
-export default function ImageUploader({ label }: { label: string }) {
-  const [files,setFiles]=useState<any>([]);
+export default function ImageUploader({ label,setFiles,files }: { label: string ,setFiles:any,files:any}) {
   const [imageSelector,setImageSelector]=useState<any>(0);
   function handleChange(e:any) {
     console.log(e.target.files);

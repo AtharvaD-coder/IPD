@@ -6,7 +6,7 @@ import { styled } from "@mui/system";
 import Label from "~~/components/custom_components/labels";
 
 const NumberInputComponent = React.forwardRef(function CustomNumberInput(
-  props: NumberInputProps,
+  { value, onChange, ...props }: NumberInputProps,
   ref: React.ForwardedRef<HTMLDivElement>,
 ) {
   return (
@@ -26,11 +26,14 @@ const NumberInputComponent = React.forwardRef(function CustomNumberInput(
           children: <RemoveIcon fontSize="small" />,
         },
       }}
+      value={value} // Pass the value prop
+      onChange={onChange} // Pass the onChange prop
       {...props}
       ref={ref}
     />
   );
 });
+
 
 export default function NumberInput({ label, value, onChange,labelStyle }: any) {
   return (

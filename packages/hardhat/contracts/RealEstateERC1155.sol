@@ -5,17 +5,13 @@ import "../node_modules/@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
 import "../node_modules/@openzeppelin/contracts/token/ERC1155/extensions/ERC1155URIStorage.sol";
 import "../node_modules/@openzeppelin/contracts/access/Ownable.sol";
 import "../node_modules/@openzeppelin/contracts/utils/Counters.sol";
+import "../node_modules/@openzeppelin/contracts/utils/Strings.sol";
 
 contract RealEstateERC1155 is ERC1155 {
 	using Counters for Counters.Counter;
 	uint256 public proposalCounter=0;
 	Counters.Counter  public  _tokenIdCounter;
-	event RealEstateListed(
-		uint256 indexed tokenId,
-		address[] owners,
-		uint256 noOfTokens,
-		uint256 priceOf1Token
-	);
+	
 	event RealEstateUpdated(
 		uint256 indexed tokenId,
 		address[] owners,
@@ -25,12 +21,7 @@ contract RealEstateERC1155 is ERC1155 {
 		RentInfo rentInfo,
 		uint256 realEstateBalance
 	);
-	event RealEstateRented(
-		uint256 indexed tokenId,
-		address indexed rentee,
-		uint256 noOfMonths,
-		uint256 rentof1Month
-	);
+
 	enum voteStatusEnum{
 			 notVoted,
 		 positiveVote,
@@ -42,6 +33,7 @@ contract RealEstateERC1155 is ERC1155 {
 	mapping(uint256 => Proposals) public proposals;
 	mapping(uint256 => Bid[]) public tokenBids;
 	mapping(uint256 => mapping(address => voteStatusEnum)) public voteStatus;
+    mapping(uint256 => string) public tokenMetadataURIs; // Mapping to store metadata URI for each token
 
 
 	enum RealEstateStatus {
@@ -122,35 +114,116 @@ contract RealEstateERC1155 is ERC1155 {
 		BidStatus status;
 		uint256 id;
 	}
-	
+	 event RealEstateListed(
+        uint256 indexed tokenId,
+        address[] owners,
+        uint256 noOfTokens,
+        uint256 priceOf1Token,
+        string metadataUri
+    );
+    event RealEstateUpdated(
+        uint256 indexed tokenId,
+        address[] owners,
+        uint256 noOfTokens,
+        uint256 priceOf1Token,
+        RealEstateStatus status,
+        RentInfo rentInfo,
+        uint256 realEstateBalance,
+        string metadataUri
+    );
+    event RealEstateRented(
+        uint256 indexed tokenId,
+        address indexed rentee,
+        uint256 noOfMonths,
+        uint256 rentof1Month
+    );
 
 	constructor() ERC1155("OpenEstate,OE") {}
 	
 
-	function listRealEstate(
-		uint256 initialAmountOfTokens,
-		address owner,
-		uint256 priceOf1token
-	) public {
-		uint256 tokenId = _tokenIdCounter.current();
-		_mint(owner, tokenId, initialAmountOfTokens, "");
+	function listRealEstateForSale(
+        uint256 initialAmountOfTokens,
+        address owner,
+        uint256 priceOf1token,
+        string memory metadataUri
+    ) public {
+        uint256 tokenId = _tokenIdCounter.current();
+        _mint(owner, tokenId, initialAmountOfTokens, "");
+        tokenMetadataURIs[tokenId] = metadataUri; // Store metadata URI for the token
 
-		RealEstate storage newProperty = realEstates[tokenId];
-		newProperty.noOfTokens = initialAmountOfTokens;
-		newProperty.priceOf1Token = priceOf1token;
-		newProperty.tokenId = tokenId;
-		newProperty.owners.push(owner);
-		newProperty.status = RealEstateStatus.ListedForSale;
-		newProperty.balanceofMemebers[owner] += initialAmountOfTokens;
+        RealEstate storage newProperty = realEstates[tokenId];
+        newProperty.noOfTokens = initialAmountOfTokens;
+        newProperty.priceOf1Token = priceOf1token;
+        newProperty.tokenId = tokenId;
+        newProperty.owners.push(owner);
+        newProperty.status = RealEstateStatus.ListedForSale;
+        newProperty.balanceofMemebers[owner] += initialAmountOfTokens;
 
-		_tokenIdCounter.increment();
-		emit RealEstateListed(
-			tokenId,
-			newProperty.owners,
-			initialAmountOfTokens,
-			priceOf1token
-		);
-	}
+        _tokenIdCounter.increment();
+        emit RealEstateListed(
+            tokenId,
+            newProperty.owners,
+            initialAmountOfTokens,
+            priceOf1token,
+            metadataUri
+        );
+    }
+
+    // Function to list real estate property for rent with metadata
+    function listRealEstateForRent(
+        uint256 initialAmountOfTokens,
+        address owner,
+        uint256 priceOf1token,
+        uint256 numberOfMonths,
+        uint256 rentof1Month,
+        uint256 depositAmount,
+        uint256 feesForLateInstallments,
+        uint256 deadline,
+        string memory metadataUri
+    ) public {
+        require(owner == msg.sender, "You are not the owner of this property");
+        require(initialAmountOfTokens > 0, "Number of tokens must be greater than zero");
+        require(priceOf1token > 0, "Price of 1 token must be greater than zero");
+        require(deadline > block.timestamp, "Deadline must be in the future");
+
+        uint256 tokenId = _tokenIdCounter.current();
+        _mint(owner, tokenId, initialAmountOfTokens, "");
+        tokenMetadataURIs[tokenId] = metadataUri; // Store metadata URI for the token
+
+        RealEstate storage newProperty = realEstates[tokenId];
+        newProperty.noOfTokens = initialAmountOfTokens;
+        newProperty.priceOf1Token = priceOf1token;
+        newProperty.tokenId = tokenId;
+        newProperty.owners.push(owner);
+        newProperty.status = RealEstateStatus.ListedForRent;
+        newProperty.balanceofMemebers[owner] += initialAmountOfTokens;
+        newProperty.rentInfo = RentInfo({
+            rentee: address(0),
+            noOfMonths: numberOfMonths,
+            rentof1Month: rentof1Month,
+            depositAmount: depositAmount,
+            noOfInstallmentsPaid: 0,
+            feesForLateInstallments: feesForLateInstallments,
+            contractStartTimestamp: 0
+        });
+
+        _tokenIdCounter.increment();
+
+        emit RealEstateListed(
+            tokenId,
+            newProperty.owners,
+            initialAmountOfTokens,
+            priceOf1token,
+            metadataUri
+        );
+    }
+
+    // Function to get metadata URI for a token
+    function tokenURI(uint256 tokenId) public view virtual returns (string memory) {
+        return tokenMetadataURIs[tokenId];
+    }
+
+
 	function getPendingBids(uint256 tokenId) public view returns (Bid[] memory) {
     uint256 pendingBidsCount = 0;
     for (uint256 i = 0; i < tokenBids[tokenId].length; i++) {

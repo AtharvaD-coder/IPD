@@ -3,7 +3,7 @@ import Image from 'next/image';
 import { Box, Flex, Text } from '@chakra-ui/layout';
 import millify from 'millify';
 import VerifiedOutlinedIcon from '@mui/icons-material/VerifiedOutlined';
-import { baseUrl, fetchApi } from '../../app/utils/fetchAPI';
+import { baseUrl, fetchApi } from '../../app/utils/fetchApi';
 import { NextApiRequest } from 'next';
 import BedroomChildOutlinedIcon from '@mui/icons-material/BedroomChildOutlined';
 import BathroomOutlinedIcon from '@mui/icons-material/BathroomOutlined';

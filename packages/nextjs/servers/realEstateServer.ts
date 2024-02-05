@@ -42,7 +42,7 @@ async function run() {
     console.log(`Number of Tokens: ${noOfTokens}`);
     console.log(`Price of 1 Token: ${priceOf1Token}`);
     const data={
-      tokenId:Number(tokenId), owners, noOfTokens:Number(noOfTokens), priceOf1Token:Number(priceOf1Token)
+      tokenId:Number(tokenId), owners, noOfTokens:Number(noOfTokens), priceOf1Token:Number(priceOf1Token),purpose:'for-sale',price:5000,externalID:Number(tokenId),coverPhoto:{url:"https://bayut-production.s3.eu-central-1.amazonaws.com/image/507408146/d53c488d43a64da08472c74fcbd34287"}
     }
     console.log(data)
     try{

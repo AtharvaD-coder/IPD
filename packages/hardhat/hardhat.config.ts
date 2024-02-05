@@ -21,10 +21,10 @@ const config: HardhatUserConfig = {
     settings: {
       optimizer: {
         enabled: true,
-        // https://docs.soliditylang.org/en/latest/using-the-compiler.html#optimizer-options
-        runs: 200,
+        runs: 1000,
       },
-    },
+      viaIR: true,
+    }
   },
   defaultNetwork: "localhost",
   namedAccounts: {

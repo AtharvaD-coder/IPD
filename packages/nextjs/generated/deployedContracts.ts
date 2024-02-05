@@ -5,7 +5,7 @@ const contracts = {
       name: "localhost",
       contracts: {
         RealEstateERC1155: {
-          address: "0x5FbDB2315678afecb367f032d93F642f64180aa3",
+          address: "0x322813Fd9A801c5507c9de605d63CEA4f2CE6c44",
           abi: [
             {
               inputs: [],
@@ -537,12 +537,382 @@ const contracts = {
                   type: "uint256",
                 },
               ],
+              name: "getAllProposals",
+              outputs: [
+                {
+                  components: [
+                    {
+                      internalType: "uint256",
+                      name: "proposalId",
+                      type: "uint256",
+                    },
+                    {
+                      internalType: "address",
+                      name: "proposalCreator",
+                      type: "address",
+                    },
+                    {
+                      internalType: "uint256",
+                      name: "positiveVotes",
+                      type: "uint256",
+                    },
+                    {
+                      internalType: "uint256",
+                      name: "negativeVotes",
+                      type: "uint256",
+                    },
+                    {
+                      internalType: "enum RealEstateERC1155.ProposalType",
+                      name: "proposalType",
+                      type: "uint8",
+                    },
+                    {
+                      internalType: "uint256",
+                      name: "tokenId",
+                      type: "uint256",
+                    },
+                    {
+                      internalType: "bool",
+                      name: "executed",
+                      type: "bool",
+                    },
+                    {
+                      components: [
+                        {
+                          internalType: "address",
+                          name: "rentee",
+                          type: "address",
+                        },
+                        {
+                          internalType: "uint256",
+                          name: "noOfMonths",
+                          type: "uint256",
+                        },
+                        {
+                          internalType: "uint256",
+                          name: "depositBalance",
+                          type: "uint256",
+                        },
+                      ],
+                      internalType: "struct RealEstateERC1155.RentProposal",
+                      name: "rentProposal",
+                      type: "tuple",
+                    },
+                    {
+                      internalType: "uint256",
+                      name: "deadline",
+                      type: "uint256",
+                    },
+                    {
+                      components: [
+                        {
+                          internalType: "address",
+                          name: "rentee",
+                          type: "address",
+                        },
+                        {
+                          internalType: "uint256",
+                          name: "noOfMonths",
+                          type: "uint256",
+                        },
+                        {
+                          internalType: "uint256",
+                          name: "rentof1Month",
+                          type: "uint256",
+                        },
+                        {
+                          internalType: "uint256",
+                          name: "depositAmount",
+                          type: "uint256",
+                        },
+                        {
+                          internalType: "uint256",
+                          name: "noOfInstallmentsPaid",
+                          type: "uint256",
+                        },
+                        {
+                          internalType: "uint256",
+                          name: "feesForLateInstallments",
+                          type: "uint256",
+                        },
+                        {
+                          internalType: "uint256",
+                          name: "contractStartTimestamp",
+                          type: "uint256",
+                        },
+                      ],
+                      internalType: "struct RealEstateERC1155.RentInfo",
+                      name: "rentInfo",
+                      type: "tuple",
+                    },
+                  ],
+                  internalType: "struct RealEstateERC1155.Proposals[]",
+                  name: "",
+                  type: "tuple[]",
+                },
+              ],
+              stateMutability: "view",
+              type: "function",
+            },
+            {
+              inputs: [
+                {
+                  internalType: "uint256",
+                  name: "tokenId",
+                  type: "uint256",
+                },
+              ],
+              name: "getBids",
+              outputs: [
+                {
+                  components: [
+                    {
+                      internalType: "address",
+                      name: "bidder",
+                      type: "address",
+                    },
+                    {
+                      internalType: "uint256",
+                      name: "numberOfTokens",
+                      type: "uint256",
+                    },
+                    {
+                      internalType: "uint256",
+                      name: "bidAmount",
+                      type: "uint256",
+                    },
+                    {
+                      internalType: "enum RealEstateERC1155.BidStatus",
+                      name: "status",
+                      type: "uint8",
+                    },
+                    {
+                      internalType: "uint256",
+                      name: "id",
+                      type: "uint256",
+                    },
+                  ],
+                  internalType: "struct RealEstateERC1155.Bid[]",
+                  name: "",
+                  type: "tuple[]",
+                },
+              ],
+              stateMutability: "view",
+              type: "function",
+            },
+            {
+              inputs: [
+                {
+                  internalType: "uint256",
+                  name: "tokenId",
+                  type: "uint256",
+                },
+              ],
               name: "getOwners",
               outputs: [
                 {
                   internalType: "address[]",
                   name: "",
                   type: "address[]",
+                },
+              ],
+              stateMutability: "view",
+              type: "function",
+            },
+            {
+              inputs: [
+                {
+                  internalType: "uint256",
+                  name: "tokenId",
+                  type: "uint256",
+                },
+              ],
+              name: "getOwnersAndPercentage",
+              outputs: [
+                {
+                  internalType: "address[]",
+                  name: "",
+                  type: "address[]",
+                },
+                {
+                  internalType: "uint256[]",
+                  name: "",
+                  type: "uint256[]",
+                },
+              ],
+              stateMutability: "view",
+              type: "function",
+            },
+            {
+              inputs: [
+                {
+                  internalType: "uint256",
+                  name: "tokenId",
+                  type: "uint256",
+                },
+              ],
+              name: "getPendingBids",
+              outputs: [
+                {
+                  components: [
+                    {
+                      internalType: "address",
+                      name: "bidder",
+                      type: "address",
+                    },
+                    {
+                      internalType: "uint256",
+                      name: "numberOfTokens",
+                      type: "uint256",
+                    },
+                    {
+                      internalType: "uint256",
+                      name: "bidAmount",
+                      type: "uint256",
+                    },
+                    {
+                      internalType: "enum RealEstateERC1155.BidStatus",
+                      name: "status",
+                      type: "uint8",
+                    },
+                    {
+                      internalType: "uint256",
+                      name: "id",
+                      type: "uint256",
+                    },
+                  ],
+                  internalType: "struct RealEstateERC1155.Bid[]",
+                  name: "",
+                  type: "tuple[]",
+                },
+              ],
+              stateMutability: "view",
+              type: "function",
+            },
+            {
+              inputs: [
+                {
+                  internalType: "uint256",
+                  name: "proposalId",
+                  type: "uint256",
+                },
+              ],
+              name: "getProposalVotes",
+              outputs: [
+                {
+                  internalType: "uint256",
+                  name: "positiveVotes",
+                  type: "uint256",
+                },
+                {
+                  internalType: "uint256",
+                  name: "negativeVotes",
+                  type: "uint256",
+                },
+              ],
+              stateMutability: "view",
+              type: "function",
+            },
+            {
+              inputs: [
+                {
+                  internalType: "uint256",
+                  name: "tokenId",
+                  type: "uint256",
+                },
+              ],
+              name: "getRealEstate",
+              outputs: [
+                {
+                  internalType: "uint256",
+                  name: "",
+                  type: "uint256",
+                },
+                {
+                  internalType: "uint256",
+                  name: "",
+                  type: "uint256",
+                },
+                {
+                  internalType: "uint256",
+                  name: "",
+                  type: "uint256",
+                },
+                {
+                  internalType: "enum RealEstateERC1155.RealEstateStatus",
+                  name: "",
+                  type: "uint8",
+                },
+                {
+                  internalType: "address[]",
+                  name: "",
+                  type: "address[]",
+                },
+                {
+                  components: [
+                    {
+                      internalType: "address",
+                      name: "rentee",
+                      type: "address",
+                    },
+                    {
+                      internalType: "uint256",
+                      name: "noOfMonths",
+                      type: "uint256",
+                    },
+                    {
+                      internalType: "uint256",
+                      name: "rentof1Month",
+                      type: "uint256",
+                    },
+                    {
+                      internalType: "uint256",
+                      name: "depositAmount",
+                      type: "uint256",
+                    },
+                    {
+                      internalType: "uint256",
+                      name: "noOfInstallmentsPaid",
+                      type: "uint256",
+                    },
+                    {
+                      internalType: "uint256",
+                      name: "feesForLateInstallments",
+                      type: "uint256",
+                    },
+                    {
+                      internalType: "uint256",
+                      name: "contractStartTimestamp",
+                      type: "uint256",
+                    },
+                  ],
+                  internalType: "struct RealEstateERC1155.RentInfo",
+                  name: "",
+                  type: "tuple",
+                },
+                {
+                  internalType: "uint256",
+                  name: "",
+                  type: "uint256",
+                },
+              ],
+              stateMutability: "view",
+              type: "function",
+            },
+            {
+              inputs: [
+                {
+                  internalType: "address",
+                  name: "owner",
+                  type: "address",
+                },
+              ],
+              name: "getRealEstatesByOwner",
+              outputs: [
+                {
+                  internalType: "uint256[]",
+                  name: "",
+                  type: "uint256[]",
                 },
               ],
               stateMutability: "view",
@@ -575,6 +945,30 @@ const contracts = {
                 },
               ],
               name: "isApprovedForAll",
+              outputs: [
+                {
+                  internalType: "bool",
+                  name: "",
+                  type: "bool",
+                },
+              ],
+              stateMutability: "view",
+              type: "function",
+            },
+            {
+              inputs: [
+                {
+                  internalType: "uint256",
+                  name: "tokenId",
+                  type: "uint256",
+                },
+                {
+                  internalType: "address",
+                  name: "owner",
+                  type: "address",
+                },
+              ],
+              name: "isOwnerOf",
               outputs: [
                 {
                   internalType: "bool",
@@ -641,6 +1035,24 @@ const contracts = {
                 },
               ],
               name: "payRent",
+              outputs: [],
+              stateMutability: "payable",
+              type: "function",
+            },
+            {
+              inputs: [
+                {
+                  internalType: "uint256",
+                  name: "tokenId",
+                  type: "uint256",
+                },
+                {
+                  internalType: "uint256",
+                  name: "numberOfTokens",
+                  type: "uint256",
+                },
+              ],
+              name: "placeBidAndPay",
               outputs: [],
               stateMutability: "payable",
               type: "function",
@@ -926,6 +1338,24 @@ const contracts = {
             {
               inputs: [
                 {
+                  internalType: "uint256",
+                  name: "tokenId",
+                  type: "uint256",
+                },
+                {
+                  internalType: "uint256",
+                  name: "bidIndex",
+                  type: "uint256",
+                },
+              ],
+              name: "selectBid",
+              outputs: [],
+              stateMutability: "nonpayable",
+              type: "function",
+            },
+            {
+              inputs: [
+                {
                   internalType: "address",
                   name: "operator",
                   type: "address",
@@ -955,6 +1385,50 @@ const contracts = {
                   internalType: "bool",
                   name: "",
                   type: "bool",
+                },
+              ],
+              stateMutability: "view",
+              type: "function",
+            },
+            {
+              inputs: [
+                {
+                  internalType: "uint256",
+                  name: "",
+                  type: "uint256",
+                },
+                {
+                  internalType: "uint256",
+                  name: "",
+                  type: "uint256",
+                },
+              ],
+              name: "tokenBids",
+              outputs: [
+                {
+                  internalType: "address",
+                  name: "bidder",
+                  type: "address",
+                },
+                {
+                  internalType: "uint256",
+                  name: "numberOfTokens",
+                  type: "uint256",
+                },
+                {
+                  internalType: "uint256",
+                  name: "bidAmount",
+                  type: "uint256",
+                },
+                {
+                  internalType: "enum RealEstateERC1155.BidStatus",
+                  name: "status",
+                  type: "uint8",
+                },
+                {
+                  internalType: "uint256",
+                  name: "id",
+                  type: "uint256",
                 },
               ],
               stateMutability: "view",
@@ -1086,114 +1560,26 @@ const contracts = {
               stateMutability: "nonpayable",
               type: "function",
             },
-          ],
-        },
-        YourContract: {
-          address: "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",
-          abi: [
             {
               inputs: [
-                {
-                  internalType: "address",
-                  name: "_owner",
-                  type: "address",
-                },
-              ],
-              stateMutability: "nonpayable",
-              type: "constructor",
-            },
-            {
-              anonymous: false,
-              inputs: [
-                {
-                  indexed: true,
-                  internalType: "address",
-                  name: "greetingSetter",
-                  type: "address",
-                },
-                {
-                  indexed: false,
-                  internalType: "string",
-                  name: "newGreeting",
-                  type: "string",
-                },
-                {
-                  indexed: false,
-                  internalType: "bool",
-                  name: "premium",
-                  type: "bool",
-                },
-                {
-                  indexed: false,
-                  internalType: "uint256",
-                  name: "value",
-                  type: "uint256",
-                },
-              ],
-              name: "GreetingChange",
-              type: "event",
-            },
-            {
-              inputs: [],
-              name: "greeting",
-              outputs: [
-                {
-                  internalType: "string",
-                  name: "",
-                  type: "string",
-                },
-              ],
-              stateMutability: "view",
-              type: "function",
-            },
-            {
-              inputs: [],
-              name: "owner",
-              outputs: [
-                {
-                  internalType: "address",
-                  name: "",
-                  type: "address",
-                },
-              ],
-              stateMutability: "view",
-              type: "function",
-            },
-            {
-              inputs: [],
-              name: "premium",
-              outputs: [
-                {
-                  internalType: "bool",
-                  name: "",
-                  type: "bool",
-                },
-              ],
-              stateMutability: "view",
-              type: "function",
-            },
-            {
-              inputs: [
-                {
-                  internalType: "string",
-                  name: "_newGreeting",
-                  type: "string",
-                },
-              ],
-              name: "setGreeting",
-              outputs: [],
-              stateMutability: "payable",
-              type: "function",
-            },
-            {
-              inputs: [],
-              name: "totalCounter",
-              outputs: [
                 {
                   internalType: "uint256",
                   name: "",
                   type: "uint256",
                 },
+                {
+                  internalType: "address",
+                  name: "",
+                  type: "address",
+                },
+              ],
+              name: "voteStatus",
+              outputs: [
+                {
+                  internalType: "enum RealEstateERC1155.voteStatusEnum",
+                  name: "",
+                  type: "uint8",
+                },
               ],
               stateMutability: "view",
               type: "function",
@@ -1201,32 +1587,20 @@ const contracts = {
             {
               inputs: [
                 {
-                  internalType: "address",
-                  name: "",
-                  type: "address",
+                  internalType: "uint256",
+                  name: "tokenId",
+                  type: "uint256",
                 },
-              ],
-              name: "userGreetingCounter",
-              outputs: [
                 {
                   internalType: "uint256",
-                  name: "",
+                  name: "bidIndex",
                   type: "uint256",
                 },
               ],
-              stateMutability: "view",
-              type: "function",
-            },
-            {
-              inputs: [],
-              name: "withdraw",
+              name: "withdrawBid",
               outputs: [],
               stateMutability: "nonpayable",
               type: "function",
-            },
-            {
-              stateMutability: "payable",
-              type: "receive",
             },
           ],
         },

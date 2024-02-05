@@ -1,3 +1,4 @@
+//SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
 import "../node_modules/@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
@@ -8,7 +9,7 @@ import "../node_modules/@openzeppelin/contracts/utils/Counters.sol";
 contract RealEstateERC1155 is ERC1155 {
 	using Counters for Counters.Counter;
 	uint256 public proposalCounter=0;
-	Counters.Counter public _tokenIdCounter;
+	Counters.Counter  public  _tokenIdCounter;
 	event RealEstateListed(
 		uint256 indexed tokenId,
 		address[] owners,
@@ -39,12 +40,15 @@ contract RealEstateERC1155 is ERC1155 {
 
 	mapping(uint256 => RealEstate) public realEstates;
 	mapping(uint256 => Proposals) public proposals;
-	
+	mapping(uint256 => Bid[]) public tokenBids;
+	mapping(uint256 => mapping(address => voteStatusEnum)) public voteStatus;
+
 
 	enum RealEstateStatus {
-		Listed,
+		ListedForSale,
 		Rented,
-		Renting
+		ListedForRent,
+		Sale
 	}
 	enum ProposalType {
 		ListForRent,
@@ -79,8 +83,8 @@ contract RealEstateERC1155 is ERC1155 {
 		RentProposal rentProposal;
 		uint256 deadline;
 		RentInfo rentInfo;
-		mapping(address => voteStatusEnum)  voteStatus;
 	}
+
 	event ProposalUpserted(
 		uint256 proposalId,
 		address proposalCreator,
@@ -105,8 +109,23 @@ contract RealEstateERC1155 is ERC1155 {
 		mapping(uint256 => bool) proposalExists;
 		uint256 realEstateBalance;
 	}
+	enum BidStatus {
+		Pending,
+		Executed,
+		Withdrawn
+	}
+
+	struct Bid {
+		address bidder;
+		uint256 numberOfTokens;
+		uint256 bidAmount;
+		BidStatus status;
+		uint256 id;
+	}
+	
 
 	constructor() ERC1155("OpenEstate,OE") {}
+	
 
 	function listRealEstate(
 		uint256 initialAmountOfTokens,
@@ -121,7 +140,7 @@ contract RealEstateERC1155 is ERC1155 {
 		newProperty.priceOf1Token = priceOf1token;
 		newProperty.tokenId = tokenId;
 		newProperty.owners.push(owner);
-		newProperty.status = RealEstateStatus.Listed;
+		newProperty.status = RealEstateStatus.ListedForSale;
 		newProperty.balanceofMemebers[owner] += initialAmountOfTokens;
 
 		_tokenIdCounter.increment();
@@ -132,6 +151,110 @@ contract RealEstateERC1155 is ERC1155 {
 			priceOf1token
 		);
 	}
+	function getPendingBids(uint256 tokenId) public view returns (Bid[] memory) {
+    uint256 pendingBidsCount = 0;
+    for (uint256 i = 0; i < tokenBids[tokenId].length; i++) {
+        if (tokenBids[tokenId][i].status == BidStatus.Pending) {
+            pendingBidsCount++;
+        }
+    }
+
+	
+
+    Bid[] memory pendingBids = new Bid[](pendingBidsCount);
+    uint256 index = 0;
+    for (uint256 i = 0; i < tokenBids[tokenId].length; i++) {
+        if (tokenBids[tokenId][i].status == BidStatus.Pending) {
+            pendingBids[index] = tokenBids[tokenId][i];
+            index++;
+        }
+    }
+
+    return pendingBids;
+}
+	function getAllProposals(uint256 tokenId) public view returns (Proposals[] memory) {
+		uint256 totalProposals = 0;
+		for (uint256 i = 0; i < proposalCounter; i++) {
+			if (proposals[i].tokenId == tokenId) {
+				totalProposals++;
+			}
+		}
+
+	
+
+    Proposals[] memory tokenProposals = new Proposals[](totalProposals);
+    uint256 index = 0;
+    for (uint256 i = 0; i < proposalCounter; i++) {
+        if (proposals[i].tokenId == tokenId) {
+            tokenProposals[index] = proposals[i];
+            index++;
+        }
+    }
+
+    return tokenProposals;
+}
+function getBids(uint256 tokenId) public view returns (Bid[] memory) {
+    uint256 activeBidsCount = 0;
+    for (uint256 i = 0; i < tokenBids[tokenId].length; i++) {
+        if (tokenBids[tokenId][i].status != BidStatus.Withdrawn) {
+            activeBidsCount++;
+        }
+    }
+
+    Bid[] memory activeBids = new Bid[](activeBidsCount);
+    uint256 index = 0;
+    for (uint256 i = 0; i < tokenBids[tokenId].length; i++) {
+        if (tokenBids[tokenId][i].status != BidStatus.Withdrawn) {
+            activeBids[index] = tokenBids[tokenId][i];
+            index++;
+        }
+    }
+
+    return activeBids;
+}
+
+  function placeBidAndPay(uint256 tokenId, uint256 numberOfTokens) public payable {
+    require(msg.value > 0, "Bid amount must be greater than zero");
+    Bid memory newBid = Bid({
+        bidder: msg.sender,
+        numberOfTokens: numberOfTokens,
+        bidAmount: msg.value,
+        status: BidStatus.Pending,
+		id:tokenBids[tokenId].length
+    });
+    tokenBids[tokenId].push(newBid);
+	}
+
+	function withdrawBid(uint256 tokenId, uint256 bidIndex) public {
+		require(tokenBids[tokenId].length > bidIndex, "Bid index out of range");
+		require(tokenBids[tokenId][bidIndex].bidder == msg.sender, "You cannot withdraw this bid");
+		require(tokenBids[tokenId][bidIndex].status == BidStatus.Pending, "Bid already executed or withdrawn");
+		tokenBids[tokenId][bidIndex].status = BidStatus.Withdrawn;
+		payable(msg.sender).transfer(tokenBids[tokenId][bidIndex].bidAmount);
+	}
+
+	function selectBid(uint256 tokenId, uint256 bidIndex) public {
+		require(tokenBids[tokenId].length > bidIndex, "Bid index out of range");
+		require(isOwnerOf(tokenId, msg.sender), "You are not the owner");
+		require(tokenBids[tokenId][bidIndex].status == BidStatus.Pending, "Bid already executed or withdrawn");
+		tokenBids[tokenId][bidIndex].status = BidStatus.Executed;
+		transferTokens(tokenId, tokenBids[tokenId][bidIndex].bidder, msg.sender, tokenBids[tokenId][bidIndex].numberOfTokens);
+		payable(msg.sender).transfer(tokenBids[tokenId][bidIndex].bidAmount);
+	}
+	function getRealEstate(uint256 tokenId) public view returns (uint256, uint256, uint256, RealEstateStatus, address[] memory, RentInfo memory, uint256) {
+    require(tokenId < _tokenIdCounter.current(), "Real estate does not exist");
+
+    RealEstate storage realEstate = realEstates[tokenId];
+    return (
+        realEstate.noOfTokens,
+        realEstate.priceOf1Token,
+        realEstate.tokenId,
+        realEstate.status,
+        realEstate.owners,
+        realEstate.rentInfo,
+        realEstate.realEstateBalance
+    );
+}
 
 
 
@@ -159,10 +282,10 @@ contract RealEstateERC1155 is ERC1155 {
 
 			}
 			else{
-				if(_status==RealEstateStatus.Renting){
+				if(_status==RealEstateStatus.ListedForRent){
 					createProposal(ProposalType.ListForRent, tokenId, deadline);
 				}
-				else if(_status==RealEstateStatus.Listed){
+				else if(_status==RealEstateStatus.ListedForSale){
 					createProposal(ProposalType.UnlistForRent, tokenId, deadline);
 
 				}
@@ -182,7 +305,21 @@ contract RealEstateERC1155 is ERC1155 {
 			realEstate.realEstateBalance
 		);
 	}
-
+function getRealEstatesByOwner(address owner) public view returns (uint256[] memory) {
+    uint256[] memory ownedRealEstates;
+    uint256 count = 0;
+    for (uint256 i = 0; i < _tokenIdCounter.current(); i++) {
+        if (isOwnerOf(i, owner)) {
+            ownedRealEstates[count] = i;
+            count++;
+        }
+    }
+    uint256[] memory result = new uint256[](count);
+    for (uint256 i = 0; i < count; i++) {
+        result[i] = ownedRealEstates[i];
+    }
+    return result;
+}
 	function updateRentinfo(
 		uint256 tokenId,
 		uint256 numberOfMonths,
@@ -271,6 +408,31 @@ contract RealEstateERC1155 is ERC1155 {
 		return realEstate.owners;
 	}
 
+	function getOwnersAndPercentage(uint256 tokenId) public view returns (address[] memory, uint256[] memory) {
+		RealEstate storage realEstate = realEstates[tokenId];
+		address[] memory owners = realEstate.owners;
+		uint256[] memory percentages = new uint256[](owners.length);
+
+		uint256 totalTokens = realEstate.noOfTokens;
+
+		for (uint256 i = 0; i < owners.length; i++) {
+			percentages[i] = (balanceOf(owners[i], tokenId) * 100) / totalTokens;
+		}
+
+		return (owners, percentages);
+	}
+
+
+	function isOwnerOf(uint256 tokenId, address owner) public view returns (bool) {
+    RealEstate storage realEstate = realEstates[tokenId];
+    for (uint256 i = 0; i < realEstate.owners.length; i++) {
+        if (realEstate.owners[i] == owner) {
+            return true;
+        }
+    }
+    return false;
+}
+
 	function createProposal(
 		ProposalType proposalType,
 		uint256 tokenId,
@@ -314,26 +476,29 @@ contract RealEstateERC1155 is ERC1155 {
 	) public payable {
 		uint256 proposalId = proposalCounter;
 		RealEstate storage realEstate = realEstates[tokenId];
-
+		require(
+			realEstate.status == RealEstateStatus.ListedForRent,
+			"not for rent"
+		);
 		require(
 			msg.value >= realEstate.rentInfo.depositAmount,
 			"deposit amount less"
 		);
 	
-			proposals[tokenId].proposalId=proposalId;
-			proposals[tokenId].proposalCreator=msg.sender;
-			proposals[tokenId].positiveVotes= 0;
-			proposals[tokenId].negativeVotes= 0;
-			proposals[tokenId].proposalType=ProposalType.setRentee;
-			proposals[tokenId].tokenId= tokenId;
-			proposals[tokenId].executed=false;
-			proposals[tokenId].deadline= deadline;
-			proposals[tokenId].rentProposal= RentProposal({
+			proposals[proposalId].proposalId=proposalId;
+			proposals[proposalId].proposalCreator=msg.sender;
+			proposals[proposalId].positiveVotes= 0;
+			proposals[proposalId].negativeVotes= 0;
+			proposals[proposalId].proposalType=ProposalType.setRentee;
+			proposals[proposalId].tokenId= tokenId;
+			proposals[proposalId].executed=false;
+			proposals[proposalId].deadline= deadline;
+			proposals[proposalId].rentProposal= RentProposal({
 				rentee: rentee,
 				noOfMonths: noOfMonths,
 				depositBalance: msg.value
 			});
-			proposals[tokenId].rentInfo=RentInfo({
+			proposals[proposalId].rentInfo=RentInfo({
 				rentee: address(0),
 				noOfMonths: 0,
 				rentof1Month: 0,
@@ -345,6 +510,12 @@ contract RealEstateERC1155 is ERC1155 {
 				realEstate.proposalExists[proposalId]=true;
 				proposalCounter++;
 
+	}
+
+	function getProposalVotes(uint256 proposalId) public view returns (uint256 positiveVotes, uint256 negativeVotes) {
+		require(proposalId < proposalCounter, "Proposal does not exist");
+
+		return (proposals[proposalId].positiveVotes, proposals[proposalId].negativeVotes);
 	}
 
 	function vote(
@@ -361,23 +532,23 @@ contract RealEstateERC1155 is ERC1155 {
 
 		require(balanceOf(msg.sender,proposal.tokenId)>0,'you cant vote');
 		require(proposal.executed==false, "Proposal already executed");
-		require(!(proposal.voteStatus[msg.sender]==voteStatusEnum.positiveVote && isPositiveVote),'Already Voted');
-		require(!(proposal.voteStatus[msg.sender]==voteStatusEnum.negativeVote && !isPositiveVote),'Already Voted');
+		require(!(voteStatus[proposalId][msg.sender]==voteStatusEnum.positiveVote && isPositiveVote),'Already Voted');
+		require(!(voteStatus[proposalId][msg.sender]==voteStatusEnum.negativeVote && !isPositiveVote),'Already Voted');
 
 		
 	
 
 		if (isPositiveVote) {
-			if(proposal.voteStatus[msg.sender]==voteStatusEnum.negativeVote){
+			if(voteStatus[proposalId][msg.sender]==voteStatusEnum.negativeVote){
 				proposal.negativeVotes -= 1;
 			}
-			proposal.voteStatus[msg.sender]=voteStatusEnum.positiveVote;
+			voteStatus[proposalId][msg.sender]=voteStatusEnum.positiveVote;
 			proposal.positiveVotes += 1;
 		} else {
-			if(proposal.voteStatus[msg.sender]==voteStatusEnum.positiveVote){
+			if(voteStatus[proposalId][msg.sender]==voteStatusEnum.positiveVote){
 				proposal.positiveVotes -= 1;
 			}
-			proposal.voteStatus[msg.sender]=voteStatusEnum.negativeVote;
+			voteStatus[proposalId][msg.sender]=voteStatusEnum.negativeVote;
 			proposal.negativeVotes += 1;
 		}
 
@@ -394,16 +565,16 @@ contract RealEstateERC1155 is ERC1155 {
 		);
 		require(!proposal.executed, "Proposal already executed");
 
-		bool isApproved = proposal.positiveVotes > proposal.negativeVotes;
+		bool isApproved = proposal.positiveVotes > proposal.negativeVotes || realEstate.owners.length==1;
 
 		require(isApproved, "not approved");
 		if (proposal.proposalType == ProposalType.ListForRent) {
-			realEstate.status = RealEstateStatus.Renting;
+			realEstate.status = RealEstateStatus.ListedForRent;
 		} else if (proposal.proposalType == ProposalType.UnlistForRent) {
-			realEstate.status = RealEstateStatus.Listed;
+			realEstate.status = RealEstateStatus.ListedForSale;
 		} else if (proposal.proposalType == ProposalType.setRentee) {
 			require(
-				realEstate.status == RealEstateStatus.Renting,
+				realEstate.status == RealEstateStatus.ListedForRent,
 				"not for rent"
 			);
 			realEstate.status = RealEstateStatus.Rented;
@@ -473,7 +644,7 @@ contract RealEstateERC1155 is ERC1155 {
 		uint256 senderBalance = balanceOf(from, tokenId);
 		require(senderBalance >= amount, "Not enough balance to transfer");
 
-		// Update sender and receiver balances
+	
 		realEstate.balanceofMemebers[from] -= amount;
 		realEstate.balanceofMemebers[to] += amount;
 

@@ -1,16 +1,8 @@
 'use client'
 import React, {useEffect, useState} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import Button from '~~/components/custom_components/button';
-import RangeSlider from '~~/components/custom_components/rangeSlider';
-import Link from 'next/link';
-import Image from 'next/image';
 import { Flex, Box, Text, Select, cookieStorageManager } from '@chakra-ui/react';
 import Property from '../../components/custom_components/Property';
-import { baseUrl, fetchApi } from '../../app/utils/fetchApi';
-import {filterData,getFilterValues } from '../../app/utils/filterData';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import axios from 'axios';
 import FilterComponent from './components/filterComponent';
 import { useFetch, useLocalStorage } from 'usehooks-ts';
 import { setFilterValues, setLoading } from '../redux/actions';

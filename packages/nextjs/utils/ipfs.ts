@@ -1,5 +1,9 @@
 import axios from 'axios';
 import fs from 'fs';
+import FormData from "form-data";
+import { Readable } from 'stream';
+
+
 
 // Pinata API endpoint for uploading files
 const PINATA_UPLOAD_ENDPOINT = 'https://api.pinata.cloud/pinning/pinFileToIPFS';
@@ -8,52 +12,55 @@ const PINATA_UPLOAD_ENDPOINT = 'https://api.pinata.cloud/pinning/pinFileToIPFS';
 const PINATA_API_KEY = 'f032f8a9c673beb3d67b';
 const PINATA_API_SECRET = '263848db7f281438ea58988526e894e2b65d1b4e1cb82b3aff106432b2893739';
 
+
 // Function to upload a single file to Pinata
-async function uploadFileToPinata(file) {
+export async function uploadToPinata(files: any, tokenId: any,metadata:any) {
     try {
         // Create a FormData object to send the file data
         const formData = new FormData();
-        formData.append("file", file);
-        // Make an HTTP POST request to Pinata API to upload the file
+        let i = 0;
+        const json={
+            ...metadata,
+
+        }
+        for (const file of files) {
+            formData.append(`file`, file, `${tokenId}/image/${file.name}`);
+            json[`image${i}`]=file.name;
+            i++;
+        }  
+        json['totalImages']=i;
+
+        
+
+        const blob = new Blob([JSON.stringify(json)], { type: 'text/plain' });
+        const file = new File([blob], 'filename.txt', { type: 'text/plain' });
+        formData.append('file', file, `${tokenId}/metaData.txt`)
+
+
         const response = await axios.post(PINATA_UPLOAD_ENDPOINT, formData, {
+            maxContentLength: -1,
             headers: {
                 'Content-Type': 'multipart/form-data',
                 'pinata_api_key': PINATA_API_KEY,
                 'pinata_secret_api_key': PINATA_API_SECRET,
             },
+            params: {
+                pinataOptions: {
+                    cidVersion: 1,
+                    wrapWithDirectory: true
+                }
+            }
         });
 
-        // Log the CID (Content Identifier) of the uploaded file
         const { IpfsHash } = response.data;
-        console.log(`File ${file.name} uploaded successfully. CID: ${IpfsHash}`);
+        console.log(`Pinata ${IpfsHash}`, response.data);
 
-        // Return the CID
         return IpfsHash;
     } catch (error) {
         // Log any errors that occur during the upload process
-        console.error(`Error uploading file ${file.name} to Pinata:`, error);
+        console.error(` Pinata:`, error);
         throw error;
     }
 }
 
 // Function to upload multiple files to Pinata
-export async function uploadToPinata(files) {
-    try {
-        // Array to store the CIDs of uploaded files
-        const cids = [];
-
-        // Iterate through each file
-        for (const file of files) {
-            // Upload the file to Pinata and store the CID
-            const cid = await uploadFileToPinata(file);
-            cids.push(cid);
-        }
-
-        // Return the array of CIDs
-        return cids[0];
-    } catch (error) {
-        // Log any errors that occur during the upload process
-        console.error('Error uploading files to Pinata:', error);
-        throw error;
-    }
-}

@@ -5,7 +5,7 @@ import NumberInput from './components/numberInputs';
 import Button from '~~/components/custom_components/button';
 import Input from '~~/components/custom_components/input';
 import { AddressInput } from '~~/components/scaffold-eth';
-import { useScaffoldContractWrite } from '~~/hooks/scaffold-eth'; // Remove unused import
+import { useScaffoldContractRead, useScaffoldContractWrite } from '~~/hooks/scaffold-eth'; // Remove unused import
 import Radio from './components/Radio';
 import Label from '~~/components/custom_components/labels';
 import { useAccount } from 'wagmi';
@@ -69,7 +69,7 @@ export default function ListRealEstate() {
       BigInt(ListDetails.rentProps?.rentPerMonth ?? 0),
       BigInt(ListDetails.rentProps?.depositAmount ?? 0),
       BigInt(ListDetails.rentProps?.lateInstallmentFees ?? 0),
-      BigInt(ListDetails.rentProps?.contractStartTimestamp ?? 0),
+      BigInt(200000000000 ?? 0),
       ''
     ],
     onBlockConfirmation: (txnReceipt) => {
@@ -77,11 +77,20 @@ export default function ListRealEstate() {
     },
   });
 
+  const {data:tokenIdCounter}=useScaffoldContractRead({
+    contractName:'RealEstateERC1155',
+  functionName:'getTokenIdCounter',
+  watch:true
+  
+})
+
 
 
   const onSubmit=async ()=>{
-
-    const data:string =await uploadToPinata(files);
+    console.log('hello')
+    const data:string =await uploadToPinata(files,tokenIdCounter,{
+      purpose:isForRent?"for-rent":"for-sale",
+    });
     console.log(data,"data asfasf")
     if(isForRent){
       listRealEstateForRent({
@@ -110,6 +119,7 @@ export default function ListRealEstate() {
 
   console.log(files,"files")
   console.log(ListDetails,"listDetails")
+
 
   return (
     <div className="p-9">
@@ -152,7 +162,22 @@ export default function ListRealEstate() {
           <NumberInput label={'Rent per Month'} />
           <NumberInput label={'Deposit Amount'} />
           <NumberInput label={'Fees for Late Installments'} />
-          <Input label={'Contract Start Timestamp'} type="date" value={new Date(ListDetails.rentProps?.contractStartTimestamp??'').toDateString()} onChange={(val:any) => {new Date(val).getTime()}} />
+          <Input label={'Contract Start Timestamp'} type="date"
+value={(ListDetails.rentProps && ListDetails.rentProps.contractStartTimestamp 
+  ? new Date(ListDetails.rentProps.contractStartTimestamp).toISOString().slice(0, 10)
+  : new Date().toISOString().slice(0, 10))}
+          // value={new Date(ListDetails.rentProps?.contractStartTimestamp??'').toISOString().slice(0, 10) } 
+          onChange={(val:any) => {
+            console.log("hello",val,new Date(val??0).toISOString().slice(0, 10))
+            setListDetails((prevGroup) => ({
+              ...prevGroup,
+              rentProps: {
+                ...prevGroup.rentProps,
+                contractStartTimestamp: new Date(val).getTime()
+              }
+            }))
+          }}
+         />
         </div>
       )}
 

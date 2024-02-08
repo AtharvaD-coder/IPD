@@ -34,15 +34,18 @@ async function run() {
 // newRun();
   // Subscribe to the event
   
-  contract.on('RealEstateListed', async (tokenId, owners, noOfTokens, priceOf1Token, event) => {
+  contract.on('RealEstateListed', async (tokenId, owners, noOfTokens, priceOf1Token,metadataUri, event) => {
 
   
     console.log(`Token ID: ${tokenId}`);
     console.log(`Owners: ${owners}`);
     console.log(`Number of Tokens: ${noOfTokens}`);
     console.log(`Price of 1 Token: ${priceOf1Token}`);
+    console.log('metadataUri',metadataUri)
+    const metadata=await axios.get(`https://ipfs.io/ipfs/${metadataUri}/metaData.txt`);
+    console.log(metadata,"metadata")
     const data={
-      tokenId:Number(tokenId), owners, noOfTokens:Number(noOfTokens), priceOf1Token:Number(priceOf1Token),purpose:'for-sale',price:5000,externalID:Number(tokenId),coverPhoto:{url:"https://bayut-production.s3.eu-central-1.amazonaws.com/image/507408146/d53c488d43a64da08472c74fcbd34287"}
+      tokenId:Number(tokenId), owners, noOfTokens:Number(noOfTokens), priceOf1Token:Number(priceOf1Token),price:5000,externalID:Number(tokenId),coverPhoto:{url:`https://ipfs.io/ipfs/${metadataUri}/image/${metadata.data.image0}`},...metadata.data
     }
     console.log(data)
     try{
@@ -60,30 +63,30 @@ async function run() {
     
   });
 
-  contract.on('RealEstateUpdated', async (tokenId, owners, noOfTokens, priceOf1Token,status,rentInfo,realEstateBalance, event) => {
+  // contract.on('RealEstateUpdated', async (tokenId, owners, noOfTokens, priceOf1Token,status,rentInfo,realEstateBalance, event) => {
 
   
  
-        const rentInfoObj=new Rentinfo(rentInfo);
-        console.log({...rentInfoObj},'onj')
-    const data={
-      tokenId:Number(tokenId), owners, noOfTokens:Number(noOfTokens), priceOf1Token:Number(priceOf1Token),realEstateBalance:Number(realEstateBalance),status:Number(status),rentInfo:{...rentInfoObj}
-    }
+  //       const rentInfoObj=new Rentinfo(rentInfo);
+  //       console.log({...rentInfoObj},'onj')
+  //   const data={
+  //     tokenId:Number(tokenId), owners, noOfTokens:Number(noOfTokens), priceOf1Token:Number(priceOf1Token),realEstateBalance:Number(realEstateBalance),status:Number(status),rentInfo:{...rentInfoObj}
+  //   }
 
-    try{
-      const res=await axios.post('http://localhost:3000/api/updateRealEstate',{data:data});
-      console.log(res.data);
-    }
-    catch(error){
-      console.log(error);
-    }
+  //   try{
+  //     const res=await axios.post('http://localhost:3000/api/updateRealEstate',{data:data});
+  //     console.log(res.data);
+  //   }
+  //   catch(error){
+  //     console.log(error);
+  //   }
    
    
    
 
 
   
-  });
+  // });
   // uint256 proposalId,
   // address proposalId,
   // uint256 positiveVotes,

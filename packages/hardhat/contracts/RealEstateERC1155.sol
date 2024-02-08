@@ -140,7 +140,9 @@ contract RealEstateERC1155 is ERC1155 {
 
 	constructor() ERC1155("OpenEstate,OE") {}
 	
-
+  function getTokenIdCounter() public view returns (uint256) {
+        return _tokenIdCounter.current();
+    }
 	function listRealEstateForSale(
         uint256 initialAmountOfTokens,
         address owner,

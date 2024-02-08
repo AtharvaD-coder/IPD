@@ -5,7 +5,7 @@ const contracts = {
       name: "localhost",
       contracts: {
         RealEstateERC1155: {
-          address: "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9",
+          address: "0x68B1D87F95878fE05B998F19b66F4baba5De1aed",
           abi: [
             {
               inputs: [],
@@ -1011,6 +1011,19 @@ const contracts = {
                   internalType: "uint256[]",
                   name: "",
                   type: "uint256[]",
+                },
+              ],
+              stateMutability: "view",
+              type: "function",
+            },
+            {
+              inputs: [],
+              name: "getTokenIdCounter",
+              outputs: [
+                {
+                  internalType: "uint256",
+                  name: "",
+                  type: "uint256",
                 },
               ],
               stateMutability: "view",

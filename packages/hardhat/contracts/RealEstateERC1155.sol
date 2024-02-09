@@ -9,9 +9,9 @@ import "../node_modules/@openzeppelin/contracts/utils/Strings.sol";
 
 contract RealEstateERC1155 is ERC1155 {
 	using Counters for Counters.Counter;
-	uint256 public proposalCounter=0;
-	Counters.Counter  public  _tokenIdCounter;
-	
+	uint256 public proposalCounter = 0;
+	Counters.Counter public _tokenIdCounter;
+
 	event RealEstateUpdated(
 		uint256 indexed tokenId,
 		address[] owners,
@@ -22,19 +22,20 @@ contract RealEstateERC1155 is ERC1155 {
 		uint256 realEstateBalance
 	);
 
-	enum voteStatusEnum{
-			 notVoted,
-		 positiveVote,
-		 negativeVote
-	
+	enum voteStatusEnum {
+		notVoted,
+		positiveVote,
+		negativeVote
 	}
 
 	mapping(uint256 => RealEstate) public realEstates;
 	mapping(uint256 => Proposals) public proposals;
 	mapping(uint256 => Bid[]) public tokenBids;
 	mapping(uint256 => mapping(address => voteStatusEnum)) public voteStatus;
-    mapping(uint256 => string) public tokenMetadataURIs; // Mapping to store metadata URI for each token
-
+	mapping(uint256 => string) public tokenMetadataURIs; // Mapping to store metadata URI for each token
+	mapping(uint256 => uint256) private _rentalIncomes;
+	mapping(uint256 => uint256) private _saleIncomes;
+	mapping(uint256 => uint256) private _costs;
 
 	enum RealEstateStatus {
 		ListedForSale,
@@ -114,138 +115,150 @@ contract RealEstateERC1155 is ERC1155 {
 		BidStatus status;
 		uint256 id;
 	}
-	 event RealEstateListed(
-        uint256 indexed tokenId,
-        address[] owners,
-        uint256 noOfTokens,
-        uint256 priceOf1Token,
-        string metadataUri
-    );
-    event RealEstateUpdated(
-        uint256 indexed tokenId,
-        address[] owners,
-        uint256 noOfTokens,
-        uint256 priceOf1Token,
-        RealEstateStatus status,
-        RentInfo rentInfo,
-        uint256 realEstateBalance,
-        string metadataUri
-    );
-    event RealEstateRented(
-        uint256 indexed tokenId,
-        address indexed rentee,
-        uint256 noOfMonths,
-        uint256 rentof1Month
-    );
+	event RealEstateListed(
+		uint256 indexed tokenId,
+		address[] owners,
+		uint256 noOfTokens,
+		uint256 priceOf1Token,
+		string metadataUri
+	);
+	event RealEstateUpdated(
+		uint256 indexed tokenId,
+		address[] owners,
+		uint256 noOfTokens,
+		uint256 priceOf1Token,
+		RealEstateStatus status,
+		RentInfo rentInfo,
+		uint256 realEstateBalance,
+		string metadataUri
+	);
+	event RealEstateRented(
+		uint256 indexed tokenId,
+		address indexed rentee,
+		uint256 noOfMonths,
+		uint256 rentof1Month
+	);
+
+	event RentalRecorded(uint256 indexed tokenId, uint256 rentalAmount);
+	event SaleRecorded(uint256 indexed tokenId, uint256 saleAmount);
 
 	constructor() ERC1155("OpenEstate,OE") {}
-	
 
 	function listRealEstateForSale(
-        uint256 initialAmountOfTokens,
-        address owner,
-        uint256 priceOf1token,
-        string memory metadataUri
-    ) public {
-        uint256 tokenId = _tokenIdCounter.current();
-        _mint(owner, tokenId, initialAmountOfTokens, "");
-        tokenMetadataURIs[tokenId] = metadataUri; // Store metadata URI for the token
+		uint256 initialAmountOfTokens,
+		address owner,
+		uint256 priceOf1token,
+		string memory metadataUri
+	) public {
+		uint256 tokenId = _tokenIdCounter.current();
+		_mint(owner, tokenId, initialAmountOfTokens, "");
+		tokenMetadataURIs[tokenId] = metadataUri; // Store metadata URI for the token
 
-        RealEstate storage newProperty = realEstates[tokenId];
-        newProperty.noOfTokens = initialAmountOfTokens;
-        newProperty.priceOf1Token = priceOf1token;
-        newProperty.tokenId = tokenId;
-        newProperty.owners.push(owner);
-        newProperty.status = RealEstateStatus.ListedForSale;
-        newProperty.balanceofMemebers[owner] += initialAmountOfTokens;
+		RealEstate storage newProperty = realEstates[tokenId];
+		newProperty.noOfTokens = initialAmountOfTokens;
+		newProperty.priceOf1Token = priceOf1token;
+		newProperty.tokenId = tokenId;
+		newProperty.owners.push(owner);
+		newProperty.status = RealEstateStatus.ListedForSale;
+		newProperty.balanceofMemebers[owner] += initialAmountOfTokens;
 
-        _tokenIdCounter.increment();
-        emit RealEstateListed(
-            tokenId,
-            newProperty.owners,
-            initialAmountOfTokens,
-            priceOf1token,
-            metadataUri
-        );
-    }
+		_tokenIdCounter.increment();
+		emit RealEstateListed(
+			tokenId,
+			newProperty.owners,
+			initialAmountOfTokens,
+			priceOf1token,
+			metadataUri
+		);
+	}
 
-    // Function to list real estate property for rent with metadata
-    function listRealEstateForRent(
-        uint256 initialAmountOfTokens,
-        address owner,
-        uint256 priceOf1token,
-        uint256 numberOfMonths,
-        uint256 rentof1Month,
-        uint256 depositAmount,
-        uint256 feesForLateInstallments,
-        uint256 deadline,
-        string memory metadataUri
-    ) public {
-        require(owner == msg.sender, "You are not the owner of this property");
-        require(initialAmountOfTokens > 0, "Number of tokens must be greater than zero");
-        require(priceOf1token > 0, "Price of 1 token must be greater than zero");
-        require(deadline > block.timestamp, "Deadline must be in the future");
+	// Function to list real estate property for rent with metadata
+	function listRealEstateForRent(
+		uint256 initialAmountOfTokens,
+		address owner,
+		uint256 priceOf1token,
+		uint256 numberOfMonths,
+		uint256 rentof1Month,
+		uint256 depositAmount,
+		uint256 feesForLateInstallments,
+		uint256 deadline,
+		string memory metadataUri
+	) public {
+		require(owner == msg.sender, "You are not the owner of this property");
+		require(
+			initialAmountOfTokens > 0,
+			"Number of tokens must be greater than zero"
+		);
+		require(
+			priceOf1token > 0,
+			"Price of 1 token must be greater than zero"
+		);
+		require(deadline > block.timestamp, "Deadline must be in the future");
 
-        uint256 tokenId = _tokenIdCounter.current();
-        _mint(owner, tokenId, initialAmountOfTokens, "");
-        tokenMetadataURIs[tokenId] = metadataUri; // Store metadata URI for the token
+		uint256 tokenId = _tokenIdCounter.current();
+		_mint(owner, tokenId, initialAmountOfTokens, "");
+		tokenMetadataURIs[tokenId] = metadataUri; // Store metadata URI for the token
 
-        RealEstate storage newProperty = realEstates[tokenId];
-        newProperty.noOfTokens = initialAmountOfTokens;
-        newProperty.priceOf1Token = priceOf1token;
-        newProperty.tokenId = tokenId;
-        newProperty.owners.push(owner);
-        newProperty.status = RealEstateStatus.ListedForRent;
-        newProperty.balanceofMemebers[owner] += initialAmountOfTokens;
-        newProperty.rentInfo = RentInfo({
-            rentee: address(0),
-            noOfMonths: numberOfMonths,
-            rentof1Month: rentof1Month,
-            depositAmount: depositAmount,
-            noOfInstallmentsPaid: 0,
-            feesForLateInstallments: feesForLateInstallments,
-            contractStartTimestamp: 0
-        });
+		RealEstate storage newProperty = realEstates[tokenId];
+		newProperty.noOfTokens = initialAmountOfTokens;
+		newProperty.priceOf1Token = priceOf1token;
+		newProperty.tokenId = tokenId;
+		newProperty.owners.push(owner);
+		newProperty.status = RealEstateStatus.ListedForRent;
+		newProperty.balanceofMemebers[owner] += initialAmountOfTokens;
+		newProperty.rentInfo = RentInfo({
+			rentee: address(0),
+			noOfMonths: numberOfMonths,
+			rentof1Month: rentof1Month,
+			depositAmount: depositAmount,
+			noOfInstallmentsPaid: 0,
+			feesForLateInstallments: feesForLateInstallments,
+			contractStartTimestamp: 0
+		});
 
-        _tokenIdCounter.increment();
+		_tokenIdCounter.increment();
 
-        emit RealEstateListed(
-            tokenId,
-            newProperty.owners,
-            initialAmountOfTokens,
-            priceOf1token,
-            metadataUri
-        );
-    }
+		emit RealEstateListed(
+			tokenId,
+			newProperty.owners,
+			initialAmountOfTokens,
+			priceOf1token,
+			metadataUri
+		);
+	}
 
-    // Function to get metadata URI for a token
-    function tokenURI(uint256 tokenId) public view virtual returns (string memory) {
-        return tokenMetadataURIs[tokenId];
-    }
+	// Function to get metadata URI for a token
+	function tokenURI(
+		uint256 tokenId
+	) public view virtual returns (string memory) {
+		return tokenMetadataURIs[tokenId];
+	}
 
+	function getPendingBids(
+		uint256 tokenId
+	) public view returns (Bid[] memory) {
+		uint256 pendingBidsCount = 0;
+		for (uint256 i = 0; i < tokenBids[tokenId].length; i++) {
+			if (tokenBids[tokenId][i].status == BidStatus.Pending) {
+				pendingBidsCount++;
+			}
+		}
 
-	function getPendingBids(uint256 tokenId) public view returns (Bid[] memory) {
-    uint256 pendingBidsCount = 0;
-    for (uint256 i = 0; i < tokenBids[tokenId].length; i++) {
-        if (tokenBids[tokenId][i].status == BidStatus.Pending) {
-            pendingBidsCount++;
-        }
-    }
+		Bid[] memory pendingBids = new Bid[](pendingBidsCount);
+		uint256 index = 0;
+		for (uint256 i = 0; i < tokenBids[tokenId].length; i++) {
+			if (tokenBids[tokenId][i].status == BidStatus.Pending) {
+				pendingBids[index] = tokenBids[tokenId][i];
+				index++;
+			}
+		}
 
-	
+		return pendingBids;
+	}
 
-    Bid[] memory pendingBids = new Bid[](pendingBidsCount);
-    uint256 index = 0;
-    for (uint256 i = 0; i < tokenBids[tokenId].length; i++) {
-        if (tokenBids[tokenId][i].status == BidStatus.Pending) {
-            pendingBids[index] = tokenBids[tokenId][i];
-            index++;
-        }
-    }
-
-    return pendingBids;
-}
-	function getAllProposals(uint256 tokenId) public view returns (Proposals[] memory) {
+	function getAllProposals(
+		uint256 tokenId
+	) public view returns (Proposals[] memory) {
 		uint256 totalProposals = 0;
 		for (uint256 i = 0; i < proposalCounter; i++) {
 			if (proposals[i].tokenId == tokenId) {
@@ -253,55 +266,63 @@ contract RealEstateERC1155 is ERC1155 {
 			}
 		}
 
-	
+		Proposals[] memory tokenProposals = new Proposals[](totalProposals);
+		uint256 index = 0;
+		for (uint256 i = 0; i < proposalCounter; i++) {
+			if (proposals[i].tokenId == tokenId) {
+				tokenProposals[index] = proposals[i];
+				index++;
+			}
+		}
 
-    Proposals[] memory tokenProposals = new Proposals[](totalProposals);
-    uint256 index = 0;
-    for (uint256 i = 0; i < proposalCounter; i++) {
-        if (proposals[i].tokenId == tokenId) {
-            tokenProposals[index] = proposals[i];
-            index++;
-        }
-    }
+		return tokenProposals;
+	}
 
-    return tokenProposals;
-}
-function getBids(uint256 tokenId) public view returns (Bid[] memory) {
-    uint256 activeBidsCount = 0;
-    for (uint256 i = 0; i < tokenBids[tokenId].length; i++) {
-        if (tokenBids[tokenId][i].status != BidStatus.Withdrawn) {
-            activeBidsCount++;
-        }
-    }
+	function getBids(uint256 tokenId) public view returns (Bid[] memory) {
+		uint256 activeBidsCount = 0;
+		for (uint256 i = 0; i < tokenBids[tokenId].length; i++) {
+			if (tokenBids[tokenId][i].status != BidStatus.Withdrawn) {
+				activeBidsCount++;
+			}
+		}
 
-    Bid[] memory activeBids = new Bid[](activeBidsCount);
-    uint256 index = 0;
-    for (uint256 i = 0; i < tokenBids[tokenId].length; i++) {
-        if (tokenBids[tokenId][i].status != BidStatus.Withdrawn) {
-            activeBids[index] = tokenBids[tokenId][i];
-            index++;
-        }
-    }
+		Bid[] memory activeBids = new Bid[](activeBidsCount);
+		uint256 index = 0;
+		for (uint256 i = 0; i < tokenBids[tokenId].length; i++) {
+			if (tokenBids[tokenId][i].status != BidStatus.Withdrawn) {
+				activeBids[index] = tokenBids[tokenId][i];
+				index++;
+			}
+		}
 
-    return activeBids;
-}
+		return activeBids;
+	}
 
-  function placeBidAndPay(uint256 tokenId, uint256 numberOfTokens) public payable {
-    require(msg.value > 0, "Bid amount must be greater than zero");
-    Bid memory newBid = Bid({
-        bidder: msg.sender,
-        numberOfTokens: numberOfTokens,
-        bidAmount: msg.value,
-        status: BidStatus.Pending,
-		id:tokenBids[tokenId].length
-    });
-    tokenBids[tokenId].push(newBid);
+	function placeBidAndPay(
+		uint256 tokenId,
+		uint256 numberOfTokens
+	) public payable {
+		require(msg.value > 0, "Bid amount must be greater than zero");
+		Bid memory newBid = Bid({
+			bidder: msg.sender,
+			numberOfTokens: numberOfTokens,
+			bidAmount: msg.value,
+			status: BidStatus.Pending,
+			id: tokenBids[tokenId].length
+		});
+		tokenBids[tokenId].push(newBid);
 	}
 
 	function withdrawBid(uint256 tokenId, uint256 bidIndex) public {
 		require(tokenBids[tokenId].length > bidIndex, "Bid index out of range");
-		require(tokenBids[tokenId][bidIndex].bidder == msg.sender, "You cannot withdraw this bid");
-		require(tokenBids[tokenId][bidIndex].status == BidStatus.Pending, "Bid already executed or withdrawn");
+		require(
+			tokenBids[tokenId][bidIndex].bidder == msg.sender,
+			"You cannot withdraw this bid"
+		);
+		require(
+			tokenBids[tokenId][bidIndex].status == BidStatus.Pending,
+			"Bid already executed or withdrawn"
+		);
 		tokenBids[tokenId][bidIndex].status = BidStatus.Withdrawn;
 		payable(msg.sender).transfer(tokenBids[tokenId][bidIndex].bidAmount);
 	}
@@ -309,64 +330,88 @@ function getBids(uint256 tokenId) public view returns (Bid[] memory) {
 	function selectBid(uint256 tokenId, uint256 bidIndex) public {
 		require(tokenBids[tokenId].length > bidIndex, "Bid index out of range");
 		require(isOwnerOf(tokenId, msg.sender), "You are not the owner");
-		require(tokenBids[tokenId][bidIndex].status == BidStatus.Pending, "Bid already executed or withdrawn");
+		require(
+			tokenBids[tokenId][bidIndex].status == BidStatus.Pending,
+			"Bid already executed or withdrawn"
+		);
 		tokenBids[tokenId][bidIndex].status = BidStatus.Executed;
-		transferTokens(tokenId, tokenBids[tokenId][bidIndex].bidder, msg.sender, tokenBids[tokenId][bidIndex].numberOfTokens);
+		transferTokens(
+			tokenId,
+			tokenBids[tokenId][bidIndex].bidder,
+			msg.sender,
+			tokenBids[tokenId][bidIndex].numberOfTokens
+		);
 		payable(msg.sender).transfer(tokenBids[tokenId][bidIndex].bidAmount);
 	}
-	function getRealEstate(uint256 tokenId) public view returns (uint256, uint256, uint256, RealEstateStatus, address[] memory, RentInfo memory, uint256) {
-    require(tokenId < _tokenIdCounter.current(), "Real estate does not exist");
 
-    RealEstate storage realEstate = realEstates[tokenId];
-    return (
-        realEstate.noOfTokens,
-        realEstate.priceOf1Token,
-        realEstate.tokenId,
-        realEstate.status,
-        realEstate.owners,
-        realEstate.rentInfo,
-        realEstate.realEstateBalance
-    );
-}
+	function getRealEstate(
+		uint256 tokenId
+	)
+		public
+		view
+		returns (
+			uint256,
+			uint256,
+			uint256,
+			RealEstateStatus,
+			address[] memory,
+			RentInfo memory,
+			uint256
+		)
+	{
+		require(
+			tokenId < _tokenIdCounter.current(),
+			"Real estate does not exist"
+		);
 
+		RealEstate storage realEstate = realEstates[tokenId];
+		return (
+			realEstate.noOfTokens,
+			realEstate.priceOf1Token,
+			realEstate.tokenId,
+			realEstate.status,
+			realEstate.owners,
+			realEstate.rentInfo,
+			realEstate.realEstateBalance
+		);
+	}
 
-
-	function getaddress() public view returns(address){
+	function getaddress() public view returns (address) {
 		return msg.sender;
 	}
-	function isSoleOwner(uint256 tokenId,address owner) public view returns (bool) {
-		 RealEstate storage realEstate = realEstates[tokenId];
-		 if(balanceOf(owner,tokenId)==0){
+
+	function isSoleOwner(
+		uint256 tokenId,
+		address owner
+	) public view returns (bool) {
+		RealEstate storage realEstate = realEstates[tokenId];
+		if (balanceOf(owner, tokenId) == 0) {
 			return false;
-		 }
-    
-    if (balanceOf(owner, tokenId) == realEstate.noOfTokens) {
-        return true;
-    }
-    
-    return false;
+		}
+
+		if (balanceOf(owner, tokenId) == realEstate.noOfTokens) {
+			return true;
+		}
+
+		return false;
 	}
 
-	function updateStatus(uint256 tokenId, RealEstateStatus _status,uint256 deadline) public {
+	function updateStatus(
+		uint256 tokenId,
+		RealEstateStatus _status,
+		uint256 deadline
+	) public {
 		RealEstate storage realEstate = realEstates[tokenId];
 
-			if(balanceOf(msg.sender, tokenId) == realEstate.noOfTokens){
-				realEstate.status = _status;
-
+		if (balanceOf(msg.sender, tokenId) == realEstate.noOfTokens) {
+			realEstate.status = _status;
+		} else {
+			if (_status == RealEstateStatus.ListedForRent) {
+				createProposal(ProposalType.ListForRent, tokenId, deadline);
+			} else if (_status == RealEstateStatus.ListedForSale) {
+				createProposal(ProposalType.UnlistForRent, tokenId, deadline);
 			}
-			else{
-				if(_status==RealEstateStatus.ListedForRent){
-					createProposal(ProposalType.ListForRent, tokenId, deadline);
-				}
-				else if(_status==RealEstateStatus.ListedForSale){
-					createProposal(ProposalType.UnlistForRent, tokenId, deadline);
-
-				}
-		
-			}
-		
-
-
+		}
 
 		emit RealEstateUpdated(
 			realEstate.tokenId,
@@ -378,21 +423,25 @@ function getBids(uint256 tokenId) public view returns (Bid[] memory) {
 			realEstate.realEstateBalance
 		);
 	}
-function getRealEstatesByOwner(address owner) public view returns (uint256[] memory) {
-    uint256[] memory ownedRealEstates;
-    uint256 count = 0;
-    for (uint256 i = 0; i < _tokenIdCounter.current(); i++) {
-        if (isOwnerOf(i, owner)) {
-            ownedRealEstates[count] = i;
-            count++;
-        }
-    }
-    uint256[] memory result = new uint256[](count);
-    for (uint256 i = 0; i < count; i++) {
-        result[i] = ownedRealEstates[i];
-    }
-    return result;
-}
+
+	function getRealEstatesByOwner(
+		address owner
+	) public view returns (uint256[] memory) {
+		uint256[] memory ownedRealEstates;
+		uint256 count = 0;
+		for (uint256 i = 0; i < _tokenIdCounter.current(); i++) {
+			if (isOwnerOf(i, owner)) {
+				ownedRealEstates[count] = i;
+				count++;
+			}
+		}
+		uint256[] memory result = new uint256[](count);
+		for (uint256 i = 0; i < count; i++) {
+			result[i] = ownedRealEstates[i];
+		}
+		return result;
+	}
+
 	function updateRentinfo(
 		uint256 tokenId,
 		uint256 numberOfMonths,
@@ -411,33 +460,31 @@ function getRealEstatesByOwner(address owner) public view returns (uint256[] mem
 		} else {
 			uint256 proposalId = proposalCounter;
 
-			
-				proposals[proposalCounter].proposalId=proposalId;
-				proposals[proposalCounter].proposalCreator=msg.sender;
-				proposals[proposalCounter].positiveVotes=0;
-				proposals[proposalCounter].negativeVotes=0;
-				proposals[proposalCounter].proposalType=ProposalType.updateRentInfo;
-				proposals[proposalCounter].tokenId=tokenId;
-				proposals[proposalCounter].executed=false;
-				proposals[proposalCounter].deadline=deadline;
-				proposals[proposalCounter].rentProposal=RentProposal({
-					rentee: address(0),
-					noOfMonths: 0,
-					depositBalance: 0
-				});
-				proposals[proposalCounter].rentInfo=RentInfo({
-					rentee: rentinfo.rentee,
-					noOfMonths: numberOfMonths,
-					rentof1Month: rentof1Month,
-					depositAmount: depositAmount,
-					noOfInstallmentsPaid: 0,
-					feesForLateInstallments: feesForLateInstallments,
-					contractStartTimestamp: 0
-				});
-					realEstate.proposalExists[proposalId]=true;
-					proposalCounter++;
-				
-		
+			proposals[proposalCounter].proposalId = proposalId;
+			proposals[proposalCounter].proposalCreator = msg.sender;
+			proposals[proposalCounter].positiveVotes = 0;
+			proposals[proposalCounter].negativeVotes = 0;
+			proposals[proposalCounter].proposalType = ProposalType
+				.updateRentInfo;
+			proposals[proposalCounter].tokenId = tokenId;
+			proposals[proposalCounter].executed = false;
+			proposals[proposalCounter].deadline = deadline;
+			proposals[proposalCounter].rentProposal = RentProposal({
+				rentee: address(0),
+				noOfMonths: 0,
+				depositBalance: 0
+			});
+			proposals[proposalCounter].rentInfo = RentInfo({
+				rentee: rentinfo.rentee,
+				noOfMonths: numberOfMonths,
+				rentof1Month: rentof1Month,
+				depositAmount: depositAmount,
+				noOfInstallmentsPaid: 0,
+				feesForLateInstallments: feesForLateInstallments,
+				contractStartTimestamp: 0
+			});
+			realEstate.proposalExists[proposalId] = true;
+			proposalCounter++;
 
 			emit ProposalUpserted(
 				proposalId,
@@ -481,7 +528,9 @@ function getRealEstatesByOwner(address owner) public view returns (uint256[] mem
 		return realEstate.owners;
 	}
 
-	function getOwnersAndPercentage(uint256 tokenId) public view returns (address[] memory, uint256[] memory) {
+	function getOwnersAndPercentage(
+		uint256 tokenId
+	) public view returns (address[] memory, uint256[] memory) {
 		RealEstate storage realEstate = realEstates[tokenId];
 		address[] memory owners = realEstate.owners;
 		uint256[] memory percentages = new uint256[](owners.length);
@@ -489,56 +538,59 @@ function getRealEstatesByOwner(address owner) public view returns (uint256[] mem
 		uint256 totalTokens = realEstate.noOfTokens;
 
 		for (uint256 i = 0; i < owners.length; i++) {
-			percentages[i] = (balanceOf(owners[i], tokenId) * 100) / totalTokens;
+			percentages[i] =
+				(balanceOf(owners[i], tokenId) * 100) /
+				totalTokens;
 		}
 
 		return (owners, percentages);
 	}
 
-
-	function isOwnerOf(uint256 tokenId, address owner) public view returns (bool) {
-    RealEstate storage realEstate = realEstates[tokenId];
-    for (uint256 i = 0; i < realEstate.owners.length; i++) {
-        if (realEstate.owners[i] == owner) {
-            return true;
-        }
-    }
-    return false;
-}
+	function isOwnerOf(
+		uint256 tokenId,
+		address owner
+	) public view returns (bool) {
+		RealEstate storage realEstate = realEstates[tokenId];
+		for (uint256 i = 0; i < realEstate.owners.length; i++) {
+			if (realEstate.owners[i] == owner) {
+				return true;
+			}
+		}
+		return false;
+	}
 
 	function createProposal(
 		ProposalType proposalType,
 		uint256 tokenId,
 		uint256 deadline
 	) public {
-			RealEstate storage realEstate = realEstates[tokenId];
+		RealEstate storage realEstate = realEstates[tokenId];
 		uint256 proposalId = proposalCounter;
 
-			proposals[proposalId].proposalId= proposalId;
-			proposals[proposalId].proposalCreator=msg.sender;
-			proposals[proposalId].positiveVotes=0;
-			proposals[proposalId].negativeVotes=0;
-			proposals[proposalId].proposalType=proposalType;
-			proposals[proposalId].tokenId=tokenId;
-			proposals[proposalId].executed=false;
-			proposals[proposalId].deadline=deadline;
-			proposals[proposalId].rentProposal=RentProposal({
-				rentee: address(0),
-				noOfMonths: 0,
-				depositBalance: 0
-			});
-			proposals[proposalId].rentInfo=RentInfo({
-				rentee: address(0),
-				noOfMonths: 0,
-				rentof1Month: 0,
-				depositAmount: 0,
-				noOfInstallmentsPaid: 0,
-				feesForLateInstallments: 0,
-				contractStartTimestamp: 0
-			});
-			realEstate.proposalExists[proposalId]=true;
-			proposalCounter++;
-		
+		proposals[proposalId].proposalId = proposalId;
+		proposals[proposalId].proposalCreator = msg.sender;
+		proposals[proposalId].positiveVotes = 0;
+		proposals[proposalId].negativeVotes = 0;
+		proposals[proposalId].proposalType = proposalType;
+		proposals[proposalId].tokenId = tokenId;
+		proposals[proposalId].executed = false;
+		proposals[proposalId].deadline = deadline;
+		proposals[proposalId].rentProposal = RentProposal({
+			rentee: address(0),
+			noOfMonths: 0,
+			depositBalance: 0
+		});
+		proposals[proposalId].rentInfo = RentInfo({
+			rentee: address(0),
+			noOfMonths: 0,
+			rentof1Month: 0,
+			depositAmount: 0,
+			noOfInstallmentsPaid: 0,
+			feesForLateInstallments: 0,
+			contractStartTimestamp: 0
+		});
+		realEstate.proposalExists[proposalId] = true;
+		proposalCounter++;
 	}
 
 	function createRenteeProposal(
@@ -557,44 +609,45 @@ function getRealEstatesByOwner(address owner) public view returns (uint256[] mem
 			msg.value >= realEstate.rentInfo.depositAmount,
 			"deposit amount less"
 		);
-	
-			proposals[proposalId].proposalId=proposalId;
-			proposals[proposalId].proposalCreator=msg.sender;
-			proposals[proposalId].positiveVotes= 0;
-			proposals[proposalId].negativeVotes= 0;
-			proposals[proposalId].proposalType=ProposalType.setRentee;
-			proposals[proposalId].tokenId= tokenId;
-			proposals[proposalId].executed=false;
-			proposals[proposalId].deadline= deadline;
-			proposals[proposalId].rentProposal= RentProposal({
-				rentee: rentee,
-				noOfMonths: noOfMonths,
-				depositBalance: msg.value
-			});
-			proposals[proposalId].rentInfo=RentInfo({
-				rentee: address(0),
-				noOfMonths: 0,
-				rentof1Month: 0,
-				depositAmount: 0,
-				noOfInstallmentsPaid: 0,
-				feesForLateInstallments: 0,
-				contractStartTimestamp: 0
-			});
-				realEstate.proposalExists[proposalId]=true;
-				proposalCounter++;
 
+		proposals[proposalId].proposalId = proposalId;
+		proposals[proposalId].proposalCreator = msg.sender;
+		proposals[proposalId].positiveVotes = 0;
+		proposals[proposalId].negativeVotes = 0;
+		proposals[proposalId].proposalType = ProposalType.setRentee;
+		proposals[proposalId].tokenId = tokenId;
+		proposals[proposalId].executed = false;
+		proposals[proposalId].deadline = deadline;
+		proposals[proposalId].rentProposal = RentProposal({
+			rentee: rentee,
+			noOfMonths: noOfMonths,
+			depositBalance: msg.value
+		});
+		proposals[proposalId].rentInfo = RentInfo({
+			rentee: address(0),
+			noOfMonths: 0,
+			rentof1Month: 0,
+			depositAmount: 0,
+			noOfInstallmentsPaid: 0,
+			feesForLateInstallments: 0,
+			contractStartTimestamp: 0
+		});
+		realEstate.proposalExists[proposalId] = true;
+		proposalCounter++;
 	}
 
-	function getProposalVotes(uint256 proposalId) public view returns (uint256 positiveVotes, uint256 negativeVotes) {
+	function getProposalVotes(
+		uint256 proposalId
+	) public view returns (uint256 positiveVotes, uint256 negativeVotes) {
 		require(proposalId < proposalCounter, "Proposal does not exist");
 
-		return (proposals[proposalId].positiveVotes, proposals[proposalId].negativeVotes);
+		return (
+			proposals[proposalId].positiveVotes,
+			proposals[proposalId].negativeVotes
+		);
 	}
 
-	function vote(
-		uint256 proposalId,
-		bool isPositiveVote
-	) public {
+	function vote(uint256 proposalId, bool isPositiveVote) public {
 		Proposals storage proposal = proposals[proposalId];
 		RealEstate storage realEstate = realEstates[proposal.tokenId];
 		require(block.timestamp <= proposal.deadline, "Proposal Expired");
@@ -603,29 +656,53 @@ function getRealEstatesByOwner(address owner) public view returns (uint256[] mem
 			"proposal does not exits"
 		);
 
-		require(balanceOf(msg.sender,proposal.tokenId)>0,'you cant vote');
-		require(proposal.executed==false, "Proposal already executed");
-		require(!(voteStatus[proposalId][msg.sender]==voteStatusEnum.positiveVote && isPositiveVote),'Already Voted');
-		require(!(voteStatus[proposalId][msg.sender]==voteStatusEnum.negativeVote && !isPositiveVote),'Already Voted');
-
-		
-	
+		require(balanceOf(msg.sender, proposal.tokenId) > 0, "you cant vote");
+		require(proposal.executed == false, "Proposal already executed");
+		require(
+			!(voteStatus[proposalId][msg.sender] ==
+				voteStatusEnum.positiveVote &&
+				isPositiveVote),
+			"Already Voted"
+		);
+		require(
+			!(voteStatus[proposalId][msg.sender] ==
+				voteStatusEnum.negativeVote &&
+				!isPositiveVote),
+			"Already Voted"
+		);
 
 		if (isPositiveVote) {
-			if(voteStatus[proposalId][msg.sender]==voteStatusEnum.negativeVote){
+			if (
+				voteStatus[proposalId][msg.sender] ==
+				voteStatusEnum.negativeVote
+			) {
 				proposal.negativeVotes -= 1;
 			}
-			voteStatus[proposalId][msg.sender]=voteStatusEnum.positiveVote;
+			voteStatus[proposalId][msg.sender] = voteStatusEnum.positiveVote;
 			proposal.positiveVotes += 1;
 		} else {
-			if(voteStatus[proposalId][msg.sender]==voteStatusEnum.positiveVote){
+			if (
+				voteStatus[proposalId][msg.sender] ==
+				voteStatusEnum.positiveVote
+			) {
 				proposal.positiveVotes -= 1;
 			}
-			voteStatus[proposalId][msg.sender]=voteStatusEnum.negativeVote;
+			voteStatus[proposalId][msg.sender] = voteStatusEnum.negativeVote;
 			proposal.negativeVotes += 1;
 		}
 
-		emit ProposalUpserted(proposalId, proposal.proposalCreator, proposal.positiveVotes, proposal.negativeVotes, proposal.proposalType, proposal.tokenId, proposal.executed, proposal.rentProposal, proposal.deadline, proposal.rentInfo);
+		emit ProposalUpserted(
+			proposalId,
+			proposal.proposalCreator,
+			proposal.positiveVotes,
+			proposal.negativeVotes,
+			proposal.proposalType,
+			proposal.tokenId,
+			proposal.executed,
+			proposal.rentProposal,
+			proposal.deadline,
+			proposal.rentInfo
+		);
 	}
 
 	function executeProposal(uint256 proposalId, uint256 tokenId) public {
@@ -638,7 +715,8 @@ function getRealEstatesByOwner(address owner) public view returns (uint256[] mem
 		);
 		require(!proposal.executed, "Proposal already executed");
 
-		bool isApproved = proposal.positiveVotes > proposal.negativeVotes || realEstate.owners.length==1;
+		bool isApproved = proposal.positiveVotes > proposal.negativeVotes ||
+			realEstate.owners.length == 1;
 
 		require(isApproved, "not approved");
 		if (proposal.proposalType == ProposalType.ListForRent) {
@@ -717,7 +795,6 @@ function getRealEstatesByOwner(address owner) public view returns (uint256[] mem
 		uint256 senderBalance = balanceOf(from, tokenId);
 		require(senderBalance >= amount, "Not enough balance to transfer");
 
-	
 		realEstate.balanceofMemebers[from] -= amount;
 		realEstate.balanceofMemebers[to] += amount;
 
@@ -728,7 +805,7 @@ function getRealEstatesByOwner(address owner) public view returns (uint256[] mem
 					realEstate.owners.length - 1
 				];
 			}
-			
+
 			realEstate.owners.pop();
 		}
 
@@ -748,5 +825,45 @@ function getRealEstatesByOwner(address owner) public view returns (uint256[] mem
 			realEstate.rentInfo,
 			realEstate.realEstateBalance
 		);
+	}
+
+	function recordRentalIncome(uint256 tokenId, uint256 rentalAmount) public {
+		require(
+			isOwnerOf(tokenId, msg.sender),
+			"Only the owner can record income."
+		);
+
+		_rentalIncomes[tokenId] += rentalAmount;
+		emit RentalRecorded(tokenId, rentalAmount);
+	}
+
+	function recordSaleIncome(uint256 tokenId, uint256 saleAmount) public {
+		require(
+			isOwnerOf(tokenId, msg.sender),
+			"Only the owner can record income."
+		);
+
+		_saleIncomes[tokenId] += saleAmount;
+		emit SaleRecorded(tokenId, saleAmount);
+	}
+
+	// 	function recordCosts(uint256 tokenId, uint256 costAmount) public {
+	//     require(isOwnerOf(tokenId, msg.sender), "Only the owner can record costs.");
+
+	//     _costs[tokenId] += costAmount;
+	//     emit CostRecorded(tokenId, costAmount);
+	// }
+
+	function calculateNetProfit(address owner) public view returns (uint256) {
+		uint256 totalIncome = 0;
+
+		// Iterate over all real estates owned by the owner
+		for (uint256 i = 0; i < _tokenIdCounter.current(); i++) {
+			if (isOwnerOf(i, owner)) {
+				totalIncome += _rentalIncomes[i] + _saleIncomes[i];
+			}
+		}
+
+		return totalIncome;
 	}
 }

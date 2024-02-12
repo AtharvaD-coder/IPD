@@ -124,7 +124,7 @@ const handleButtonClick = (event: React.MouseEvent<HTMLButtonElement>, purpose: 
 
 
   const { data, error } = useFetch<any>('http://localhost:3000/api/getAllRealEstates');
-
+  console.log(data,"dataaawww")
 
 
   useEffect(() => {

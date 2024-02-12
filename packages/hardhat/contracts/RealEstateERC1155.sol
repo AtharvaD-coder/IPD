@@ -34,6 +34,11 @@ contract RealEstateERC1155 is ERC1155 {
 	mapping(uint256 => Bid[]) public tokenBids;
 	mapping(uint256 => mapping(address => voteStatusEnum)) public voteStatus;
     mapping(uint256 => string) public tokenMetadataURIs; // Mapping to store metadata URI for each token
+    mapping(uint256 => PriceHistory[]) public priceHistories;
+	struct PriceHistory {
+			uint256 timestamp;
+			uint256 price;
+		}
 
 
 	enum RealEstateStatus {
@@ -315,7 +320,16 @@ function getBids(uint256 tokenId) public view returns (Bid[] memory) {
 		tokenBids[tokenId][bidIndex].status = BidStatus.Executed;
 		transferTokens(tokenId, tokenBids[tokenId][bidIndex].bidder, msg.sender, tokenBids[tokenId][bidIndex].numberOfTokens);
 		payable(msg.sender).transfer(tokenBids[tokenId][bidIndex].bidAmount);
+		priceHistories[tokenId].push(PriceHistory({
+			timestamp: block.timestamp,
+			price: tokenBids[tokenId][bidIndex].bidAmount/tokenBids[tokenId][bidIndex].numberOfTokens
+		}));
 	}
+
+	function getPriceHistory(uint256 tokenId) public view returns (PriceHistory[] memory) {
+        return priceHistories[tokenId];
+    }
+
 	function getRealEstate(uint256 tokenId) public view returns (uint256, uint256, uint256, RealEstateStatus, address[] memory, RentInfo memory, uint256) {
     require(tokenId < _tokenIdCounter.current(), "Real estate does not exist");
 

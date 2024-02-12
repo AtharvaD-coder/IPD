@@ -14,7 +14,7 @@ const DefaultImage = 'https://media.istockphoto.com/id/1269776313/photo/suburban
 interface PropertyProps {
   property: {
     title: string;
-    externalID: string;
+    tokenId: string;
     coverPhoto?: {
       url: string;
     };
@@ -27,11 +27,13 @@ interface PropertyProps {
   };
 }
 
-const Property: React.FC<any> = ({ property: { _id,title, externalID, coverPhoto, price, rentFrequency, rooms, baths, area, isVerified } }:any) => (
-  <Link href={`/property/${externalID}`} passHref>
+const Property: React.FC<any> = ({ property: { _id,title,price, tokenId, coverPhoto, rentFrequency, rooms, baths, area, isVerified } }:any) => {
+  
+  return(
+  <Link href={`/property/${tokenId}`} passHref>
     <Flex flexWrap='wrap' w='420px' p='5' paddingTop='0px' justifyContent='flex-start' cursor='pointer'>
       <Box >
-        <Image src={coverPhoto ? coverPhoto.url : DefaultImage} className='rounded-xl' width={300}  height={300} alt='' />
+        <Image src={coverPhoto ? coverPhoto : DefaultImage} className='rounded-xl' width={300}  height={300} alt='' />
       </Box>
 
       <Box w='full'>
@@ -53,7 +55,8 @@ const Property: React.FC<any> = ({ property: { _id,title, externalID, coverPhoto
 
     </Flex>
   </Link>
-);
+  )
+};
 
 
 export async function getData({query}: { query: NextApiRequest['query'] }) {
@@ -67,10 +70,10 @@ export async function getData({query}: { query: NextApiRequest['query'] }) {
   const bathsMin = query.bathsMin || '0';
   const sort = query.sort || 'price-desc';
   const areaMax = query.areaMax || '35000';
-  const locationExternalIDs = query.locationExternalIDs || '5002';
-  const categoryExternalID = query.categoryExternalID || '4';
+  const locationtokenIds = query.locationtokenIds || '5002';
+  const categorytokenId = query.categorytokenId || '4';
 
-  const data = await fetchApi(`${baseUrl}/properties/list?locationExternalIDs=${locationExternalIDs}&purpose=${purpose}&categoryExternalID=${categoryExternalID}&bathsMin=${bathsMin}&rentFrequency=${rentFrequency}&priceMin=${minPrice}&priceMax=${maxPrice}&roomsMin=${roomsMin}&sort=${sort}&areaMax=${areaMax}`);
+  const data = await fetchApi(`${baseUrl}/properties/list?locationtokenIds=${locationtokenIds}&purpose=${purpose}&categorytokenId=${categorytokenId}&bathsMin=${bathsMin}&rentFrequency=${rentFrequency}&priceMin=${minPrice}&priceMax=${maxPrice}&roomsMin=${roomsMin}&sort=${sort}&areaMax=${areaMax}`);
 
   console.log(data,"data");
     return {

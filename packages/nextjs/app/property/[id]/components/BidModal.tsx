@@ -1,10 +1,9 @@
 import { useState } from 'react';
 import { Box, Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody, ModalCloseButton, Button, FormControl, FormLabel, Input } from '@chakra-ui/react';
-import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { useAccount } from 'wagmi';
 
-const BidModal = ({ isOpen, onClose, onSubmit }) => {
+const BidModal = ({ isOpen, onClose, onSubmit }:any) => {
   const [amount, setAmount] = useState('');
   const [numberOfTokens, setNumberOfTokens] = useState('');
   const { address } = useAccount();
@@ -18,7 +17,7 @@ const BidModal = ({ isOpen, onClose, onSubmit }) => {
   };
 
   const handleSubmit = () => {
-    onSubmit(amount, numberOfTokens);
+    onSubmit(numberOfTokens,amount);
   };
 
   return (

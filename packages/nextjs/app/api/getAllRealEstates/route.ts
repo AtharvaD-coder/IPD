@@ -1,25 +1,25 @@
 import { ObjectId } from 'mongodb';
+import mongoose, { ConnectOptions } from 'mongoose';
 
 import { NextResponse } from 'next/server';
 import { baseUrl, fetchApi } from '~~/app/utils/fetchApi';
 import { connectToDatabase } from '~~/servers/connect';
+import { Properties } from '~~/servers/schema/properties';
+import { uri } from '../../../utils/mongoose-utils';
 
 export async function GET(req:Request) {
     try {
         
+        await mongoose.connect(uri, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true
+          }as ConnectOptions);
+        
    
-   
-        const db=await connectToDatabase('OpenEstate_properties');
-        if(!db){
-            return NextResponse.json(({ error: 'not connected to db' }),{status:400});
-        }
-        const coll=db.collection('properties');
-        const documents = await coll.find({}).toArray();
+     
+        const documents=await Properties.find({})
         console.log('documents',documents);
-        const fetchAdditionalData = async (doc:any) => {
-            const d = await fetchApi(`${baseUrl}/properties/detail?externalID=${doc.externalID}`);
-            return { ...doc, ...d };
-        };
+    
 
         // Use Promise.all to perform asynchronous operations concurrently
         // const updatedDocuments = await Promise.all(documents.map(fetchAdditionalData));

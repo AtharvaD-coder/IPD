@@ -1,0 +1,74 @@
+import React, { useCallback, useEffect, useState } from 'react';
+import ImageViewer from 'react-simple-image-viewer';
+
+function ImageGallery({ imageUrls }: any) {
+
+    const [currentImage, setCurrentImage] = useState(0);
+    const [isViewerOpen, setIsViewerOpen] = useState(false);
+
+
+    const openImageViewer = useCallback((index) => {
+        setCurrentImage(index);
+        setIsViewerOpen(true);
+    }, []);
+
+    const closeImageViewer = () => {
+        setCurrentImage(0);
+        setIsViewerOpen(false);
+    };
+    const [mainImage, setMainImage] = useState(imageUrls[0]);
+    const [selectedThumbnail, setSelectedThumbnail] = useState(0);
+
+    const handleThumbnailClick = (imageUrl, index) => {
+        setMainImage(imageUrl);
+        setSelectedThumbnail(index);
+    };
+
+    useEffect(() => {
+        setMainImage(imageUrls[0]);
+        setSelectedThumbnail(0);
+    }, [imageUrls]);
+
+    return (
+        <div className='flex flex-col w-[100%] mr-5 '>
+            <div className='flex ' style={{overflowX: 'scroll' }}>
+                <div className='w-[300px] h-[300px] min-w-[300px] mr-5 ' >
+                    <img
+                        src={imageUrls[0]}
+                        onClick={() => openImageViewer(0)}
+                        key={0}
+                        className='w-[300px] h-[300px]'                        
+                    />
+                </div>
+                <div className="inline w-fit" style={{ display: 'grid', gridTemplateRows: 'auto auto', gridAutoFlow: 'column' }}  >
+                    {imageUrls.slice(1).map((src, index) => (
+                        <div className='w-[200px] m3 flex'>
+                        <img
+                            src={src}
+                            onClick={() => openImageViewer(index + 1)}
+                            style={{ height: '150px', width: 'auto' }} // Adjusted width here
+                            key={index}
+                            className="rounded-md m-2  "
+                            alt=""
+                        />
+                        </div>
+                    ))}
+                </div>
+
+
+            </div>
+            {isViewerOpen && (
+                <ImageViewer
+                    src={imageUrls}
+                    currentIndex={currentImage}
+                    disableScroll={true}
+                    closeOnClickOutside={true}
+                    onClose={closeImageViewer}
+                   
+                />
+            )}
+        </div>
+    );
+}
+
+export default ImageGallery;

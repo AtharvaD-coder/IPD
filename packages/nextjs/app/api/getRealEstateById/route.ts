@@ -1,28 +1,31 @@
 import { ObjectId } from 'mongodb';
+import mongoose from 'mongoose';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { NextRequest, NextResponse } from 'next/server';
 import { connectToDatabase } from '~~/servers/connect';
+import { uri } from '../../../utils/mongoose-utils';
+import { ConnectOptions } from 'mongoose';
+import { Properties } from '~~/servers/schema/properties';
 
 export async function POST(req: NextRequest) {
     try {
-        const { id } = await req.json();
-        console.log(id,'id')
+        
+        let { id } = await req.json();
+        await mongoose.connect(uri, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true
+          }as ConnectOptions);
+        
+        console.log(id,'id wtf')
         // Check if ID is provided
+        
         if (!id) {
             return NextResponse.json({ error: 'ID is required' },{status:400});
         }
-
-        const db = await connectToDatabase('OpenEstate_properties');
-        if (!db) {
-            return NextResponse.json({ error: 'Not connected to the database' },{status:400});
-        }
+        id=Number(id)
         
-        const coll = db.collection('properties');
-        
-        // Convert the ID string to an ObjectId
-        const objectId = new ObjectId(id);
 
-        const document = await coll.findOne({ _id: objectId });
+      const document=await Properties.findOne({tokenId:id})
 
         if (!document) {
             return NextResponse.json({ error: 'Document not found' },{status:400});
@@ -30,7 +33,7 @@ export async function POST(req: NextRequest) {
 
         console.log('Document:', document);
       
-            return NextResponse.json({ data:document },{status:200});
+            return NextResponse.json(document,{status:200});
 
     } catch (error) {
         console.error(error);

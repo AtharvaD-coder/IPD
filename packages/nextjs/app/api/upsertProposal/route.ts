@@ -7,7 +7,7 @@ export async function POST(req: NextRequest ) {
     try {
         const {data } = await req.json();
 
-        const db = await connectToDatabase('OpenEstate_properties');
+        const db = await connectToDatabase('OpenEstate');
         if (!db) {
             return  NextResponse.json({ error: 'not connected to db' },{status:400});
         }

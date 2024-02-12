@@ -5,7 +5,7 @@ const contracts = {
       name: "localhost",
       contracts: {
         RealEstateERC1155: {
-          address: "0xa513E6E4b8f2a923D98304ec87F64353C4D5C853",
+          address: "0x5FbDB2315678afecb367f032d93F642f64180aa3",
           abi: [
             {
               inputs: [],
@@ -237,79 +237,12 @@ const contracts = {
                 },
                 {
                   indexed: false,
-                  internalType: "address[]",
-                  name: "owners",
-                  type: "address[]",
-                },
-                {
-                  indexed: false,
-                  internalType: "uint256",
-                  name: "noOfTokens",
-                  type: "uint256",
-                },
-                {
-                  indexed: false,
-                  internalType: "uint256",
-                  name: "priceOf1Token",
-                  type: "uint256",
-                },
-                {
-                  indexed: false,
                   internalType: "enum RealEstateERC1155.RealEstateStatus",
                   name: "status",
                   type: "uint8",
                 },
-                {
-                  components: [
-                    {
-                      internalType: "address",
-                      name: "rentee",
-                      type: "address",
-                    },
-                    {
-                      internalType: "uint256",
-                      name: "noOfMonths",
-                      type: "uint256",
-                    },
-                    {
-                      internalType: "uint256",
-                      name: "rentof1Month",
-                      type: "uint256",
-                    },
-                    {
-                      internalType: "uint256",
-                      name: "depositAmount",
-                      type: "uint256",
-                    },
-                    {
-                      internalType: "uint256",
-                      name: "noOfInstallmentsPaid",
-                      type: "uint256",
-                    },
-                    {
-                      internalType: "uint256",
-                      name: "feesForLateInstallments",
-                      type: "uint256",
-                    },
-                    {
-                      internalType: "uint256",
-                      name: "contractStartTimestamp",
-                      type: "uint256",
-                    },
-                  ],
-                  indexed: false,
-                  internalType: "struct RealEstateERC1155.RentInfo",
-                  name: "rentInfo",
-                  type: "tuple",
-                },
-                {
-                  indexed: false,
-                  internalType: "uint256",
-                  name: "realEstateBalance",
-                  type: "uint256",
-                },
               ],
-              name: "RealEstateUpdated",
+              name: "RealEstateStatusUpdated",
               type: "event",
             },
             {

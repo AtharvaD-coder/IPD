@@ -6,23 +6,31 @@ import Rentproposal from '../classes/rentProposal';
 import { Properties } from './schema/properties';
 import mongoose, { ConnectOptions } from 'mongoose';
 import { uri } from '../utils/mongoose-utils';
+import Web3 from 'web3';
 
 async function run() {
  
 
   const localhostUrl = `http://127.0.0.1:8545/`; // Update the port if needed
   const provider = new ethers.JsonRpcProvider(localhostUrl);
+  const web3 = new Web3(localhostUrl); // Replace 'YOUR_PROVIDER_URL' with your Ethereum node provider URL
+
 
   const contractAddress = contracts[31337][0].contracts.RealEstateERC1155.address;
   const contractAbi = contracts[31337][0].contracts.RealEstateERC1155.abi;
 
   const contract = new ethers.Contract(contractAddress, contractAbi, provider);
+  const contractweb3 = new web3.eth.Contract(contractAbi, contractAddress);
 
-  const transactions = await provider.getLogs({
-    address: contractAddress
-});
+  const eventts=await contractweb3.getPastEvents('allEvents', {
+    fromBlock: 0,
+    toBlock: 'latest',
+    
+  });
 
-console.log(transactions, "transactions")
+  console.log(eventts,"eventts")
+
+
 
   //   const propertyForSale = await fetchApi(`${baseUrl}/properties/list?locationExternalIDs=5002&purpose=for-sale&hitsPerPage=200`);
   //   const propertyForRent = await fetchApi(`${baseUrl}/properties/list?locationExternalIDs=5002&purpose=for-rent&hitsPerPage=200`);
@@ -99,30 +107,50 @@ console.log(transactions, "transactions")
 
   });
 
-  // contract.on('RealEstateUpdated', async (tokenId, owners, noOfTokens, priceOf1Token,status,rentInfo,realEstateBalance, event) => {
+  contract.on('RealEstateUpdated', async (tokenId, owners, noOfTokens, priceOf1Token, metadataUri, event) => {
+    try{
 
+    
+    console.log(`Token ID: ${tokenId}`);
+    console.log(`Owners: ${owners}`);
+    console.log(`Number of Tokens: ${noOfTokens}`);
+    console.log(`Price of 1 Token: ${priceOf1Token}`);
+    console.log('metadataUri', metadataUri)
+    // let metadata: any = await axios.get(`https://ipfs.io/ipfs/${metadataUri}/metaData.txt`);
+    // metadata = metadata.data
+    // console.log(metadata, "metadata")
+    // let photos = [];
+    // for (let i = 0; i < metadata.totalImages; i++) {
+    //   photos.push(metadata['image' + i]);
+    // }
+    // console.log(photos, "phooootoo")
+    // const data = new Properties({
+    //   tokenId: Number(tokenId),
+    //   owners: owners,
+    //   noOfTokens: Number(noOfTokens),
+    //   priceOf1Token: Number(priceOf1Token),
+    //   coverPhoto: `https://ipfs.io/ipfs/${metadataUri}/image/${metadata.image0}`,
+    //   totalImages: metadata?.totalImages,
+    //   photos: photos,
+    //   purpose: metadata.purpose,
+    //   description: metadata.description,
+    //   metadataUri: metadataUri,
+    //   amenities:metadata.amenities,
+    //   BhkType:metadata.BhkType,
+    //   area:metadata.area,
+    //   noOfBathrooms:metadata.noOfBathrooms,
+    //   noOfBedrooms:metadata.noOfBedrooms
 
+    // })
+    // await data.save()
+    console.log("done")
+    }
+    catch(error){
+      console.log(error)
+    }
 
-  //       const rentInfoObj=new Rentinfo(rentInfo);
-  //       console.log({...rentInfoObj},'onj')
-  //   const data={
-  //     tokenId:Number(tokenId), owners, noOfTokens:Number(noOfTokens), priceOf1Token:Number(priceOf1Token),realEstateBalance:Number(realEstateBalance),status:Number(status),rentInfo:{...rentInfoObj}
-  //   }
-
-  //   try{
-  //     const res=await axios.post('http://localhost:3000/api/updateRealEstate',{data:data});
-  //     console.log(res.data);
-  //   }
-  //   catch(error){
-  //     console.log(error);
-  //   }
-
-
-
-
-
-
-  // });
+  }
+  )
   // uint256 proposalId,
   // address proposalId,
   // uint256 positiveVotes,

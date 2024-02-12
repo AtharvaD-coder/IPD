@@ -12,15 +12,7 @@ contract RealEstateERC1155 is ERC1155 {
 	uint256 public proposalCounter=0;
 	Counters.Counter  public  _tokenIdCounter;
 	
-	event RealEstateUpdated(
-		uint256 indexed tokenId,
-		address[] owners,
-		uint256 noOfTokens,
-		uint256 priceOf1Token,
-		RealEstateStatus status,
-		RentInfo rentInfo,
-		uint256 realEstateBalance
-	);
+	
 
 	enum voteStatusEnum{
 			 notVoted,
@@ -119,7 +111,7 @@ contract RealEstateERC1155 is ERC1155 {
 		BidStatus status;
 		uint256 id;
 	}
-	 event RealEstateListed(
+	event RealEstateListed(
         uint256 indexed tokenId,
         address[] owners,
         uint256 noOfTokens,
@@ -136,6 +128,10 @@ contract RealEstateERC1155 is ERC1155 {
         uint256 realEstateBalance,
         string metadataUri
     );
+	event RealEstateStatusUpdated(
+		uint256 indexed tokenId,
+		RealEstateStatus status
+	);
     event RealEstateRented(
         uint256 indexed tokenId,
         address indexed rentee,
@@ -368,7 +364,10 @@ function getBids(uint256 tokenId) public view returns (Bid[] memory) {
 
 			if(balanceOf(msg.sender, tokenId) == realEstate.noOfTokens){
 				realEstate.status = _status;
-
+				emit RealEstateStatusUpdated(
+					realEstate.tokenId,
+					realEstate.status
+				);
 			}
 			else{
 				if(_status==RealEstateStatus.ListedForRent){
@@ -384,15 +383,7 @@ function getBids(uint256 tokenId) public view returns (Bid[] memory) {
 
 
 
-		emit RealEstateUpdated(
-			realEstate.tokenId,
-			realEstate.owners,
-			realEstate.noOfTokens,
-			realEstate.priceOf1Token,
-			realEstate.status,
-			realEstate.rentInfo,
-			realEstate.realEstateBalance
-		);
+		
 	}
 function getRealEstatesByOwner(address owner) public view returns (uint256[] memory) {
     uint256[] memory ownedRealEstates;
@@ -488,7 +479,8 @@ function getRealEstatesByOwner(address owner) public view returns (uint256[] mem
 			realEstate.priceOf1Token,
 			realEstate.status,
 			realEstate.rentInfo,
-			realEstate.realEstateBalance
+			realEstate.realEstateBalance,
+			tokenMetadataURIs[tokenId]
 		);
 	}
 
@@ -659,8 +651,16 @@ function getRealEstatesByOwner(address owner) public view returns (uint256[] mem
 		require(isApproved, "not approved");
 		if (proposal.proposalType == ProposalType.ListForRent) {
 			realEstate.status = RealEstateStatus.ListedForRent;
+			emit RealEstateStatusUpdated(
+			realEstate.tokenId,
+			realEstate.status
+		);
 		} else if (proposal.proposalType == ProposalType.UnlistForRent) {
 			realEstate.status = RealEstateStatus.ListedForSale;
+			emit RealEstateStatusUpdated(
+			realEstate.tokenId,
+			realEstate.status
+		);
 		} else if (proposal.proposalType == ProposalType.setRentee) {
 			require(
 				realEstate.status == RealEstateStatus.ListedForRent,
@@ -678,6 +678,10 @@ function getRealEstatesByOwner(address owner) public view returns (uint256[] mem
 				rentof1Month: realEstate.rentInfo.rentof1Month,
 				contractStartTimestamp: block.timestamp
 			});
+			emit RealEstateStatusUpdated(
+			realEstate.tokenId,
+			realEstate.status
+		);
 		}
 
 		proposal.executed = true;
@@ -762,7 +766,8 @@ function getRealEstatesByOwner(address owner) public view returns (uint256[] mem
 			realEstate.priceOf1Token,
 			realEstate.status,
 			realEstate.rentInfo,
-			realEstate.realEstateBalance
+			realEstate.realEstateBalance,
+			tokenMetadataURIs[tokenId]
 		);
 	}
 }

@@ -22,6 +22,7 @@ import PropertyDetailCard from './components/PropertyDetailCard';
 import DetailsTabs from './components/DetailsTabs';
 import PriceHistory from './components/priceHistory';
 import OwnerShip from './components/OwnerPercentage';
+import CustomizedTimeline from './components/timeline';
 
 
 const PropertyDetails = ({ params }: any) => {
@@ -241,6 +242,8 @@ const PropertyDetails = ({ params }: any) => {
         </div>
 
       </div>
+
+      <CustomizedTimeline tokenId={params?.id}/>
 
 
       <button onClick={() => {

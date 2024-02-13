@@ -139,7 +139,11 @@ contract RealEstateERC1155 is ERC1155 {
         uint256 noOfMonths,
         uint256 rentof1Month
     );
-
+	struct TokenInfo {
+			uint256 tokenId;
+			uint256 numberOfTokens;
+			uint256 amount;
+		}
 	event RentalRecorded(uint256 indexed tokenId, uint256 rentalAmount);
 	event SaleRecorded(uint256 indexed tokenId, uint256 saleAmount);
 
@@ -165,6 +169,11 @@ contract RealEstateERC1155 is ERC1155 {
 		newProperty.owners.push(owner);
 		newProperty.status = RealEstateStatus.ListedForSale;
 		newProperty.balanceofMemebers[owner] += initialAmountOfTokens;
+
+		priceHistories[tokenId].push(PriceHistory({
+			timestamp: block.timestamp,
+			price: priceOf1token
+		}));	
 
 		_tokenIdCounter.increment();
 		emit RealEstateListed(
@@ -219,7 +228,10 @@ contract RealEstateERC1155 is ERC1155 {
 			feesForLateInstallments: feesForLateInstallments,
 			contractStartTimestamp: 0
 		});
-
+		priceHistories[tokenId].push(PriceHistory({
+					timestamp: block.timestamp,
+					price: priceOf1token
+				}));	
 		_tokenIdCounter.increment();
 
 		emit RealEstateListed(
@@ -230,6 +242,8 @@ contract RealEstateERC1155 is ERC1155 {
 			metadataUri
 		);
 	}
+
+	
 
 	// Function to get metadata URI for a token
 	function tokenURI(
@@ -281,6 +295,32 @@ contract RealEstateERC1155 is ERC1155 {
 
 		return tokenProposals;
 	}
+
+	
+
+	function getRealEstatesByOwner(address owner) public view returns (TokenInfo[] memory) {
+        uint256[] memory ownedTokenIds = new uint256[](getTokenIdCounter());
+        uint256[] memory tokenCounts = new uint256[](getTokenIdCounter());
+        uint256[] memory amounts = new uint256[](getTokenIdCounter());
+        uint256 count = 0;
+        for (uint256 i = 0; i < getTokenIdCounter(); i++) {
+            if (isOwnerOf(i, owner)) {
+                ownedTokenIds[count] = i;
+                tokenCounts[count] = balanceOf(owner, i);
+                amounts[count] = tokenCounts[count] * realEstates[i].priceOf1Token;
+                count++;
+            }
+        }
+        TokenInfo[] memory tokenInfoArray = new TokenInfo[](count);
+        for (uint256 i = 0; i < count; i++) {
+            tokenInfoArray[i] = TokenInfo({
+                tokenId: ownedTokenIds[i],
+                numberOfTokens: tokenCounts[i],
+                amount: amounts[i]
+            });
+        }
+        return tokenInfoArray;
+    }
 
 	function getBids(uint256 tokenId) public view returns (Bid[] memory) {
 		uint256 activeBidsCount = 0;
@@ -356,6 +396,16 @@ contract RealEstateERC1155 is ERC1155 {
         return priceHistories[tokenId];
     }
 
+	function getPriceHistoriesForTokens(uint256[] memory tokenIds) public view returns (PriceHistory[][] memory) {
+    PriceHistory[][] memory allPriceHistories = new PriceHistory[][](tokenIds.length);
+
+    for (uint256 i = 0; i < tokenIds.length; i++) {
+        allPriceHistories[i] = getPriceHistory(tokenIds[i]);
+    }
+
+    return allPriceHistories;
+}
+
 	function getRealEstate(uint256 tokenId) public view returns (uint256, uint256, uint256, RealEstateStatus, address[] memory, RentInfo memory, uint256) {
     require(tokenId < _tokenIdCounter.current(), "Real estate does not exist");
 
@@ -422,23 +472,7 @@ contract RealEstateERC1155 is ERC1155 {
 		
 	}
 
-	function getRealEstatesByOwner(
-		address owner
-	) public view returns (uint256[] memory) {
-		uint256[] memory ownedRealEstates;
-		uint256 count = 0;
-		for (uint256 i = 0; i < _tokenIdCounter.current(); i++) {
-			if (isOwnerOf(i, owner)) {
-				ownedRealEstates[count] = i;
-				count++;
-			}
-		}
-		uint256[] memory result = new uint256[](count);
-		for (uint256 i = 0; i < count; i++) {
-			result[i] = ownedRealEstates[i];
-		}
-		return result;
-	}
+	
 
 	function updateRentinfo(
 		uint256 tokenId,
@@ -645,6 +679,26 @@ contract RealEstateERC1155 is ERC1155 {
 			proposals[proposalId].negativeVotes
 		);
 	}
+
+	 function getProposalsForTokenIds(uint256[] memory tokenIds) public view returns (RealEstateERC1155.Proposals[][] memory) {
+        RealEstateERC1155.Proposals[][] memory allProposals = new RealEstateERC1155.Proposals[][](tokenIds.length);
+
+        for (uint256 i = 0; i < tokenIds.length; i++) {
+            allProposals[i] = getAllProposals(tokenIds[i]);
+        }
+
+        return allProposals;
+    }
+
+    function getBidsForTokenIds(uint256[] memory tokenIds) public view returns (RealEstateERC1155.Bid[][] memory) {
+        RealEstateERC1155.Bid[][] memory allBids = new RealEstateERC1155.Bid[][](tokenIds.length);
+
+        for (uint256 i = 0; i < tokenIds.length; i++) {
+            allBids[i] = getBids(tokenIds[i]);
+        }
+
+        return allBids;
+    }
 
 	function vote(uint256 proposalId, bool isPositiveVote) public {
 		Proposals storage proposal = proposals[proposalId];

@@ -12,6 +12,7 @@ import { useAccount } from 'wagmi';
 import { uploadToPinata } from '~~/utils/ipfs';
 import AmenitySelector from './components/amenities';
 import { amenities } from '~~/utils/utils';
+import { parseUnits } from 'ethers';
 interface RentProps {
   numberOfMonths?: number;
   rentPerMonth?: number;
@@ -103,6 +104,7 @@ export default function ListRealEstate() {
   })
 
 
+  console.log(parseUnits(`${1}`, 'ether'), "data asfasf")
 
   const onSubmit = async () => {
     console.log('hello')
@@ -117,13 +119,12 @@ export default function ListRealEstate() {
 
 
     })
-    console.log(data, "data asfasf")
     if (isForRent) {
       listRealEstateForRent({
         args: [
           BigInt(ListDetails?.initialAmountOfTokens ?? 0),
           ListDetails.owner,
-          BigInt(ListDetails?.priceOf1Token ?? 0),
+          BigInt(parseUnits(`${ListDetails?.priceOf1Token ?? 0}`, 'ether')),
           BigInt(ListDetails.rentProps?.numberOfMonths ?? 0),
           BigInt(ListDetails.rentProps?.rentPerMonth ?? 0),
           BigInt(ListDetails.rentProps?.depositAmount ?? 0),
@@ -137,7 +138,7 @@ export default function ListRealEstate() {
         args: [
           BigInt(ListDetails?.initialAmountOfTokens ?? 0),
           ListDetails.owner,
-          BigInt(ListDetails?.priceOf1Token ?? 0),
+          BigInt(parseUnits(`${ListDetails?.priceOf1Token ?? 0}`, 'ether')),
           data
         ],
       })

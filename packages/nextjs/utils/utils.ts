@@ -20,3 +20,7 @@ export const realEstateStatus=(status:number)=>{
             return "Sale"
     }
 }
+
+export const convertWeiToEther = (wei) => {
+    return Number(wei)/10**18; // 1 Ether = 10^18 Wei
+};

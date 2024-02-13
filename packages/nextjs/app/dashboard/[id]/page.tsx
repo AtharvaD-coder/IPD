@@ -1,9 +1,17 @@
 'use client'
 import 'chart.js/auto';
-import { Box, Text, Button, Tabs, TabList, TabPanels, Tab, TabPanel } from "@chakra-ui/react";
+import { Box, Text, Button, Tabs, TabList, TabPanels, Tab, TabPanel,Flex } from "@chakra-ui/react";
 import { useScaffoldContractRead, useScaffoldContractWrite } from "~~/hooks/scaffold-eth";
 import { Pie } from "react-chartjs-2";
 import { stat } from 'fs';
+import {
+    Stat,
+    StatLabel,
+    StatNumber,
+    StatHelpText,
+    StatArrow,
+    StatGroup,
+  } from '@chakra-ui/react'
 
 // Define types for owners and percentages
 type Owner = string;
@@ -91,8 +99,8 @@ const PropertyDetails = ({ params }: any) => {
     console.log(rentInfo,"rentInfo",status);
 
     // Extract owners and percentages from ownersAndPercentages data
-    const owners: Owner[] = ownersAndPercentages?.[0] ?? [];
-    const percentages: Percentage[] = ownersAndPercentages?.[1] ?? [];
+    const owners: string[] = (ownersAndPercentages?.[0] as unknown as string[] ) ?? [] ;
+    const percentages: string[] = (ownersAndPercentages?.[1] as unknown as string[]) ?? [];
     console.log(owners, "owners", percentages, "percentages")
 
     // Prepare data for the pie chart
@@ -129,23 +137,37 @@ const PropertyDetails = ({ params }: any) => {
         ]
     };
     return (
-        <Box maxWidth='1000px' margin='auto' p='4'>
-            <Text>Info</Text>
-            <Box>
-                <Text>
-                    No. of Tokens - {Number(noOfTokens)}
-                </Text>
-                <Text>
-                    Price of 1 Token - {Number(priceOf1Token)}
-                </Text>
-                <Text>
-                    Status - {getStatusString(Number(status))}
-                </Text>
-            </Box>
-            <Box mt={8}>
-                <Text>Ownership Percentage</Text>
+        <Box maxWidth='1000px'  p='7'>
+           
+           <Flex direction="row" justifyContent="space-between" alignItems="flex-start">
+                            <Flex direction="column"  justifyContent="flex-start" maxWidth='180px' >
+                    <Box bg="gray.200" borderRadius="lg" p={4} textAlign="center" mb={5} minWidth='200px'>
+                        <Text fontSize="lg" fontWeight="bold">
+                        No. of Tokens : {Number(noOfTokens)}
+                        </Text>
+                    </Box>
+                    <Box bg="gray.200" borderRadius="lg" p={4} textAlign="center" mb={5} minWidth='200px'>
+                        <Text fontSize="lg" fontWeight="bold">
+                        Price of  1 Token : {Number(priceOf1Token)}
+                        </Text>
+                    </Box>
+                    <Box bg="gray.200" borderRadius="lg" p={4} textAlign="center" minWidth='200px'>
+                        <Text fontSize="lg" fontWeight="bold" color={status?.toString() !== 'listed' ? 'green' : 'red'}>
+                        Status : {getStatusString(Number(status))}
+                        </Text>
+                    </Box>
+                    </Flex>
+
+
+
+
+
+            <Box ml={{ base:  0, md: 'calc(50% -  50px)' }} mb={150}>
+                <Text fontSize='3xl' mt='-10px' color="	#404040" >Ownership Percentage</Text>
                 <Pie data={pieChartData} />
             </Box>
+
+            </Flex>
             <Tabs>
                 <TabList>
                     <Tab>Active Proposals</Tab>
@@ -198,7 +220,7 @@ const PropertyDetails = ({ params }: any) => {
                 </TabPanels>
             </Tabs>
 
-            <Tabs>
+            <Tabs mt={10}>
                 <TabList>
                     <Tab>Active Bids</Tab>
                     <Tab>Executed Bids</Tab>

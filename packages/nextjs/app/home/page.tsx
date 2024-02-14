@@ -1,28 +1,18 @@
+"use client";
 
-
-
-
-
-
-
-'use client'
-
-import { NextPage } from 'next';
-import React from 'react';
-import RentComponent from '~~/components/custom_components/RentComponent';
-import Button from '~~/components/custom_components/button';
+import React from "react";
+import { NextPage } from "next";
+import RentComponent from "~~/components/custom_components/RentComponent";
+import Button from "~~/components/custom_components/button";
 
 const btnstyle = {
-  marginLeft: '10px',
-  marginRight: '10px',
-  gap: '10px',
+  marginLeft: "10px",
+  marginRight: "10px",
+  gap: "10px",
 };
 
-
 const Page: NextPage = () => {
-
   const handleButtonClick = () => {
-
     RentComponent({ tokenId: 1 });
   };
 

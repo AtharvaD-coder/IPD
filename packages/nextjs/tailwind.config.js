@@ -1,7 +1,7 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: ["./app/**/*.{js,ts,jsx,tsx}", "./components/**/*.{js,ts,jsx,tsx}", "./utils/**/*.{js,ts,jsx,tsx}"],
-  plugins: [require("daisyui"),],
+  plugins: [require("daisyui")],
   darkTheme: "scaffoldEthDark",
   // DaisyUI theme colors
   daisyui: {
@@ -10,10 +10,10 @@ module.exports = {
         scaffoldEth: {
           primary: "#495464",
           "primary-content": "#F7F3E9",
-          secondary: "black",
-          "secondary-content": "#212638",
+          secondary: "0B60B0",
+          "secondary-content": "white",
           accent: "#F7F3E9",
-          "accent-content": "#212638",
+          "accent-content": "white",
           neutral: "#F7F3E9",
           "neutral-content": "#ffffff",
           "base-100": "#F5F7F8",

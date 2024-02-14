@@ -34,15 +34,12 @@ const NumberInputComponent = React.forwardRef(function CustomNumberInput(
   );
 });
 
-
-export default function NumberInput({ label, value, onChange,labelStyle }: any) {
+export default function NumberInput({ label, value, onChange, labelStyle }: any) {
   return (
     <div className="align-center flex items-center justify-between m-3 w-full">
-          <Label labelStyle={labelStyle} >{label}</Label>
+      <Label labelStyle={labelStyle}>{label}</Label>
 
-      <NumberInputComponent aria-label="Quantity Input" min={0} value={value} onChange={onChange}
-
- />
+      <NumberInputComponent aria-label="Quantity Input" min={0} value={value} onChange={onChange} />
     </div>
   );
 }

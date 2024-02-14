@@ -5,7 +5,7 @@ const contracts = {
       name: "localhost",
       contracts: {
         RealEstateERC1155: {
-          address: "0x9d4454B023096f34B160D6B654540c56A1F81688",
+          address: "0xa513E6E4b8f2a923D98304ec87F64353C4D5C853",
           abi: [
             {
               inputs: [],
@@ -551,6 +551,25 @@ const contracts = {
             {
               inputs: [
                 {
+                  internalType: "address",
+                  name: "user",
+                  type: "address",
+                },
+              ],
+              name: "canVoteUser",
+              outputs: [
+                {
+                  internalType: "bool",
+                  name: "",
+                  type: "bool",
+                },
+              ],
+              stateMutability: "view",
+              type: "function",
+            },
+            {
+              inputs: [
+                {
                   internalType: "enum RealEstateERC1155.ProposalType",
                   name: "proposalType",
                   type: "uint8",
@@ -597,6 +616,38 @@ const contracts = {
               name: "createRenteeProposal",
               outputs: [],
               stateMutability: "payable",
+              type: "function",
+            },
+            {
+              inputs: [
+                {
+                  internalType: "address",
+                  name: "user",
+                  type: "address",
+                },
+              ],
+              name: "downvoteUser",
+              outputs: [],
+              stateMutability: "nonpayable",
+              type: "function",
+            },
+            {
+              inputs: [
+                {
+                  internalType: "address",
+                  name: "",
+                  type: "address",
+                },
+              ],
+              name: "downvotes",
+              outputs: [
+                {
+                  internalType: "uint256",
+                  name: "",
+                  type: "uint256",
+                },
+              ],
+              stateMutability: "view",
               type: "function",
             },
             {
@@ -1263,6 +1314,30 @@ const contracts = {
                 {
                   internalType: "uint256",
                   name: "",
+                  type: "uint256",
+                },
+              ],
+              stateMutability: "view",
+              type: "function",
+            },
+            {
+              inputs: [
+                {
+                  internalType: "address",
+                  name: "user",
+                  type: "address",
+                },
+              ],
+              name: "getUserVotesCount",
+              outputs: [
+                {
+                  internalType: "uint256",
+                  name: "upvoteCount",
+                  type: "uint256",
+                },
+                {
+                  internalType: "uint256",
+                  name: "downvoteCount",
                   type: "uint256",
                 },
               ],
@@ -2038,6 +2113,38 @@ const contracts = {
             {
               inputs: [
                 {
+                  internalType: "address",
+                  name: "user",
+                  type: "address",
+                },
+              ],
+              name: "upvoteUser",
+              outputs: [],
+              stateMutability: "nonpayable",
+              type: "function",
+            },
+            {
+              inputs: [
+                {
+                  internalType: "address",
+                  name: "",
+                  type: "address",
+                },
+              ],
+              name: "upvotes",
+              outputs: [
+                {
+                  internalType: "uint256",
+                  name: "",
+                  type: "uint256",
+                },
+              ],
+              stateMutability: "view",
+              type: "function",
+            },
+            {
+              inputs: [
+                {
                   internalType: "uint256",
                   name: "",
                   type: "uint256",
@@ -2049,6 +2156,30 @@ const contracts = {
                   internalType: "string",
                   name: "",
                   type: "string",
+                },
+              ],
+              stateMutability: "view",
+              type: "function",
+            },
+            {
+              inputs: [
+                {
+                  internalType: "address",
+                  name: "",
+                  type: "address",
+                },
+                {
+                  internalType: "address",
+                  name: "",
+                  type: "address",
+                },
+              ],
+              name: "userVotes",
+              outputs: [
+                {
+                  internalType: "enum RealEstateERC1155.voteUserEnum",
+                  name: "",
+                  type: "uint8",
                 },
               ],
               stateMutability: "view",
@@ -2094,6 +2225,24 @@ const contracts = {
                 },
               ],
               stateMutability: "view",
+              type: "function",
+            },
+            {
+              inputs: [
+                {
+                  internalType: "address",
+                  name: "user",
+                  type: "address",
+                },
+                {
+                  internalType: "enum RealEstateERC1155.voteUserEnum",
+                  name: "voteValue",
+                  type: "uint8",
+                },
+              ],
+              name: "voteUser",
+              outputs: [],
+              stateMutability: "nonpayable",
               type: "function",
             },
             {

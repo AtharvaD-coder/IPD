@@ -1,13 +1,13 @@
 enum RealEstateStatus {
-    Listed,
-    Rented,
-    Renting
+  Listed,
+  Rented,
+  Renting,
 }
 enum ProposalType {
-    ListForRent,
-    UnlistForRent,
-    setRentee,
-    updateRentInfo
+  ListForRent,
+  UnlistForRent,
+  setRentee,
+  updateRentInfo,
 }
 
-export {ProposalType,RealEstateStatus}
+export { ProposalType, RealEstateStatus };

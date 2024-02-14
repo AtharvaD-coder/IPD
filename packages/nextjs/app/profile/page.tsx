@@ -1,82 +1,98 @@
-'use client'
-import { useAccount } from "wagmi";
-import { useScaffoldContractRead } from "~~/hooks/scaffold-eth";
-import { BlockieAvatar } from "~~/components/scaffold-eth";
-import Networth from "./components/netWorth";
+"use client";
+
+import { useEffect, useState } from "react";
 import PriceHistory from "./components/PriceHistory";
 import Properties from "./components/myRealEstates";
+import NameModal from "./components/nameeModal";
+import Networth from "./components/netWorth";
 import ProposalsAndBids from "./components/proposalsAndBids";
-
-
+import VotesComponent from "./components/votes";
+import { useAccount } from "wagmi";
+import { BlockieAvatar } from "~~/components/scaffold-eth";
+import { useScaffoldContractRead } from "~~/hooks/scaffold-eth";
+import axios from "axios";
 
 export default function MyRealEstates() {
+  const [modalOpen,setModalOpen]=useState(0);
   const { address } = useAccount();
   const { data: realEstates } = useScaffoldContractRead({
     contractName: "RealEstateERC1155",
     functionName: "getRealEstatesByOwner",
-    args: [address ?? ''],
-    watch:false
-});
+    args: [address ?? ""],
+    watch: false,
+  });
+
+
+  const [name, setName] = useState(address);
+  useEffect(()=>{
+    async function fetchName() {
+      try {
+        const res = await axios.post("http://localhost:3000/api/getUserName", { address });
+        console.log(res.data.name,"pleaseee pleasee")
+        setName(res?.data?.name);  
+
+      } catch (error) {
+        console.log("im done")
+        console.error(error);
+      }
+    }
+    if(address)
+      fetchName();
+  },[address])
 
 
   return (
     <div className="w-[100%] h-[100%] m-5 flex">
-      <div className=" w-[25vw] max-w-[25vw] bg-red-400 h-full">
+      <NameModal isOpen={modalOpen}  onClose={()=>setModalOpen(false)} />
+      <div className=" w-[25vw] max-w-[25vw]  h-full">
         <div className="mt-3 mb-5">
+          <BlockieAvatar address={address ?? ""} size={window ? window.innerHeight * 0.35 : 300} />
+        </div>
+        <div>
+          <h1>
+            <span className="font-bold mb-3">Name :</span>
+            {name}
+          </h1>
+          <button onClick={()=>setModalOpen(true)} className="btn btn-primary m-3 align-end">Edit</button>
 
-          <BlockieAvatar address={address??''} size={window?window.innerHeight * 0.35:300} />
-          </div>
-          <div>
-
-          <h1><span className="font-bold mb-3">Name :</span>{"Anurag"}</h1>
-          <h1><span className="font-bold mb-3">Address :</span>{address}</h1>
-
+          <h1>
+            <span className="font-bold mb-3">Address :</span>
+            {address}
+          </h1>
         </div>
 
         <div>
-        <ProposalsAndBids tokenIds={realEstates?.map((data)=>Number(data.tokenId)) ?? []} />
+          <ProposalsAndBids tokenIds={realEstates?.map(data => Number(data.tokenId)) ?? []} />
         </div>
       </div>
       <div className="ml-5 w-[100%] h-[100%]">
-        <div className="border-2">
-          <h1 className="text-3xl font-bold">Percentage breakdown</h1>
-          <div>
-          <Networth realEstates={realEstates}/>
+        <div className="flex">
+          <div className="w-fit">
+
+            <div>
+              <Networth realEstates={realEstates} />
+            </div>
+          </div>
+          <div className="m-3">
+            <VotesComponent address={address} />
           </div>
         </div>
         <div className="border-2">
-          <h1 className="text-3xl font-bold">Percentage breakdown</h1>
-          <div>
-          <PriceHistory tokenIds={realEstates?.map((data)=>Number(data.tokenId)) ?? []}/>
-          </div>
+       
+            <PriceHistory tokenIds={realEstates?.map(data => Number(data.tokenId)) ?? []} />
+          
         </div>
 
         <div className="border-2">
           <h1 className="text-3xl font-bold">My real Estates</h1>
           <div>
-          <Properties />
+            <Properties />
           </div>
         </div>
       </div>
     </div>
   );
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // 'use client'
 // import { useEffect, useState } from "react"
@@ -99,7 +115,6 @@ export default function MyRealEstates() {
 //     // const [realEstates, setRealEstates] = useState<(bigint | undefined)[]>([]);
 //     const [realEstates, setRealEstates] = useState<RealEstate[]>([]);
 
-
 //     // const PropertyDetails = ({ params }: any) => {
 //     //     const { data: realEstateArray } = useScaffoldContractRead({
 //     //         contractName: "RealEstateERC1155",
@@ -108,7 +123,6 @@ export default function MyRealEstates() {
 //     //         watch: true
 //     //     });
 //     // }
-
 
 //     // useEffect(() => {
 //     //     async function fetchForomDb() {
@@ -122,7 +136,6 @@ export default function MyRealEstates() {
 
 //     //         }
 
-
 //     //     }
 //     //     fetchForomDb();
 
@@ -135,11 +148,11 @@ export default function MyRealEstates() {
 //             args: [address],
 //             watch: true
 //         });
-    
+
 //         if (ownedRealEstateIds) {
 //             // Filter out any undefined values
 //             const definedIds = ownedRealEstateIds.filter((id): id is bigint => id !== undefined);
-            
+
 //             // Now you can safely map over definedIds
 //             const fetchRealEstateDetails = async () => {
 //                 const detailsPromises = definedIds.map((tokenId) =>
@@ -150,17 +163,15 @@ export default function MyRealEstates() {
 //                         watch: true
 //                     })
 //                 );
-    
+
 //                 const detailsResults = await Promise.all(detailsPromises);
 //                 const realEstatesDetails = detailsResults.map((result) => result.data);
 //                 setRealEstates(realEstatesDetails);
 //             };
-    
+
 //             fetchRealEstateDetails();
 //         }
 //     }, [address]);
-    
-
 
 //     return (
 

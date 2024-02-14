@@ -1,6 +1,6 @@
-import Label from '~~/components/custom_components/labels';
+import Label from "~~/components/custom_components/labels";
 
-export default function Radio({ label, value, onChange, options,name }: any) {
+export default function Radio({ label, value, onChange, options, name }: any) {
   return (
     <div>
       <Label>{label}</Label>
@@ -10,8 +10,9 @@ export default function Radio({ label, value, onChange, options,name }: any) {
             <label className="label cursor-pointer">
               <span className="label-text">{data}</span>
               <input
-              
-               type="radio" name={name} className="radio radio-primary"
+                type="radio"
+                name={name}
+                className="radio radio-primary"
                 // checked={data === value}
                 onChange={() => onChange(data)}
               />

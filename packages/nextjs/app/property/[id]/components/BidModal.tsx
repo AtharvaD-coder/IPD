@@ -1,23 +1,36 @@
-import { useState } from 'react';
-import { Box, Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody, ModalCloseButton, Button, FormControl, FormLabel, Input } from '@chakra-ui/react';
-import 'react-datepicker/dist/react-datepicker.css';
-import { useAccount } from 'wagmi';
+import { useState } from "react";
+import {
+  Box,
+  Button,
+  FormControl,
+  FormLabel,
+  Input,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+} from "@chakra-ui/react";
+import "react-datepicker/dist/react-datepicker.css";
+import { useAccount } from "wagmi";
 
-const BidModal = ({ isOpen, onClose, onSubmit }:any) => {
-  const [amount, setAmount] = useState('');
-  const [numberOfTokens, setNumberOfTokens] = useState('');
+const BidModal = ({ isOpen, onClose, onSubmit }: any) => {
+  const [amount, setAmount] = useState("");
+  const [numberOfTokens, setNumberOfTokens] = useState("");
   const { address } = useAccount();
 
-  const handleAmountChange = (event) => {
+  const handleAmountChange = event => {
     setAmount(event.target.value);
   };
 
-  const handleTokensChange = (event) => {
+  const handleTokensChange = event => {
     setNumberOfTokens(event.target.value);
   };
 
   const handleSubmit = () => {
-    onSubmit(numberOfTokens,amount);
+    onSubmit(numberOfTokens, amount);
   };
 
   return (

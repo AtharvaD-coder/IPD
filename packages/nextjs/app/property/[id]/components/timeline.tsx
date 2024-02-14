@@ -1,101 +1,110 @@
-import * as React from 'react';
-import Web3 from 'web3';
-import contracts from '~~/generated/deployedContracts';
-import { realEstateStatus } from '~~/utils/utils';
+import * as React from "react";
+import Web3 from "web3";
+import contracts from "~~/generated/deployedContracts";
+import { realEstateStatus } from "~~/utils/utils";
 
-export default  function CustomizedTimeline({ tokenId }:any) {
-    const [events,setEvents]=React.useState([]);
-    const localhostUrl = `http://127.0.0.1:8545/`; // Update the port if needed
+export default function CustomizedTimeline({ tokenId }: any) {
+  const [events, setEvents] = React.useState([]);
+  const localhostUrl = `http://127.0.0.1:8545/`; // Update the port if needed
   const web3 = new Web3(localhostUrl); // Replace 'YOUR_PROVIDER_URL' with your Ethereum node provider URL
-
 
   const contractAddress = contracts[31337][0].contracts.RealEstateERC1155.address;
   const contractAbi = contracts[31337][0].contracts.RealEstateERC1155.abi;
 
   const contractweb3 = new web3.eth.Contract(contractAbi, contractAddress);
-  async function getEvents(){
-    const events = await contractweb3.getPastEvents('allEvents', {
-        fromBlock: 0,
-        toBlock: 'latest',
+  async function getEvents() {
+    const events = await contractweb3.getPastEvents("allEvents", {
+      fromBlock: 0,
+      toBlock: "latest",
     });
-    console.log(events, "events",tokenId)
+    console.log(events, "events", tokenId);
     const filteredEvents = events.filter(event => Number(event.returnValues.tokenId) == tokenId);
 
-    const eventsWithTxDetails = await Promise.all(filteredEvents.map(async (event) => {
+    const eventsWithTxDetails = await Promise.all(
+      filteredEvents.map(async event => {
         const tx = await web3.eth.getTransaction(event.transactionHash);
-        const timestamp=(await web3.eth.getBlock(tx.blockNumber)).timestamp
+        const timestamp = (await web3.eth.getBlock(tx.blockNumber)).timestamp;
 
         return {
-            ...event,
-            timestamp: new Date(Number(timestamp) * 1000), // Convert UNIX timestamp to JavaScript Date object
-            sender: tx.from,
+          ...event,
+          timestamp: new Date(Number(timestamp) * 1000), // Convert UNIX timestamp to JavaScript Date object
+          sender: tx.from,
         };
-    }));
+      }),
+    );
 
     console.log(eventsWithTxDetails, "eventsWithTxDetails");
     setEvents(eventsWithTxDetails);
-}
+  }
 
-    React.useEffect(()=>{
-        getEvents()
-    },[tokenId])
+  React.useEffect(() => {
+    getEvents();
+  }, [tokenId]);
 
-    return (
-        <ul className="timeline timeline-snap-icon max-md:timeline-compact timeline-vertical">
-            {
-                events?.map(({timestamp,event,sender,returnValues}:any,index:any)=>{
-                    let eventName='';
-                    let date=new Date(timestamp).toLocaleString();
-                    if(event==="RealEstateListed"){
-                        eventName="Real Estate Listed"
+  return (
+    <ul className="timeline timeline-snap-icon max-md:timeline-compact timeline-vertical">
+      {events?.map(({ timestamp, event, sender, returnValues }: any, index: any) => {
+        let eventName = "";
+        let date = new Date(timestamp).toLocaleString();
+        if (event === "RealEstateListed") {
+          eventName = "Real Estate Listed";
+        } else if (event === "RealEstateUpdated") {
+          eventName = "Real Estate Updated";
+        } else if (event === "RealEstateRented") {
+          eventName = "Real Estate Rented";
+        } else if (event === "RealEstateStatusUpdated") {
+          eventName = " Status Updated";
+        }
 
-                    }
-                    else if(event==="RealEstateUpdated"){
-                        eventName="Real Estate Updated"
-                    }
-                    else if(event==="RealEstateRented"){
-                        eventName="Real Estate Rented"
-                    }
-                    else if(event==="RealEstateStatusUpdated"){
-                        eventName=" Status Updated"
-                    }
-
-                    return (
-                        <li>
-                            <div className="timeline-middle">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-5 w-5"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clipRule="evenodd" /></svg>
-                            </div>
-                            <div className="timeline-start md:text-end mb-20">
-                                <time className="font-mono italic">{date}</time>
-                                <div className="text-lg font-black">{eventName}</div>
-                                <div>
-                                    {
-                                        event==="RealEstateListed" ?
-                                        <div>
-                                            <p><span className='font-bold   ' >By :</span> {sender}</p>
-                                            <p><span className='font-bold' >Initail number of Tokens : </span>{Number(returnValues.noOfTokens)}</p>
-                                            <p><span className='font-bold' >Inital Price of 1 Token : </span>{Number(returnValues.priceOf1Token)}</p>
-
-                                        </div>
-                                        :
-                                    event==="RealEstateStatusUpdated" ?
-                                        <div>
-                                              <p><span className='font-bold   ' >By :</span> {sender}</p>
-                                            <p><span className='font-bold' >Status : </span>{realEstateStatus(Number(returnValues.status))}</p>
-                                        </div>
-                                        
-                                        :
-                                        ''
-                                    }
-                                </div>
-                            </div>
-                            <hr />
-                        </li>
-                    
-                    )
-                })
-            }
-            {/* <li>
+        return (
+          <li>
+            <div className="timeline-middle">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-5 w-5">
+                <path
+                  fillRule="evenodd"
+                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            </div>
+            <div className="timeline-start md:text-end mb-20">
+              <time className="font-mono italic">{date}</time>
+              <div className="text-lg font-black">{eventName}</div>
+              <div>
+                {event === "RealEstateListed" ? (
+                  <div>
+                    <p>
+                      <span className="font-bold   ">By :</span> {sender}
+                    </p>
+                    <p>
+                      <span className="font-bold">Initail number of Tokens : </span>
+                      {Number(returnValues.noOfTokens)}
+                    </p>
+                    <p>
+                      <span className="font-bold">Inital Price of 1 Token : </span>
+                      {Number(returnValues.priceOf1Token)}
+                    </p>
+                  </div>
+                ) : event === "RealEstateStatusUpdated" ? (
+                  <div>
+                    <p>
+                      <span className="font-bold   ">By :</span> {sender}
+                    </p>
+                    <p>
+                      <span className="font-bold">Status : </span>
+                      {realEstateStatus(Number(returnValues.status))}
+                    </p>
+                  </div>
+                ) : (
+                  ""
+                )}
+              </div>
+            </div>
+            <hr />
+          </li>
+        );
+      })}
+      {/* <li>
                 <div className="timeline-middle">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-5 w-5"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clipRule="evenodd" /></svg>
                 </div>
@@ -106,7 +115,7 @@ export default  function CustomizedTimeline({ tokenId }:any) {
                 </div>
                 <hr />
             </li> */}
-            {/* <li>
+      {/* <li>
                 <hr />
                 <div className="timeline-middle">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-5 w-5"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clipRule="evenodd" /></svg>
@@ -153,5 +162,6 @@ export default  function CustomizedTimeline({ tokenId }:any) {
                     The Apple Watch is a line of smartwatches produced by Apple Inc. It incorporates fitness tracking, health-oriented capabilities, and wireless telecommunication, and integrates with iOS and other Apple products and services
                 </div>
             </li> */}
-        </ul>);
+    </ul>
+  );
 }

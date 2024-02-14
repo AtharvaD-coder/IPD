@@ -1,12 +1,11 @@
 // ScaffoldEthApp.tsx
-
-import { Provider } from "react-redux";
+import store from "./redux/store";
 import { ChakraProvider } from "@chakra-ui/react";
-import store from "./redux/store"; 
 import { config } from "@fortawesome/fontawesome-svg-core";
 import "@fortawesome/fontawesome-svg-core/styles.css";
 import "@rainbow-me/rainbowkit/styles.css";
 import { Metadata } from "next";
+import { Provider } from "react-redux";
 import { AppComponent } from "~~/components/AppComponent";
 import "~~/styles/globals.css";
 
@@ -53,9 +52,7 @@ const ScaffoldEthApp = ({ children }: { children: React.ReactNode }) => {
   return (
     <html>
       <body>
-       
-            <AppComponent>{children}</AppComponent>
-     
+        <AppComponent>{children}</AppComponent>
       </body>
     </html>
   );

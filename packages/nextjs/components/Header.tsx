@@ -4,12 +4,11 @@ import React, { useCallback, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Bars3Icon, MagnifyingGlassIcon, SparklesIcon } from "@heroicons/react/24/outline";
 import { HomeIcon } from "@heroicons/react/20/solid";
-import { UserIcon, UserGroupIcon } from "@heroicons/react/24/solid";
+import { Bars3Icon, MagnifyingGlassIcon, SparklesIcon } from "@heroicons/react/24/outline";
+import { UserGroupIcon, UserIcon } from "@heroicons/react/24/solid";
 import { FaucetButton, RainbowKitCustomConnectButton } from "~~/components/scaffold-eth";
 import { useOutsideClick } from "~~/hooks/scaffold-eth";
-
 
 const NavLink = ({ href, children }: { href: string; children: React.ReactNode }) => {
   const pathname = usePathname();
@@ -43,28 +42,28 @@ export const Header = () => {
     <>
       <li>
         <NavLink href="/">
-        <UserIcon className="h-4 w-4" />
+          <UserIcon className="h-4 w-4" />
           Home
         </NavLink>
       </li>
       <li>
         <NavLink href="/listRealEstate">
           <HomeIcon className="h-4 w-4" />
-          List Real Estates
+          <span className="hover:text-secondary-content focus:text-secondary-content">List Real Estate</span>
         </NavLink>
       </li>
-    
+
       <li>
         <NavLink href="/realEstates">
           <MagnifyingGlassIcon className="h-4 w-4" />
-        Search Estates
+          <span className="hover:text-secondary-content focus:text-secondary-content">Search Estates</span>
         </NavLink>
       </li>
 
       <li>
         <NavLink href="/about">
           <UserGroupIcon className="h-4 w-4" />
-        About us
+          <span className="hover:text-secondary-content focus:text-secondary-content">About us</span>
         </NavLink>
       </li>
     </>

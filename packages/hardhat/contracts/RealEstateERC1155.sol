@@ -19,6 +19,12 @@ contract RealEstateERC1155 is ERC1155 {
 		positiveVote,
 		negativeVote
 	}
+	enum voteUserEnum{
+		noVote,
+		upvote,
+		downvote
+	}
+	
 
 	mapping(uint256 => RealEstate) public realEstates;
 	mapping(uint256 => Proposals) public proposals;
@@ -33,6 +39,10 @@ contract RealEstateERC1155 is ERC1155 {
 	mapping(uint256 => uint256) private _rentalIncomes;
 	mapping(uint256 => uint256) private _saleIncomes;
 	mapping(uint256 => uint256) private _costs;
+	mapping(address=>mapping(address=>voteUserEnum)) public userVotes;
+	mapping(address => uint256) public upvotes;
+	mapping(address => uint256) public downvotes;
+
 
 	enum RealEstateStatus {
 		ListedForSale,
@@ -668,6 +678,52 @@ contract RealEstateERC1155 is ERC1155 {
 		realEstate.proposalExists[proposalId] = true;
 		proposalCounter++;
 	}
+
+	function canVoteUser(address user) public view returns (bool){
+		TokenInfo[] memory tokenIds=getRealEstatesByOwner(user);
+		for(uint256 i=0;i<tokenIds.length;i++){
+			if(isOwnerOf(tokenIds[i].tokenId, msg.sender)){
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+
+
+
+	function voteUser(address user,voteUserEnum voteValue) public{
+		require(canVoteUser(user),"no property in common");
+		require(voteValue==userVotes[user][msg.sender],"Already Voted");
+		userVotes[user][msg.sender]=voteValue;
+		
+	}
+
+	function upvoteUser(address user) public {
+		require(canVoteUser(user), "No property in common");
+		require(userVotes[user][msg.sender] != voteUserEnum.upvote  , "Already upvoted");
+		if(userVotes[user][msg.sender]==voteUserEnum.downvote){
+			downvotes[user]--;
+		}
+		upvotes[user]++;
+		userVotes[user][msg.sender] = voteUserEnum.upvote;
+	}
+
+	function downvoteUser(address user) public {
+		require(canVoteUser(user), "No property in common");
+		require(userVotes[user][msg.sender] != voteUserEnum.downvote, "Already downvoted");
+		if(userVotes[user][msg.sender]==voteUserEnum.upvote){
+			upvotes[user]--;
+		}
+		downvotes[user]++;
+		userVotes[user][msg.sender] = voteUserEnum.downvote;
+	}
+
+	function getUserVotesCount(address user) public view returns (uint256 upvoteCount, uint256 downvoteCount) {
+		return (upvotes[user], downvotes[user]);
+	}
+
 
 	function getProposalVotes(
 		uint256 proposalId

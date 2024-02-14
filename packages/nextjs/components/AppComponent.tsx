@@ -1,9 +1,12 @@
 "use client";
 
 import { useEffect } from "react";
+import { ChakraProvider } from "@chakra-ui/react";
 import { RainbowKitProvider, darkTheme, lightTheme } from "@rainbow-me/rainbowkit";
 import { Toaster } from "react-hot-toast";
+import { Provider } from "react-redux";
 import { WagmiConfig } from "wagmi";
+import store from "~~/app/redux/store";
 import { Footer } from "~~/components/Footer";
 import { Header } from "~~/components/Header";
 import { BlockieAvatar } from "~~/components/scaffold-eth";
@@ -13,9 +16,6 @@ import { useDarkMode } from "~~/hooks/scaffold-eth/useDarkMode";
 import { useGlobalState } from "~~/services/store/store";
 import { wagmiConfig } from "~~/services/web3/wagmiConfig";
 import { appChains } from "~~/services/web3/wagmiConnectors";
-import { Provider } from "react-redux";
-import { ChakraProvider } from "@chakra-ui/react";
-import store from "~~/app/redux/store";
 
 export const AppComponent = ({ children }: { children: React.ReactNode }) => {
   const price = useNativeCurrencyPrice();
@@ -37,17 +37,16 @@ export const AppComponent = ({ children }: { children: React.ReactNode }) => {
         avatar={BlockieAvatar}
         theme={isDarkMode ? darkTheme() : lightTheme()}
       >
-         <Provider store={store}>
+        <Provider store={store}>
           <ChakraProvider>
-
-        <div className="flex flex-col min-h-screen">
-          <Header />
-          <main className="relative flex flex-col flex-1">{children}</main>
-          {/* <Footer /> */}
-        </div>
-        <Toaster />
+            <div className="flex flex-col min-h-screen">
+              <Header />
+              <main className="relative flex flex-col flex-1">{children}</main>
+              {/* <Footer /> */}
+            </div>
+            <Toaster />
           </ChakraProvider>
-          </Provider>
+        </Provider>
       </RainbowKitProvider>
     </WagmiConfig>
   );

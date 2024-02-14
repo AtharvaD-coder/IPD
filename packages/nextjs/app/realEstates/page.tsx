@@ -1,13 +1,14 @@
-'use client'
-import React, {useEffect, useState} from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { Flex, Box, Text, Select, cookieStorageManager } from '@chakra-ui/react';
-import Property from '../../components/custom_components/Property';
-import FilterComponent from './components/filterComponent';
-import { useFetch, useLocalStorage } from 'usehooks-ts';
-import { setFilterValues, setLoading } from '../redux/actions';
-import { RootState } from '../redux/reducers'; 
-import { setPropertiesForSale, setPropertiesForRent } from '../redux/actions';
+"use client";
+
+import React, { useEffect, useState } from "react";
+import Property from "../../components/custom_components/Property";
+import { setFilterValues, setLoading } from "../redux/actions";
+import { setPropertiesForRent, setPropertiesForSale } from "../redux/actions";
+import { RootState } from "../redux/reducers";
+import FilterComponent from "./components/filterComponent";
+import { Box, Flex, Select, Text, cookieStorageManager } from "@chakra-ui/react";
+import { useDispatch, useSelector } from "react-redux";
+import { useFetch, useLocalStorage } from "usehooks-ts";
 
 interface HomeProps {
   propertiesForSale: Array<any>;
@@ -15,106 +16,101 @@ interface HomeProps {
 }
 
 const realEstates: React.FC<HomeProps> = () => {
-  
-
-  const containerStyle:React.CSSProperties = {
-    display: 'flex',
-    flexDirection: 'row', 
-    minHeight: '95vh',      
+  const containerStyle: React.CSSProperties = {
+    display: "flex",
+    flexDirection: "row",
+    minHeight: "95vh",
   };
 
-  const sidebarStyle:React.CSSProperties = {
-    flex: 1.5,              
-    backgroundColor: '#9bb0c4', 
-    color: '#333',         
-    paddingTop: '20px', 
-    paddingLeft:'5px',     
-    paddingRight:'5px',     
+  const sidebarStyle: React.CSSProperties = {
+    flex: 1.5,
+    backgroundColor: "#9bb0c4",
+    color: "#333",
+    paddingTop: "20px",
+    paddingLeft: "5px",
+    paddingRight: "5px",
   };
 
   const btnstyle = {
-    marginLeft:'10px',
-    marginRight:'10px',
-    gap:'10px',
+    marginLeft: "10px",
+    marginRight: "10px",
+    gap: "10px",
   };
 
   const bedsnbath = {
-    marginLeft:'10px',
-    marginRight:'10px',
-    gap:'10px',
+    marginLeft: "10px",
+    marginRight: "10px",
+    gap: "10px",
   };
 
   const inputStyle = {
-  padding: "10px",
-  fontSize: "1rem",
-  border: "1px solid #ccc",
-  borderRadius: "8px",
-  // marginLeft: "40rem",
-  marginTop: "20px",
-  width:'300px',
-  backgroundColor: '#c5d4e3',
-  color: '#333',  
-  boxShadow: "3px 0px 14px -3px rgba(110,123,179,0.73)",
-  "::placeholder": {
+    padding: "10px",
+    fontSize: "1rem",
+    border: "1px solid #ccc",
+    borderRadius: "8px",
+    // marginLeft: "40rem",
+    marginTop: "20px",
+    width: "300px",
+    backgroundColor: "#c5d4e3",
     color: "#333",
-    
-  },
-};
+    boxShadow: "3px 0px 14px -3px rgba(110,123,179,0.73)",
+    "::placeholder": {
+      color: "#333",
+    },
+  };
 
-const hrStyle = {
-  marginTop:'8px',
-  width:'100%',
-  color:'#c2c7cc'
-}
+  const hrStyle = {
+    marginTop: "8px",
+    width: "100%",
+    color: "#c2c7cc",
+  };
 
-const titleStyle = {
-  fontSize:'12px'
-}
+  const titleStyle = {
+    fontSize: "12px",
+  };
 
-const applyStyle = {
-  marginTop: '10px'
-}
+  const applyStyle = {
+    marginTop: "10px",
+  };
 
-
-const handleButtonClick = (event: React.MouseEvent<HTMLButtonElement>, purpose: string) => {
-  dispatch(setFilterValues({ ...filterValues, purpose }));
-};
+  const handleButtonClick = (event: React.MouseEvent<HTMLButtonElement>, purpose: string) => {
+    dispatch(setFilterValues({ ...filterValues, purpose }));
+  };
 
   const cardContainerStyle: React.CSSProperties = {
     display: "flex",
     justifyContent: "center",
     gap: "80px",
     flex: 6,
-    padding: '20px',
-    flexWrap: 'wrap',
-    overflowY: 'scroll',
-    height: '80vh',
-    width: '100%',
+    padding: "20px",
+    flexWrap: "wrap",
+    overflowY: "scroll",
+    height: "80vh",
+    width: "100%",
     margin: 3,
-    paddingRight: '15px', // Adjust as needed based on your design
+    paddingRight: "15px", // Adjust as needed based on your design
   };
-  
+
   const cardStyle = {
     border: "1px solid #ccc",
     padding: "16px",
     borderRadius: "8px",
     boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
     cursor: "pointer",
-    backgroundColor:"#4F709C",
-    height:'150px'
-  
+    backgroundColor: "#4F709C",
+    height: "150px",
   };
-  
+
   const headingStyle = {
     fontSize: "1.5rem",
     fontWeight: "bold",
     marginBottom: "0.5rem",
   };
-  
+
   const textStyle = {
     fontSize: "1.25rem",
   };
-  
+
   const dispatch = useDispatch();
 
   const filterValues = useSelector((state: RootState) => state.filterValues);
@@ -122,23 +118,20 @@ const handleButtonClick = (event: React.MouseEvent<HTMLButtonElement>, purpose: 
   const propertiesForSale = useSelector((state: RootState) => state.propertiesForSale);
   const propertiesForRent = useSelector((state: RootState) => state.propertiesForRent);
 
-
-  const { data, error } = useFetch<any>('http://localhost:3000/api/getAllRealEstates');
-  console.log(data,"dataaawww")
-
+  const { data, error } = useFetch<any>("http://localhost:3000/api/getAllRealEstates");
+  console.log(data, "dataaawww");
 
   useEffect(() => {
     dispatch(setLoading(true));
     if (data?.data?.length > 0) {
-
-      const propertiesForSale = data.data.filter((property: any) => property.purpose === 'for-sale');
-      const propertiesForRent = data.data.filter((property: any) => property.purpose === 'for-rent');
+      const propertiesForSale = data.data.filter((property: any) => property.purpose === "for-sale");
+      const propertiesForRent = data.data.filter((property: any) => property.purpose === "for-rent");
 
       dispatch(setPropertiesForSale(propertiesForSale));
       dispatch(setPropertiesForRent(propertiesForRent));
 
       // Set default filter for properties for sale
-      dispatch(setFilterValues({ ...filterValues, purpose: 'for-sale' }));
+      dispatch(setFilterValues({ ...filterValues, purpose: "for-sale" }));
     }
 
     dispatch(setLoading(false));
@@ -149,47 +142,33 @@ const handleButtonClick = (event: React.MouseEvent<HTMLButtonElement>, purpose: 
   //     dispatch(setFilterValues(data.data));
   //   }
 
-  //   dispatch(setLoading(false)); 
+  //   dispatch(setLoading(false));
   // }, [data, dispatch]);
-    
-   
+
   return (
     <div style={containerStyle}>
       <FilterComponent />
       {!loading ? (
-        <div style={cardContainerStyle} className="[&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none']">
+        <div
+          style={cardContainerStyle}
+          className="[&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none']"
+        >
           <Flex>
-            <Flex flexWrap='wrap' className='w-[70vw] flex justify-between'>
-            {filterValues.purpose === 'for-sale'
+            <Flex flexWrap="wrap" className="w-[70vw] flex justify-between">
+              {filterValues.purpose === "for-sale"
                 ? propertiesForSale.map((property: any) => <Property property={property} key={property._id} />)
-                : propertiesForRent.map((property: any) => <Property property={property} key={property._id} />)
-              }
+                : propertiesForRent.map((property: any) => <Property property={property} key={property._id} />)}
             </Flex>
           </Flex>
         </div>
       ) : (
-        <div className='flex justify-center items-center'>
-          Loading...
-        </div>
+        <div className="flex justify-center items-center">Loading...</div>
       )}
     </div>
   );
-  
 };
 
 export default realEstates;
-
-
-
-
-
-
-
-
-
-
-
-
 
 // 'use client'
 // import React, {useEffect, useState} from 'react';
@@ -212,21 +191,20 @@ export default realEstates;
 // }
 
 // const realEstates: React.FC<HomeProps> = () => {
-  
 
 //   const containerStyle:React.CSSProperties = {
 //     display: 'flex',
-//     flexDirection: 'row', 
-//     minHeight: '95vh',      
+//     flexDirection: 'row',
+//     minHeight: '95vh',
 //   };
 
 //   const sidebarStyle:React.CSSProperties = {
-//     flex: 1.5,              
-//     backgroundColor: '#9bb0c4', 
-//     color: '#333',         
-//     paddingTop: '20px', 
-//     paddingLeft:'5px',     
-//     paddingRight:'5px',     
+//     flex: 1.5,
+//     backgroundColor: '#9bb0c4',
+//     color: '#333',
+//     paddingTop: '20px',
+//     paddingLeft:'5px',
+//     paddingRight:'5px',
 //   };
 
 //   const btnstyle = {
@@ -250,11 +228,11 @@ export default realEstates;
 //   marginTop: "20px",
 //   width:'300px',
 //   backgroundColor: '#c5d4e3',
-//   color: '#333',  
+//   color: '#333',
 //   boxShadow: "3px 0px 14px -3px rgba(110,123,179,0.73)",
 //   "::placeholder": {
 //     color: "#333",
-    
+
 //   },
 // };
 
@@ -272,9 +250,8 @@ export default realEstates;
 //   marginTop: '10px'
 // }
 
-
 //   const handleButtonClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    
+
 //     console.log('Button Clicked');
 //   };
 
@@ -291,9 +268,8 @@ export default realEstates;
 //     margin: 3,
 //     paddingRight: '15px', // Adjust as needed based on your design
 //   };
-  
+
 //   // For Webkit browsers like Chrome and Safari
-  
 
 //   const cardStyle = {
 //     border: "1px solid #ccc",
@@ -303,20 +279,20 @@ export default realEstates;
 //     cursor: "pointer",
 //     backgroundColor:"#4F709C",
 //     height:'150px'
-  
+
 //   };
-  
+
 //   const headingStyle = {
 //     fontSize: "1.5rem",
 //     fontWeight: "bold",
 //     marginBottom: "0.5rem",
 //   };
-  
+
 //   const textStyle = {
 //     fontSize: "1.25rem",
 //   };
-  
-//   const { data, error } = useFetch<any>('http://localhost:3000/api/getAllRealEstates')   
+
+//   const { data, error } = useFetch<any>('http://localhost:3000/api/getAllRealEstates')
 //   console.log(data);
 //    const [loading, setLoading] = useState(true);
 //     const [filterValues, setFilterValues] = useState<any>({price:[0,100],area:[0,100]});
@@ -330,7 +306,7 @@ export default realEstates;
 //     const searchParams =  useSearchParams();
 //     // console.log(searchParams)
 //     useEffect(() => {
-      
+
 //       // console.log(searchParams.entries())
 //       // You can now use the current URL
 //       // ...
@@ -344,7 +320,6 @@ export default realEstates;
 //     //   console.log(filterValues,'filterValues')
 //     // },[filterValues])
 
-  
 //     // useEffect(() => {
 //     //   const fetchData = async () => {
 //     //     console.log(Properties)
@@ -354,18 +329,16 @@ export default realEstates;
 //     //       }
 //     //       const { properties } = await getData();
 //     //       setProperties(properties);
-   
+
 //     //       setLoading(false);
 //     //     } catch (error) {
 //     //       console.error('Error fetching data:', error);
 //     //       setLoading(false);
 //     //     }
 //     //   };
-  
+
 //     //   fetchData();
 //     // }, []);
-  
-  
 
 //     const searchProperties = (fv: any) => {
 
@@ -373,16 +346,14 @@ export default realEstates;
 //       console.log(filterValues,fv);
 //     }
 
-    
-   
 //   return (
 //     <div style={containerStyle} >
- 
+
 //        <FilterComponent filterValues={filterValues} setFilterValues={setFilterValues} />
 //       { !loading?<div style={cardContainerStyle} className="[&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none']">
 //         <Flex>
 //           <Flex flexWrap='wrap' className='w-[70vw] flex justify-between'>
-      
+
 //             {data?.data  && data.data?.map((property:any) => <Property property={property} key={property._id} />)}
 
 //           </Flex>
@@ -393,16 +364,14 @@ export default realEstates;
 //         Loading...
 //       </div>
 // }
-      
+
 //      </div>
 
 //   );
 // };
 
-
-
 // // export async function getData() {
-// //   try { 
+// //   try {
 // //     const properties=await axios.get('http://localhost:3000/api/getAllRealEstates')
 // //     console.log(properties.data.data,"properties")
 // //     return {
@@ -410,7 +379,7 @@ export default realEstates;
 // //     };
 // //   } catch (error) {
 // //     console.error('Error fetching data:', error);
-// //     throw error; 
+// //     throw error;
 // //   }
 // // }
 

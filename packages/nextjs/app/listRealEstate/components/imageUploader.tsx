@@ -1,14 +1,15 @@
+import { useState } from "react";
 import Label from "~~/components/custom_components/labels";
-import {useState} from "react";
-export default function ImageUploader({ label,setFiles,files }: { label: string ,setFiles:any,files:any}) {
-  const [imageSelector,setImageSelector]=useState<any>(0);
-  function handleChange(e:any) {
+
+export default function ImageUploader({ label, setFiles, files }: { label: string; setFiles: any; files: any }) {
+  const [imageSelector, setImageSelector] = useState<any>(0);
+  function handleChange(e: any) {
     console.log(e.target.files);
-    setFiles([...files,e.target.files[0]]);
-}
-    return (
+    setFiles([...files, e.target.files[0]]);
+  }
+  return (
     <div>
-     <Label >{label}</Label>
+      <Label>{label}</Label>
 
       {/* <div className="flex items-center justify-center w-full ">
         <label
@@ -40,34 +41,33 @@ export default function ImageUploader({ label,setFiles,files }: { label: string 
         </label>
       </div> */}
       <div className=" flex flex-col items-center">
-
-      {files.length>0 &&
-      (
-        <img className="m-3 w-[200px] h-[200px] object-cover rounded-xl" src={URL.createObjectURL(files[imageSelector])} />
-
-      )
-      
-      }
-      <div className="flex overflow-x-auto my-3 ">
-      
-      {
-          files.map((file:any,index:Number)=>{
-              console.log(file)
-              return (
-                <div   className="m-3 w-[70px] h-[70px] object-cover border-solid border-2 rounded-xl flex justify-center items-center border-black rounded-lg p-2 cursor-pointer"
-                onClick={()=>{
-                    setImageSelector(index)
-                }}>
-
-                  <img className="rounded-xl" src={URL.createObjectURL(file)} />
-                </div>
-                  )
-                  
-                })
-            }
-            </div>
-      <input type="file" onChange={(e)=>handleChange(e)} className="file-input file-input-bordered file-input-primary w-full max-w-xs" />
-          </div>
+        {files.length > 0 && (
+          <img
+            className="m-3 w-[200px] h-[200px] object-cover rounded-xl"
+            src={URL.createObjectURL(files[imageSelector])}
+          />
+        )}
+        <div className="flex overflow-x-auto my-3 ">
+          {files.map((file: any, index: Number) => {
+            console.log(file);
+            return (
+              <div
+                className="m-3 w-[70px] h-[70px] object-cover border-solid border-2 rounded-xl flex justify-center items-center border-black rounded-lg p-2 cursor-pointer"
+                onClick={() => {
+                  setImageSelector(index);
+                }}
+              >
+                <img className="rounded-xl" src={URL.createObjectURL(file)} />
+              </div>
+            );
+          })}
+        </div>
+        <input
+          type="file"
+          onChange={e => handleChange(e)}
+          className="file-input file-input-bordered file-input-primary w-full max-w-xs"
+        />
+      </div>
     </div>
   );
 }

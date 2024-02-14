@@ -1,14 +1,15 @@
-'use client'
+"use client";
 
-import React from 'react';
-import pic from '../public/hero-image.png';
-import CountUp from 'react-countup';
+import React from "react";
+import pic from "../public/hero-image.png";
+import CountUp from "react-countup";
+
 // import { motion } from "framer-motion"
 
 const Home: React.FC = () => (
   <div className="flex bg-gray-800">
     <div className="flex-1 h-screen ">
-      <div className='flex flex-col items-center justify-center h-full'>
+      <div className="flex flex-col items-center justify-center h-full">
         {/* <motion.h1
         initial={{y:"2rem", opacity:0}}
         animate={{y:"0rem", opacity:1}}
@@ -20,86 +21,62 @@ const Home: React.FC = () => (
         </h1>
         </motion.h1> */}
 
-<h1 className='font-bold text-6xl mt-[-200px] text-white leading-loose'>
-          Your Gateway <br className="mt-10"  />
+        <h1 className="font-bold text-6xl mt-[-200px] text-white leading-loose">
+          Your Gateway <br className="mt-10" />
           To Digital Ownership!
         </h1>
 
-        <h3 className='text-zinc-400 mt-10 ml-[-100px] italic'>
+        <h3 className="text-zinc-400 mt-10 ml-[-100px] italic">
           search from a plethora of homes <br />
           and choose the right one for your stay, investment, or purchase.
         </h3>
 
-        <div className='text-white mt-20 flex'>
-            <div className='flex flex-col items-center mr-8 bg-slate-700 rounded-lg p-1 font text-2xl'>
-              <div className='flex items-center'>
-                <CountUp end={10000} />
-                <span className='ml-1 text-orange-400'>+</span>
-              </div>
-              <h1 className='text-zinc-400 mt-1 font-bold'>Premium Estates</h1>
+        <div className="text-white mt-20 flex">
+          <div className="flex flex-col items-center mr-8 bg-slate-700 rounded-lg p-1 font text-2xl">
+            <div className="flex items-center">
+              <CountUp end={10000} />
+              <span className="ml-1 text-orange-400">+</span>
             </div>
-
-            <div className='flex flex-col items-center mr-8  bg-slate-700 rounded-lg p-1 text-2xl'>
-              <div className='flex items-center'>
-                <CountUp end={2000} />
-                <span className='ml-1 text-orange-400'>+</span>
-              </div>
-              <h1 className='text-zinc-400 mt-1 font-bold'>Happy customers</h1>
-            </div>
-
-            <div className='flex flex-col items-center  bg-slate-700 rounded-lg p-1 text-2xl'>
-              <div className='flex items-center'>
-                <CountUp end={30} />
-                <span className='ml-1 text-orange-400'>+</span>
-              </div>
-              <h1 className='text-zinc-400 mt-1 font-bold'>Awards</h1>
-            </div>
+            <h1 className="text-zinc-400 mt-1 font-bold">Premium Estates</h1>
           </div>
 
+          <div className="flex flex-col items-center mr-8  bg-slate-700 rounded-lg p-1 text-2xl">
+            <div className="flex items-center">
+              <CountUp end={2000} />
+              <span className="ml-1 text-orange-400">+</span>
+            </div>
+            <h1 className="text-zinc-400 mt-1 font-bold">Happy customers</h1>
+          </div>
+
+          <div className="flex flex-col items-center  bg-slate-700 rounded-lg p-1 text-2xl">
+            <div className="flex items-center">
+              <CountUp end={30} />
+              <span className="ml-1 text-orange-400">+</span>
+            </div>
+            <h1 className="text-zinc-400 mt-1 font-bold">Awards</h1>
+          </div>
+        </div>
       </div>
-
     </div>
-    
-    <div className="flex-1 h-screen ">
-      
-        <img  style={{
-          width: '25rem',
-          height: '35rem',
-          border: '3px solid ',
-          borderRadius: '15rem 15rem 0 0',
-          marginTop: '35px',
-          marginLeft: '180px',
-        }} src={pic.src} alt="" />
 
+    <div className="flex-1 h-screen ">
+      <img
+        style={{
+          width: "25rem",
+          height: "35rem",
+          border: "3px solid ",
+          borderRadius: "15rem 15rem 0 0",
+          marginTop: "35px",
+          marginLeft: "180px",
+        }}
+        src={pic.src}
+        alt=""
+      />
     </div>
   </div>
 );
 
 export default Home;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // import React from 'react';
 // import Link from 'next/link';
@@ -118,7 +95,7 @@ export default Home;
 // }
 
 // const Banner: React.FC<BannerProps> = ({ purpose, title1, title2, desc1, desc2, buttonText, linkName, imageUrl }) => (
-//   <Flex justifyContent='center' alignItems='center' m='5'> 
+//   <Flex justifyContent='center' alignItems='center' m='5'>
 //     <Box mx='2'>
 //       <Image src={imageUrl} width={500} height={300} alt='' />
 //       <Box p='5'>

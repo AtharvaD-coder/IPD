@@ -1,6 +1,6 @@
 // reducers.ts
-import { createReducer } from '@reduxjs/toolkit';
-import { setFilterValues, setLoading, setPropertiesForSale, setPropertiesForRent } from './actions';
+import { setFilterValues, setLoading, setPropertiesForRent, setPropertiesForSale } from "./actions";
+import { createReducer } from "@reduxjs/toolkit";
 
 interface State {
   filterValues: { [key: string]: any };
@@ -10,13 +10,13 @@ interface State {
 }
 
 const initialState: State = {
-  filterValues: { purpose: '', type: '', price: [0, 100], area: [0, 100], rooms: 0 },
+  filterValues: { purpose: "", type: "", price: [0, 100], area: [0, 100], rooms: 0 },
   loading: false,
   propertiesForSale: [],
   propertiesForRent: [],
 };
 
-export const rootReducer = createReducer(initialState, (builder) => {
+export const rootReducer = createReducer(initialState, builder => {
   builder
     .addCase(setFilterValues, (state, action) => {
       state.filterValues = { ...state.filterValues, ...action.payload };
@@ -33,10 +33,6 @@ export const rootReducer = createReducer(initialState, (builder) => {
 });
 
 export type RootState = ReturnType<typeof rootReducer>;
-
-
-
-
 
 // // reducers.ts
 

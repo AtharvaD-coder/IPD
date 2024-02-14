@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
 interface AccordionProps {
   items: { title: string; content: string[] }[];
@@ -8,7 +8,7 @@ const Accordion: React.FC<AccordionProps> = ({ items }) => {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
 
   const handleClick = (index: number) => {
-    setActiveIndex((prevIndex) => (prevIndex === index ? null : index));
+    setActiveIndex(prevIndex => (prevIndex === index ? null : index));
   };
 
   return (
@@ -17,12 +17,12 @@ const Accordion: React.FC<AccordionProps> = ({ items }) => {
         <div key={index}>
           <h2
             onClick={() => handleClick(index)}
-            className={`accordion-header ${activeIndex === index ? 'active' : ''}`}
+            className={`accordion-header ${activeIndex === index ? "active" : ""}`}
           >
             {item.title}
           </h2>
           <div
-            className={`accordion-body ${activeIndex === index ? 'visible' : 'hidden'}`}
+            className={`accordion-body ${activeIndex === index ? "visible" : "hidden"}`}
             aria-hidden={activeIndex !== index}
           >
             <ul>

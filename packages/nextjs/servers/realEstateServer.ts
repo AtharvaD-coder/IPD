@@ -1,20 +1,17 @@
-import contracts from '../generated/deployedContracts';
-import { ethers } from 'ethers';
-import axios from 'axios'
-import Rentinfo from '../classes/RentInfo';
-import Rentproposal from '../classes/rentProposal';
-import { Properties } from './schema/properties';
-import mongoose, { ConnectOptions } from 'mongoose';
-import { uri } from '../utils/mongoose-utils';
-import Web3 from 'web3';
+import Rentinfo from "../classes/RentInfo";
+import Rentproposal from "../classes/rentProposal";
+import contracts from "../generated/deployedContracts";
+import { uri } from "../utils/mongoose-utils";
+import { Properties } from "./schema/properties";
+import axios from "axios";
+import { ethers } from "ethers";
+import mongoose, { ConnectOptions } from "mongoose";
+import Web3 from "web3";
 
 async function run() {
- 
-
   const localhostUrl = `http://127.0.0.1:8545/`; // Update the port if needed
   const provider = new ethers.JsonRpcProvider(localhostUrl);
   const web3 = new Web3(localhostUrl); // Replace 'YOUR_PROVIDER_URL' with your Ethereum node provider URL
-
 
   const contractAddress = contracts[31337][0].contracts.RealEstateERC1155.address;
   const contractAbi = contracts[31337][0].contracts.RealEstateERC1155.abi;
@@ -22,15 +19,12 @@ async function run() {
   const contract = new ethers.Contract(contractAddress, contractAbi, provider);
   const contractweb3 = new web3.eth.Contract(contractAbi, contractAddress);
 
-  const eventts=await contractweb3.getPastEvents('allEvents', {
+  const eventts = await contractweb3.getPastEvents("allEvents", {
     fromBlock: 0,
-    toBlock: 'latest',
-    
+    toBlock: "latest",
   });
 
-  console.log(eventts,"eventts")
-
-
+  console.log(eventts, "eventts");
 
   //   const propertyForSale = await fetchApi(`${baseUrl}/properties/list?locationExternalIDs=5002&purpose=for-sale&hitsPerPage=200`);
   //   const propertyForRent = await fetchApi(`${baseUrl}/properties/list?locationExternalIDs=5002&purpose=for-rent&hitsPerPage=200`);
@@ -51,22 +45,21 @@ async function run() {
   // newRun();
   // Subscribe to the event
 
-  contract.on('RealEstateListed', async (tokenId, owners, noOfTokens, priceOf1Token, metadataUri, event) => {
-
+  contract.on("RealEstateListed", async (tokenId, owners, noOfTokens, priceOf1Token, metadataUri, event) => {
     try {
       console.log(`Token ID: ${tokenId}`);
       console.log(`Owners: ${owners}`);
       console.log(`Number of Tokens: ${noOfTokens}`);
       console.log(`Price of 1 Token: ${priceOf1Token}`);
-      console.log('metadataUri', metadataUri)
+      console.log("metadataUri", metadataUri);
       let metadata: any = await axios.get(`https://ipfs.io/ipfs/${metadataUri}/metaData.txt`);
-      metadata = metadata.data
-      console.log(metadata, "metadata")
+      metadata = metadata.data;
+      console.log(metadata, "metadata");
       let photos = [];
       for (let i = 0; i < metadata.totalImages; i++) {
-        photos.push(metadata['image' + i]);
+        photos.push(metadata["image" + i]);
       }
-      console.log(photos, "phooootoo")
+      console.log(photos, "phooootoo");
       const data = new Properties({
         tokenId: Number(tokenId),
         owners: owners,
@@ -78,18 +71,16 @@ async function run() {
         purpose: metadata.purpose,
         description: metadata.description,
         metadataUri: metadataUri,
-        amenities:metadata.amenities,
-        BhkType:metadata.BhkType,
-        area:metadata.area,
-        noOfBathrooms:metadata.noOfBathrooms,
-        noOfBedrooms:metadata.noOfBedrooms
-
-      })
-      await data.save()
-      console.log("done")
-    }
-    catch (error) {
-      console.error(error)
+        amenities: metadata.amenities,
+        BhkType: metadata.BhkType,
+        area: metadata.area,
+        noOfBathrooms: metadata.noOfBathrooms,
+        noOfBedrooms: metadata.noOfBedrooms,
+      });
+      await data.save();
+      console.log("done");
+    } catch (error) {
+      console.error(error);
     }
 
     // try{
@@ -101,56 +92,47 @@ async function run() {
     //   console.log(error);
 
     // }
-
-
-
-
   });
 
-  contract.on('RealEstateUpdated', async (tokenId, owners, noOfTokens, priceOf1Token, metadataUri, event) => {
-    try{
+  contract.on("RealEstateUpdated", async (tokenId, owners, noOfTokens, priceOf1Token, metadataUri, event) => {
+    try {
+      console.log(`Token ID: ${tokenId}`);
+      console.log(`Owners: ${owners}`);
+      console.log(`Number of Tokens: ${noOfTokens}`);
+      console.log(`Price of 1 Token: ${priceOf1Token}`);
+      console.log("metadataUri", metadataUri);
+      // let metadata: any = await axios.get(`https://ipfs.io/ipfs/${metadataUri}/metaData.txt`);
+      // metadata = metadata.data
+      // console.log(metadata, "metadata")
+      // let photos = [];
+      // for (let i = 0; i < metadata.totalImages; i++) {
+      //   photos.push(metadata['image' + i]);
+      // }
+      // console.log(photos, "phooootoo")
+      // const data = new Properties({
+      //   tokenId: Number(tokenId),
+      //   owners: owners,
+      //   noOfTokens: Number(noOfTokens),
+      //   priceOf1Token: Number(priceOf1Token),
+      //   coverPhoto: `https://ipfs.io/ipfs/${metadataUri}/image/${metadata.image0}`,
+      //   totalImages: metadata?.totalImages,
+      //   photos: photos,
+      //   purpose: metadata.purpose,
+      //   description: metadata.description,
+      //   metadataUri: metadataUri,
+      //   amenities:metadata.amenities,
+      //   BhkType:metadata.BhkType,
+      //   area:metadata.area,
+      //   noOfBathrooms:metadata.noOfBathrooms,
+      //   noOfBedrooms:metadata.noOfBedrooms
 
-    
-    console.log(`Token ID: ${tokenId}`);
-    console.log(`Owners: ${owners}`);
-    console.log(`Number of Tokens: ${noOfTokens}`);
-    console.log(`Price of 1 Token: ${priceOf1Token}`);
-    console.log('metadataUri', metadataUri)
-    // let metadata: any = await axios.get(`https://ipfs.io/ipfs/${metadataUri}/metaData.txt`);
-    // metadata = metadata.data
-    // console.log(metadata, "metadata")
-    // let photos = [];
-    // for (let i = 0; i < metadata.totalImages; i++) {
-    //   photos.push(metadata['image' + i]);
-    // }
-    // console.log(photos, "phooootoo")
-    // const data = new Properties({
-    //   tokenId: Number(tokenId),
-    //   owners: owners,
-    //   noOfTokens: Number(noOfTokens),
-    //   priceOf1Token: Number(priceOf1Token),
-    //   coverPhoto: `https://ipfs.io/ipfs/${metadataUri}/image/${metadata.image0}`,
-    //   totalImages: metadata?.totalImages,
-    //   photos: photos,
-    //   purpose: metadata.purpose,
-    //   description: metadata.description,
-    //   metadataUri: metadataUri,
-    //   amenities:metadata.amenities,
-    //   BhkType:metadata.BhkType,
-    //   area:metadata.area,
-    //   noOfBathrooms:metadata.noOfBathrooms,
-    //   noOfBedrooms:metadata.noOfBedrooms
-
-    // })
-    // await data.save()
-    console.log("done")
+      // })
+      // await data.save()
+      console.log("done");
+    } catch (error) {
+      console.log(error);
     }
-    catch(error){
-      console.log(error)
-    }
-
-  }
-  )
+  });
   // uint256 proposalId,
   // address proposalId,
   // uint256 positiveVotes,
@@ -162,48 +144,57 @@ async function run() {
   // uint256 deadline,
   // RentInfo rentInfo
 
-  contract.on('ProposalUpserted', async (proposalId, proposalCreator, positiveVotes, negativeVotes, proposalType, tokenId, executed, rentProposal, deadline, rentInfo, event) => {
-    console.log(`Proposal Added - Proposal ID: ${proposalId}`);
-    console.log(`Proposal Creator: ${proposalCreator}`);
-    console.log(`Positive Votes: ${positiveVotes}`);
-    console.log(`Negative Votes: ${negativeVotes}`);
-    console.log(`Proposal Type: ${proposalType}`);
-    console.log(`Token ID: ${tokenId}`);
-    console.log(`Executed: ${executed}`);
-    console.log(`Rent Proposal: `, rentProposal);
-    console.log(`Deadline: ${deadline}`);
-    console.log(`Rent Info: `, rentInfo);
-    const rentinfo = new Rentinfo(rentInfo);
-    const rentproposal = new Rentproposal(rentProposal)
-    const proposalData = {
-      proposalId: Number(proposalId),
-      proposalCreator: proposalCreator,
-      positiveVotes: Number(positiveVotes),
-      negativeVotes: Number(negativeVotes),
-      proposalType: Number(proposalType),
-      tokenId: Number(tokenId),
-      executed: executed,
-      deadline: Number(deadline),
-      Rentinfo: { ...rentinfo },
-      rentproposal: { ...rentproposal }
-    }
-    try {
-      console.log('hello');
-      const res = await axios.post('http://localhost:3000/api/upsertProposal', { data: proposalData });
-      console.log(res.data);
-    }
-    catch (error) {
-      console.log(error);
-    }
-
-
-
-
-
-  });
+  contract.on(
+    "ProposalUpserted",
+    async (
+      proposalId,
+      proposalCreator,
+      positiveVotes,
+      negativeVotes,
+      proposalType,
+      tokenId,
+      executed,
+      rentProposal,
+      deadline,
+      rentInfo,
+      event,
+    ) => {
+      console.log(`Proposal Added - Proposal ID: ${proposalId}`);
+      console.log(`Proposal Creator: ${proposalCreator}`);
+      console.log(`Positive Votes: ${positiveVotes}`);
+      console.log(`Negative Votes: ${negativeVotes}`);
+      console.log(`Proposal Type: ${proposalType}`);
+      console.log(`Token ID: ${tokenId}`);
+      console.log(`Executed: ${executed}`);
+      console.log(`Rent Proposal: `, rentProposal);
+      console.log(`Deadline: ${deadline}`);
+      console.log(`Rent Info: `, rentInfo);
+      const rentinfo = new Rentinfo(rentInfo);
+      const rentproposal = new Rentproposal(rentProposal);
+      const proposalData = {
+        proposalId: Number(proposalId),
+        proposalCreator: proposalCreator,
+        positiveVotes: Number(positiveVotes),
+        negativeVotes: Number(negativeVotes),
+        proposalType: Number(proposalType),
+        tokenId: Number(tokenId),
+        executed: executed,
+        deadline: Number(deadline),
+        Rentinfo: { ...rentinfo },
+        rentproposal: { ...rentproposal },
+      };
+      try {
+        console.log("hello");
+        const res = await axios.post("http://localhost:3000/api/upsertProposal", { data: proposalData });
+        console.log(res.data);
+      } catch (error) {
+        console.log(error);
+      }
+    },
+  );
 }
 
- mongoose.connect(uri  ).then(()=>{
-  console.log("connected")
+mongoose.connect(uri).then(() => {
+  console.log("connected");
   run();
-})
+});

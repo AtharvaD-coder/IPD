@@ -1,3 +1,3 @@
-  const json={
-            purpose:"for-sale",
-        }
+const json = {
+  purpose: "for-sale",
+};

@@ -13,6 +13,7 @@ import {
 import { Line } from "react-chartjs-2";
 import { useScaffoldContractRead } from "~~/hooks/scaffold-eth";
 import { convertWeiToEther } from "~~/utils/utils";
+import { CardBox } from "~~/components/custom_components/cardComponent";
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler);
 const colors = [
@@ -118,11 +119,11 @@ const PriceHistory = ({ tokenIds }) => {
   };
 
   return (
-    <div>
+    <CardBox>
     <h1 className="text-3xl font-bold">Price History</h1>
 
       <Line data={chartData} options={options} />
-    </div>
+    </CardBox>
   );
 };
 

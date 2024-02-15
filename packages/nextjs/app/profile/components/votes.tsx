@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { CardBox } from "~~/components/custom_components/cardComponent";
 import { useScaffoldContractRead, useScaffoldContractWrite } from "~~/hooks/scaffold-eth";
 
 export default function VotesComponent({ address }: any) {
@@ -33,7 +34,7 @@ export default function VotesComponent({ address }: any) {
 
 
     return (
-        <div className="border-2 rounded-xl m-3">
+      <CardBox>
             <h1 className="text-3xl font-bold ">Votes</h1>
             <div className="flex flex-col m-3">
                 <div className="mt-4">
@@ -73,6 +74,6 @@ export default function VotesComponent({ address }: any) {
                     <button onClick={() => downvote()} className="btn btn-primary m-3">DownVote</button>
                 </div>
             </div>
-        </div>
+        </CardBox>
     );
 }

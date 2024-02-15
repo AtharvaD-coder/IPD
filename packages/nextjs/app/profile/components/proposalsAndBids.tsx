@@ -1,5 +1,6 @@
 import { Box, Button, Text } from "@chakra-ui/react";
 import { formatEther, parseUnits } from "ethers";
+import { CardBox } from "~~/components/custom_components/cardComponent";
 import { useScaffoldContractRead, useScaffoldContractWrite } from "~~/hooks/scaffold-eth";
 
 export default function ProposalsAndBids({ tokenIds }) {
@@ -61,7 +62,7 @@ export default function ProposalsAndBids({ tokenIds }) {
 
     return (
         <div>
-            <div className="border-4 rounded-lg p-2 my-3">
+          <CardBox>
                 <h1 className="text-3xl font-bold "> Proposals</h1>
 
                 {activeProposals?.slice(0, 3).map((proposal: any) => (
@@ -97,8 +98,8 @@ export default function ProposalsAndBids({ tokenIds }) {
 
                     </div>
                 ))}
-            </div>
-            <div className="border-4  rounded-lg p-2 my-3 " >
+            </CardBox>
+            <CardBox>
                 <h1 className="text-3xl font-bold "> Bids</h1>
 
                 {activeBids?.slice(0, 3).map((bid: any) => (
@@ -140,7 +141,7 @@ export default function ProposalsAndBids({ tokenIds }) {
 
                     </div>
                 ))}
-            </div>
+            </CardBox>
         </div>
     );
 }

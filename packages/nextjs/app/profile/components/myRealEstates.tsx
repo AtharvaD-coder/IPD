@@ -4,6 +4,7 @@ import axios from "axios";
 import { useAccount } from "wagmi";
 import Property from "~~/components/custom_components/Property";
 import Card from "~~/components/custom_components/card";
+import { CardBox } from "~~/components/custom_components/cardComponent";
 
 export default function Properties() {
   const { address } = useAccount();
@@ -22,7 +23,10 @@ export default function Properties() {
     fetchForomDb();
   }, [address]);
   return (
+    <CardBox>
+      <h1 className="text-3xl font-bold">My real Estates</h1>
     <div className="w-full flex justify-center grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-4 ">
+
       {realEstates?.map((data: any, index) => {
         return (
           <div key={index}>
@@ -31,5 +35,6 @@ export default function Properties() {
         );
       })}
     </div>
+    </CardBox>
   );
 }

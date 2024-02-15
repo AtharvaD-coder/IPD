@@ -15,6 +15,7 @@ import { AddressInput } from "~~/components/scaffold-eth";
 import { useScaffoldContractRead, useScaffoldContractWrite } from "~~/hooks/scaffold-eth";
 import { uploadToPinata } from "~~/utils/ipfs";
 import { amenities } from "~~/utils/utils";
+import MapboxMap from "./components/mapComponent";
 
 interface RentProps {
   numberOfMonths?: number;
@@ -243,6 +244,9 @@ export default function ListRealEstate() {
       <div className="horizontal-2 w-[90vw] ">
         <Label>Amenities</Label>
         <AmenitySelector selectedAmenities={additionalDetails.amenities} setSelectedAmenities={handleAmenitiesChange} />
+      </div>
+      <div>
+      <MapboxMap/>
       </div>
 
       <Button

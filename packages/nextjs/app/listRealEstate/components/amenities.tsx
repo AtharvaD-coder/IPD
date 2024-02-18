@@ -8,27 +8,19 @@ export default function AmenitySelector({ selectedAmenities, setSelectedAmenitie
     } else {
       setSelectedAmenities([...selectedAmenities, amenity]);
     }
-
-    // setSelectedAmenities(prevSelected => {
-    //   if (prevSelected.includes(amenity)) {
-    //     return prevSelected.filter(selected => selected !== amenity);
-    //   } else {
-    //     return [...prevSelected, amenity];
-    //   }
-    // });
   };
 
   return (
-    <div className="flex flex-wrap ">
+    <div className="flex flex-wrap">
       {amenities.map(amenity => (
-        <div key={amenity} className="items-center flex justify-center m-2">
+        <div key={amenity} className="flex flex-col items-center m-2">
+          <span className="mb-1 font-bold text-sm ">{amenity}</span>
           <input
             type="checkbox"
             checked={selectedAmenities.includes(amenity)}
             onChange={() => handleAmenityToggle(amenity)}
-            className="checkbox checkbox-primary m-2 "
+            className="checkbox checkbox-primary"
           />
-          {amenity}
         </div>
       ))}
     </div>

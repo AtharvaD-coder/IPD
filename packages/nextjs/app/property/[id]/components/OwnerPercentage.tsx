@@ -3,10 +3,11 @@ import { ArcElement, Chart as ChartJS } from "chart.js";
 import { Pie } from "react-chartjs-2";
 import { IdentificationIcon } from "@heroicons/react/24/outline";
 import { useScaffoldContractRead } from "~~/hooks/scaffold-eth";
+import { CardBox } from "~~/components/custom_components/cardComponent";
 
 ChartJS.register(ArcElement);
 
-export default function OwnerShip({ id }) {
+export default function OwnerShip({ id ,realEstateArray}) {
   const { data: ownersAndPercentages } = useScaffoldContractRead({
     contractName: "RealEstateERC1155",
     functionName: "getOwnersAndPercentage",
@@ -51,11 +52,16 @@ export default function OwnerShip({ id }) {
     ],
   };
   return (
-    <div className="w-[300px] m-3 ">
-      <Box mt={8}>
-        <Text>Ownership Percentage</Text>
-        <Pie data={pieChartData} />
-      </Box>
-    </div>
+    <CardBox
+      className='w-[100%] '
+    >
+      <h1 className="text-3xl font-bold">Ownership Percentage</h1>
+      <div className="w-[310px] m-3 ">
+        <Box mt={8}>
+
+          <Pie data={pieChartData} />
+        </Box>
+      </div>
+    </CardBox>
   );
 }

@@ -86,7 +86,7 @@ const PriceHistory = ({ tokenId }) => {
   };
 
   return (
-    <div>
+    <div className="w-[100%] ">
       <Line data={data()} options={options} />
     </div>
   );

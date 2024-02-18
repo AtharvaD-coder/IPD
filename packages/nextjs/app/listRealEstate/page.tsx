@@ -16,8 +16,6 @@ import { useScaffoldContractRead, useScaffoldContractWrite } from "~~/hooks/scaf
 import { uploadToPinata } from "~~/utils/ipfs";
 import { amenities } from "~~/utils/utils";
 import MapboxMap from "./components/mapComponent";
-import { CardBox } from "~~/components/custom_components/cardComponent";
-import ToggleButtonSizes from "./components/toggleButton";
 
 interface RentProps {
   numberOfMonths?: number;
@@ -155,90 +153,66 @@ export default function ListRealEstate() {
       <div className="horizontal-1 flex justify-between items-center w-[90vw] ">
         <div className="m-2 w-[30vw]">
           <ImageUploader files={files} setFiles={setFiles} label={"Upload Image"} />
-          {/* <ImageUploader/> */}
         </div>
         <div className=" w-[30vw] justify-center items-center flex flex-col ">
-          <CardBox>
-          <NumberInput 
+          <NumberInput
             value={ListDetails.initialAmountOfTokens}
             onChange={(e: any, val: any) => setListDetails({ ...ListDetails, initialAmountOfTokens: Number(val) })}
-            label={"Number of tokens of property"}
-            
+            label={"Number of tokens of your property"}
           />
-          <NumberInput 
+          <NumberInput
             value={ListDetails.priceOf1Token}
             onChange={(e: any, val: any) => setListDetails({ ...ListDetails, priceOf1Token: Number(val) })}
             label={"Price of 1 Token"}
           />
-          </CardBox>
-          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <CardBox>
-                <NumberInput
-                  label={"Area (in Sq ft)"}
-                  value={additionalDetails.area}
-                  onChange={(e: any, val: any) => {
-                    setAdditionalDetails((prev: any) => ({ ...prev, area: val }));
-                  }}
-                />
-                <NumberInput
-                  label={"Number of Bathrooms"}
-                  value={additionalDetails.noOfBathrooms}
-                  onChange={(e: any, val: any) => {
-                    setAdditionalDetails((prev: any) => ({ ...prev, noOfBathrooms: val }));
-                  }}
-                />
-                <NumberInput
-                  label={"Number of Bedrooms"}
-                  value={additionalDetails.noOfBedrooms}
-                  onChange={(e: any, val: any) => {
-                    setAdditionalDetails((prev: any) => ({ ...prev, noOfBedrooms: val }));
-                  }}
-                />
-
-                <NumberInput
-                  label={"BHK"}
-                  value={additionalDetails.bhk}
-                  onChange={(e: any, val: any) => {
-                    setAdditionalDetails((prev: any) => ({ ...prev, bhk: val }));
-                  }}
-                />
-
-                </CardBox>
-            </div>
+          <NumberInput
+            label={"Area (in Sq ft)"}
+            value={additionalDetails.area}
+            onChange={(e: any, val: any) => {
+              setAdditionalDetails((prev: any) => ({ ...prev, area: val }));
+            }}
+          />
+          <NumberInput
+            label={"Number of Bathrooms"}
+            value={additionalDetails.noOfBathrooms}
+            onChange={(e: any, val: any) => {
+              setAdditionalDetails((prev: any) => ({ ...prev, noOfBathrooms: val }));
+            }}
+          />
+          <NumberInput
+            label={"Number of Bedrooms"}
+            value={additionalDetails.noOfBedrooms}
+            onChange={(e: any, val: any) => {
+              setAdditionalDetails((prev: any) => ({ ...prev, noOfBedrooms: val }));
+            }}
+          />
         </div>
       </div>
-                  <CardBox>
       <div className="horizontal-2 w-[90vw] ">
-      
-        <Label> Estate Description:</Label>
+        <Label>Short description</Label>
         <textarea
           value={additionalDetails?.description ?? ""}
           onChange={e => {
             setAdditionalDetails((prev: any) => ({ ...prev, description: e.target.value }));
           }}
           className="textarea rounded-3xl textarea-bordered w-full"
-          placeholder="write a description for your estate!"
+          placeholder="Short Description"
         />
       </div>
 
       <div className="horizontal-3 w-[90vw]">
         {/* <Radio label={'Type Of property'} options={['Residential', 'Commercial', 'Vacation Home', 'PG']} /> */}
-        
-        <div className="mt-5">
-        <Label> Property for:</Label>
-        <ToggleButtonSizes/>
-        </div>
-
-        {/* <Radio
+        <Radio label={"For"} options={["Sale", "Rent"]} onChange={handleTypeChange} name="radio-group-1" />
+        <Radio
           label={"BHK type"}
           options={["1 BHk", "2 BHK", "3BHK", "3+ BHK"]}
           onChange={handleBHKTypeChange}
           name="radio-group-2"
-        /> */}
+        />
 
         {/* <Radio label={'Size'} options={['1 BHK', '2 BHK', '3BHK', '4BHK']} /> */}
       </div>
-</CardBox>
+
       {isForRent && (
         <div className="horizontal-2 w-[90vw] ">
           <NumberInput label={"Number of Months"} />
@@ -267,13 +241,12 @@ export default function ListRealEstate() {
           />
         </div>
       )}
-      <CardBox>
       <div className="horizontal-2 w-[90vw] ">
-        <Label>Amenities:</Label>
+        <Label>Amenities</Label>
         <AmenitySelector selectedAmenities={additionalDetails.amenities} setSelectedAmenities={handleAmenitiesChange} />
       </div>
-      </CardBox>
       <div>
+        {/* <MapboxMap /> */}
       {/* <MapboxMap/> */}
       </div>
 

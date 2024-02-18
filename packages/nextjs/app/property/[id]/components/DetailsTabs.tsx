@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { CardBox } from "~~/components/custom_components/cardComponent";
 
 export default function DetailsTabs({ TabComponents }) {
   const [selectedTab, setSelectedTab] = useState(0);
@@ -8,6 +9,11 @@ export default function DetailsTabs({ TabComponents }) {
   };
 
   return (
+    <CardBox
+
+    className='w-[100%] '
+  >
+    <h1 className="text-3xl font-bold">More Details</h1>
     <div role="tablist" className="tabs tabs-lifted tabs-lg w-fit">
       {TabComponents.map(({ title, Component }, index) => (
         <>
@@ -31,5 +37,6 @@ export default function DetailsTabs({ TabComponents }) {
         </>
       ))}
     </div>
+    </CardBox>
   );
 }

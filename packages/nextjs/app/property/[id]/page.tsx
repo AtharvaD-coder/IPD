@@ -25,6 +25,7 @@ import { formatGwei } from "viem";
 import { useAccount } from "wagmi";
 import Button from "~~/components/custom_components/button";
 import { useScaffoldContractRead, useScaffoldContractWrite } from "~~/hooks/scaffold-eth";
+import Map from "./components/map";
 
 const PropertyDetails = ({ params }: any) => {
   const [data, setData] = useState<any>({});
@@ -237,6 +238,9 @@ const PropertyDetails = ({ params }: any) => {
         </div>
         <div>
           <OwnerShip id={params?.id ?? 0} />
+         
+            <Map />
+        
         </div>
       </div>
 

@@ -246,7 +246,7 @@ export default function ListRealEstate() {
         <AmenitySelector selectedAmenities={additionalDetails.amenities} setSelectedAmenities={handleAmenitiesChange} />
       </div>
       <div>
-      <MapboxMap/>
+        {/* <MapboxMap /> */}
       </div>
 
       <Button

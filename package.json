@@ -45,6 +45,7 @@
     "@emotion/is-prop-valid": "^1.2.1",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
+    "@headlessui/react": "^1.7.18",
     "@mapbox/mapbox-gl-geocoder": "^5.0.2",
     "@mapbox/search-js-react": "^1.0.0-beta.18",
     "@mui/icons-material": "^5.14.9",

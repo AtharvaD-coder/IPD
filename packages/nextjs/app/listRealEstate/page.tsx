@@ -247,6 +247,7 @@ export default function ListRealEstate() {
       </div>
       <div>
         {/* <MapboxMap /> */}
+      {/* <MapboxMap/> */}
       </div>
 
       <Button

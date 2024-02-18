@@ -1,10 +1,11 @@
 
 import mapboxgl, { LngLatLike } from 'mapbox-gl';
 import { useEffect, useRef } from 'react';
+import { CardBox } from '~~/components/custom_components/cardComponent';
 
 export default function Map(){
     const mapContainerRef = useRef(null);
-    const ACCESS_TOKEN='pk.eyJ1IjoiYW51cmFnODYiLCJhIjoiY2xtcjdvemQ5MDRnaDJqcXZmdmwzZGk0NCJ9.Rtfd_h0kJc3kwbHuEYUPyw'
+    const ACCESS_TOKEN='pk..'
     useEffect(() => {
         mapboxgl.accessToken = ACCESS_TOKEN;
         const map = new mapboxgl.Map({
@@ -45,8 +46,13 @@ export default function Map(){
 
 
     return (
-        <div className='h-[200px] w-auto'>
-            <div id='map' ref={mapContainerRef} style={{width: '100%', height: '100%'}} />
+        <CardBox
+        className='w-[100%] '
+      >
+        <h1 className="text-3xl font-bold">Locaiton</h1>
+        <div className='h-[300px] w-auto rounded-xl'>
+            <div id='map' ref={mapContainerRef} style={{width: '100%', height: '100%',}} />
         </div>
+        </CardBox>
     )
 }

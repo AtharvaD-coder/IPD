@@ -5,6 +5,7 @@ import { Stat, StatArrow, StatGroup, StatHelpText, StatLabel, StatNumber } from 
 import "chart.js/auto";
 import { stat } from "fs";
 import { Pie } from "react-chartjs-2";
+import { CardBox } from "~~/components/custom_components/cardComponent";
 import { useScaffoldContractRead, useScaffoldContractWrite } from "~~/hooks/scaffold-eth";
 
 // Define types for owners and percentages
@@ -156,8 +157,10 @@ const PropertyDetails = ({ params }: any) => {
           <Pie data={pieChartData} />
         </Box>
       </Flex>
+      <CardBox>
       <Tabs>
         <TabList>
+
           <Tab>Active Proposals</Tab>
           <Tab>Executed Proposals</Tab>
           <Tab>Expired Proposals</Tab>
@@ -211,7 +214,9 @@ const PropertyDetails = ({ params }: any) => {
           </TabPanel>
         </TabPanels>
       </Tabs>
-
+      </CardBox>
+      
+      <CardBox>
       <Tabs mt={10}>
         <TabList>
           <Tab>Active Bids</Tab>
@@ -256,6 +261,7 @@ const PropertyDetails = ({ params }: any) => {
           </TabPanel>
         </TabPanels>
       </Tabs>
+      </CardBox>
     </Box>
   );
 };

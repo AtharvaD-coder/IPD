@@ -1,5 +1,6 @@
 import * as React from "react";
 import Web3 from "web3";
+import { CardBox } from "~~/components/custom_components/cardComponent";
 import contracts from "~~/generated/deployedContracts";
 import { realEstateStatus } from "~~/utils/utils";
 
@@ -42,7 +43,11 @@ export default function CustomizedTimeline({ tokenId }: any) {
   }, [tokenId]);
 
   return (
-    <ul className="timeline timeline-snap-icon max-md:timeline-compact timeline-vertical">
+    <CardBox
+    className='w-[100%] flx '
+  >
+    <h1 className="text-3xl font-bold mb-3">Activity </h1>
+    <ul className="timeline timeline-snap-icon max-md:timeline-compact timeline-vertical ">
       {events?.map(({ timestamp, event, sender, returnValues }: any, index: any) => {
         let eventName = "";
         let date = new Date(timestamp).toLocaleString();
@@ -55,9 +60,79 @@ export default function CustomizedTimeline({ tokenId }: any) {
         } else if (event === "RealEstateStatusUpdated") {
           eventName = " Status Updated";
         }
+        else if (event === "TokensTransfered") {
+          eventName = "Tokens Transfered"
+        }
 
         return (
           <li>
+
+            <div className={`timeline-${index % 2 == 0 ? "start" : "end"}   md:text-end mb-20`} >
+              <div style={{
+                transform: 'scaleY(-1)',
+
+              }} className={`chat chat-${index % 2 === 0 ? "end" : "start"}  flex flex-row justify-center   `}>
+                <div className="chat-bubble chat-bubble-secondary  ">
+
+
+                  <div style={{
+                    transform: 'scaleY(-1)'
+
+                  }} >
+
+                    <time className="font-mono italic">{date}</time>
+                    <div className="text-lg font-black">{eventName}</div>
+                    <div>
+                      {event === "RealEstateListed" ? (
+                        <div>
+                          <p>
+                            <span className="font-bold   ">By :</span> {sender}
+                          </p>
+                          <p>
+                            <span className="font-bold">Initail number of Tokens : </span>
+                            {Number(returnValues.noOfTokens)}
+                          </p>
+                          <p>
+                            <span className="font-bold">Inital Price of 1 Token : </span>
+                            {Number(returnValues.priceOf1Token)}
+                          </p>
+                        </div>
+                      ) : event === "RealEstateStatusUpdated" ? (
+                        <div>
+                          <p>
+                            <span className="font-bold   ">By :</span> {sender}
+                          </p>
+                          <p>
+                            <span className="font-bold">Status : </span>
+                            {realEstateStatus(Number(returnValues.status))}
+                          </p>
+                        </div>
+                      ) : event === "TokensTransfered" ? (
+                        <div>
+                          <p>
+                            <span className="font-bold   ">from :</span> {returnValues.from}
+                          </p>
+                          <p>
+                            <span className="font-bold   ">To :</span> {returnValues.to}
+                          </p>
+                          <p>
+                            <span className="font-bold ">Number of tokens : </span>
+                            {Number(returnValues.noOfTokens)} tokens
+                          </p>
+                        </div>
+                      ) :
+                        (
+                          ""
+                        )
+                      }
+                    </div>
+                  </div>
+
+
+                </div>
+              </div>
+
+            </div>
             <div className="timeline-middle">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-5 w-5">
                 <path
@@ -66,39 +141,7 @@ export default function CustomizedTimeline({ tokenId }: any) {
                   clipRule="evenodd"
                 />
               </svg>
-            </div>
-            <div className="timeline-start md:text-end mb-20">
-              <time className="font-mono italic">{date}</time>
-              <div className="text-lg font-black">{eventName}</div>
-              <div>
-                {event === "RealEstateListed" ? (
-                  <div>
-                    <p>
-                      <span className="font-bold   ">By :</span> {sender}
-                    </p>
-                    <p>
-                      <span className="font-bold">Initail number of Tokens : </span>
-                      {Number(returnValues.noOfTokens)}
-                    </p>
-                    <p>
-                      <span className="font-bold">Inital Price of 1 Token : </span>
-                      {Number(returnValues.priceOf1Token)}
-                    </p>
-                  </div>
-                ) : event === "RealEstateStatusUpdated" ? (
-                  <div>
-                    <p>
-                      <span className="font-bold   ">By :</span> {sender}
-                    </p>
-                    <p>
-                      <span className="font-bold">Status : </span>
-                      {realEstateStatus(Number(returnValues.status))}
-                    </p>
-                  </div>
-                ) : (
-                  ""
-                )}
-              </div>
+
             </div>
             <hr />
           </li>
@@ -163,5 +206,6 @@ export default function CustomizedTimeline({ tokenId }: any) {
                 </div>
             </li> */}
     </ul>
+    </CardBox>
   );
 }

@@ -7,7 +7,7 @@ import { CardBox } from "~~/components/custom_components/cardComponent";
 
 ChartJS.register(ArcElement);
 
-export default function OwnerShip({ id }) {
+export default function OwnerShip({ id ,realEstateArray}) {
   const { data: ownersAndPercentages } = useScaffoldContractRead({
     contractName: "RealEstateERC1155",
     functionName: "getOwnersAndPercentage",

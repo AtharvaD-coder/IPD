@@ -11,7 +11,7 @@ export default function PropertyDetailCard({
     <CardBox
     className='w-[100%] '
   >
-    <h1 className="text-3xl font-bold">My real Estates</h1>
+    <h1 className="text-3xl font-bold mb-5">Property Details</h1>
     <div className=" w-fit h-[120px] items-center flex border-2 border-black rounded-xl justify-center  pt-4 pb-4   ">
       <div className="m-5">
         <p className=" mb-0 opacity-75 text-md">Price</p>

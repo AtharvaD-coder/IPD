@@ -16,7 +16,9 @@ import { useScaffoldContractRead, useScaffoldContractWrite } from "~~/hooks/scaf
 import { uploadToPinata } from "~~/utils/ipfs";
 import { amenities } from "~~/utils/utils";
 import MapboxMap from "./components/mapComponent";
-
+import { CardBox } from "~~/components/custom_components/cardComponent";
+import ToggleButtonSizes from "./components/toggleButton";
+import { motion, AnimatePresence } from 'framer-motion'
 interface RentProps {
   numberOfMonths?: number;
   rentPerMonth?: number;
@@ -149,105 +151,142 @@ export default function ListRealEstate() {
   console.log(ListDetails, "listDetails");
 
   return (
-    <div className="p-9">
-      <div className="horizontal-1 flex justify-between items-center w-[90vw] ">
-        <div className="m-2 w-[30vw]">
+
+    <div className="p-5">
+      <div className="horizontal-1 flex justify-between items-center w-[100%] ">
+        <div className="m-2 w-1/3 ">
           <ImageUploader files={files} setFiles={setFiles} label={"Upload Image"} />
+          {/* <ImageUploader/> */}
         </div>
-        <div className=" w-[30vw] justify-center items-center flex flex-col ">
-          <NumberInput
-            value={ListDetails.initialAmountOfTokens}
-            onChange={(e: any, val: any) => setListDetails({ ...ListDetails, initialAmountOfTokens: Number(val) })}
-            label={"Number of tokens of your property"}
-          />
-          <NumberInput
-            value={ListDetails.priceOf1Token}
-            onChange={(e: any, val: any) => setListDetails({ ...ListDetails, priceOf1Token: Number(val) })}
-            label={"Price of 1 Token"}
-          />
-          <NumberInput
-            label={"Area (in Sq ft)"}
-            value={additionalDetails.area}
-            onChange={(e: any, val: any) => {
-              setAdditionalDetails((prev: any) => ({ ...prev, area: val }));
-            }}
-          />
-          <NumberInput
-            label={"Number of Bathrooms"}
-            value={additionalDetails.noOfBathrooms}
-            onChange={(e: any, val: any) => {
-              setAdditionalDetails((prev: any) => ({ ...prev, noOfBathrooms: val }));
-            }}
-          />
-          <NumberInput
-            label={"Number of Bedrooms"}
-            value={additionalDetails.noOfBedrooms}
-            onChange={(e: any, val: any) => {
-              setAdditionalDetails((prev: any) => ({ ...prev, noOfBedrooms: val }));
-            }}
-          />
+        <div className=" w-1/3 justify-center items-center flex flex-col ">
+          <CardBox className="w-[100%]">
+            <NumberInput
+              value={ListDetails.initialAmountOfTokens}
+              onChange={(e: any, val: any) => setListDetails({ ...ListDetails, initialAmountOfTokens: Number(val) })}
+              label={"Number of tokens of property"}
+
+            />
+            <NumberInput
+              value={ListDetails.priceOf1Token}
+              onChange={(e: any, val: any) => setListDetails({ ...ListDetails, priceOf1Token: Number(val) })}
+              label={"Price of 1 Token"}
+            />
+          </CardBox>
+          <CardBox className="w-[100%]" >
+            <NumberInput
+              label={"Area (in Sq ft)"}
+              value={additionalDetails.area}
+              onChange={(e: any, val: any) => {
+                setAdditionalDetails((prev: any) => ({ ...prev, area: val }));
+              }}
+            />
+            <NumberInput
+              label={"Number of Bathrooms"}
+              value={additionalDetails.noOfBathrooms}
+              onChange={(e: any, val: any) => {
+                setAdditionalDetails((prev: any) => ({ ...prev, noOfBathrooms: val }));
+              }}
+            />
+            <NumberInput
+              label={"Number of Bedrooms"}
+              value={additionalDetails.noOfBedrooms}
+              onChange={(e: any, val: any) => {
+                setAdditionalDetails((prev: any) => ({ ...prev, noOfBedrooms: val }));
+              }}
+            />
+
+            <NumberInput
+              label={"BHK"}
+              value={additionalDetails.bhk}
+              onChange={(e: any, val: any) => {
+                setAdditionalDetails((prev: any) => ({ ...prev, bhk: val }));
+              }}
+            />
+
+          </CardBox>
         </div>
       </div>
-      <div className="horizontal-2 w-[90vw] ">
-        <Label>Short description</Label>
-        <textarea
-          value={additionalDetails?.description ?? ""}
-          onChange={e => {
-            setAdditionalDetails((prev: any) => ({ ...prev, description: e.target.value }));
-          }}
-          className="textarea rounded-3xl textarea-bordered w-full"
-          placeholder="Short Description"
-        />
-      </div>
-
-      <div className="horizontal-3 w-[90vw]">
-        {/* <Radio label={'Type Of property'} options={['Residential', 'Commercial', 'Vacation Home', 'PG']} /> */}
-        <Radio label={"For"} options={["Sale", "Rent"]} onChange={handleTypeChange} name="radio-group-1" />
-        <Radio
-          label={"BHK type"}
-          options={["1 BHk", "2 BHK", "3BHK", "3+ BHK"]}
-          onChange={handleBHKTypeChange}
-          name="radio-group-2"
-        />
-
-        {/* <Radio label={'Size'} options={['1 BHK', '2 BHK', '3BHK', '4BHK']} /> */}
-      </div>
-
-      {isForRent && (
+      <CardBox className={'rounded-[30px] my-5'} >
         <div className="horizontal-2 w-[90vw] ">
-          <NumberInput label={"Number of Months"} />
-          <NumberInput label={"Rent per Month"} />
-          <NumberInput label={"Deposit Amount"} />
-          <NumberInput label={"Fees for Late Installments"} />
-          <Input
-            label={"Contract Start Timestamp"}
-            type="date"
-            value={
-              ListDetails.rentProps && ListDetails.rentProps.contractStartTimestamp
-                ? new Date(ListDetails.rentProps.contractStartTimestamp).toISOString().slice(0, 10)
-                : new Date().toISOString().slice(0, 10)
-            }
-            // value={new Date(ListDetails.rentProps?.contractStartTimestamp??'').toISOString().slice(0, 10) }
-            onChange={(val: any) => {
-              console.log("hello", val, new Date(val ?? 0).toISOString().slice(0, 10));
-              setListDetails(prevGroup => ({
-                ...prevGroup,
-                rentProps: {
-                  ...prevGroup.rentProps,
-                  contractStartTimestamp: new Date(val).getTime(),
-                },
-              }));
+
+          <h1 className="text-xl font-bold" > Description</h1>
+          <textarea
+
+            value={additionalDetails?.description ?? ""}
+            onChange={e => {
+              setAdditionalDetails((prev: any) => ({ ...prev, description: e.target.value }));
             }}
+            className="textarea rounded-3xl textarea-bordered w-full min-h-[150px] bg-white "
+            placeholder="write a description for your estate!"
           />
         </div>
-      )}
-      <div className="horizontal-2 w-[90vw] ">
-        <Label>Amenities</Label>
-        <AmenitySelector selectedAmenities={additionalDetails.amenities} setSelectedAmenities={handleAmenitiesChange} />
-      </div>
+      </CardBox>
+      <CardBox className={'rounded-[30px] my-5'} >
+
+
+        {/* <Radio label={'Type Of property'} options={['Residential', 'Commercial', 'Vacation Home', 'PG']} /> */}
+
+        <h1 className="text-xl font-bold" >Property For</h1>
+
+        <ToggleButtonSizes value={isForRent} setValue={setIsForRent} />
+
+
+
+
+      </CardBox>
+      <AnimatePresence>
+
+        {isForRent && (
+          <motion.div
+            initial={{ opacity: 0, height: '0px' }}
+            animate={{ opacity: 1, height: 'auto' }}
+            transition={{ duration: 0.5 }}
+            exit={{ opacity: 0, height: '0px' }}
+
+          >
+
+
+            <CardBox >
+              <h1 className="text-xl font-bold" > Rent Info</h1>
+
+              <div className="horizontal-2 w-[90vw] ">
+                <NumberInput label={"Number of Months"} />
+                <NumberInput label={"Rent per Month"} />
+                <NumberInput label={"Deposit Amount"} />
+                <NumberInput label={"Fees for Late Installments"} />
+                <Input
+                  label={"Contract Start Timestamp"}
+                  type="date"
+                  value={
+                    ListDetails.rentProps && ListDetails.rentProps.contractStartTimestamp
+                      ? new Date(ListDetails.rentProps.contractStartTimestamp).toISOString().slice(0, 10)
+                      : new Date().toISOString().slice(0, 10)
+                  }
+                  // value={new Date(ListDetails.rentProps?.contractStartTimestamp??'').toISOString().slice(0, 10) }
+                  onChange={(val: any) => {
+                    console.log("hello", val, new Date(val ?? 0).toISOString().slice(0, 10));
+                    setListDetails(prevGroup => ({
+                      ...prevGroup,
+                      rentProps: {
+                        ...prevGroup.rentProps,
+                        contractStartTimestamp: new Date(val).getTime(),
+                      },
+                    }));
+                  }}
+                />
+              </div>
+            </CardBox>
+          </motion.div>
+
+        )}
+      </AnimatePresence>
+
+
+      <AmenitySelector selectedAmenities={additionalDetails.amenities} setSelectedAmenities={handleAmenitiesChange} />
+
+
       <div>
-        {/* <MapboxMap /> */}
-      {/* <MapboxMap/> */}
+        <MapboxMap/>
       </div>
 
       <Button
@@ -256,6 +295,9 @@ export default function ListRealEstate() {
           onSubmit();
         }}
       />
+
     </div>
+
+
   );
 }

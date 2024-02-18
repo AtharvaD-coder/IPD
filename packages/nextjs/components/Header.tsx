@@ -160,7 +160,7 @@ export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   return (
-    <header className={`bg-primary sticky top-0 z-50 rounded-b-md transition-opacity duration-300 ${scrollDirection === 'down' ? 'opacity-0' : 'opacity-100'}`}>
+    <header className={`bg-primary sticky top-0 z-50 rounded-b-md transition-opacity duration-300 ${scrollDirection === 'down' ? 'opacity-0' : 'opacity-100'}`} style={{position: 'fixed', width: '100%', zIndex: '999'}}>
       <div className="mx-auto flex  items-center justify-around p-0 lg:px-8" aria-label="Global">
         <div>
           <a href="#" className="-m-1.5 p-1.5">

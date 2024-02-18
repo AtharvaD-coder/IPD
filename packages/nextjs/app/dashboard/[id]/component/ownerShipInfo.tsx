@@ -59,7 +59,7 @@ export default function Ownership({ id, realEstateArray }: any) {
     };
     return (
         <CardBox>
-            <h1 className="text-3xl font-bold mb-5">Proposals</h1>
+            <h1 className="text-3xl font-bold mb-5">Owners</h1>
 
 
 

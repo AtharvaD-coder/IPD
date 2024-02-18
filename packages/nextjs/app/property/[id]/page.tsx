@@ -175,9 +175,9 @@ const PropertyDetails = ({ params }: any) => {
   }, [data]);
 
   return (
-    <div className="m-10 ">
-      <div className=" flex items-start   ">
-        <div className="overflow-y-auto max-h-[100%] h-full   ">
+    <div className="m-10  ">
+      <div className=" flex items-start w-[100%]  ">
+        <div className="overflow-y-auto max-h-[100%] h-full w-[100%]   ">
           <div className=" mb-6 flex w-full items-center ">
             <ImageGallery imageUrls={images} />
           </div>
@@ -201,7 +201,7 @@ const PropertyDetails = ({ params }: any) => {
                 {
                   title: "Price History",
                   Component: () => (
-                    <div>
+                    <div className="w-[700px] h-[300px]">
                       <PriceHistory tokenId={params?.id ?? 0} />
                     </div>
                   ),
@@ -243,7 +243,7 @@ const PropertyDetails = ({ params }: any) => {
           </div>
         </div>
 
-        <StickyBox offsetTop={5} offsetBottom={5}>
+        <StickyBox className="w-[100%" offsetTop={5} offsetBottom={5}>
 
           <OwnerShip id={params?.id ?? 0} />
 

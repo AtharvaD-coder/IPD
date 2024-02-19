@@ -9,7 +9,7 @@ import { MagnifyingGlassIcon, SparklesIcon } from "@heroicons/react/24/outline";
 import { UserGroupIcon, UserIcon } from "@heroicons/react/24/solid";
 import { FaucetButton, RainbowKitCustomConnectButton } from "~~/components/scaffold-eth";
 // import { useOutsideClick } from "~~/hooks/scaffold-eth";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 const NavLink = ({ href, children }: { href: string; children: React.ReactNode }) => {
   const pathname = usePathname();
   const isActive = pathname === href;
@@ -156,11 +156,13 @@ function classNames(...classes) {
 }
 
 export function Header() {
-  const scrollDirection = useScrollDirection();
+  const isNearTop = useScrollDirection();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  console.log(isNearTop,"isNea")
 
   return (
-    <header className={`bg-primary sticky top-0 z-50 rounded-b-md transition-opacity duration-300 ${scrollDirection === 'down' ? 'opacity-0' : 'opacity-100'}`}>
+    <AnimatePresence>
+    {isNearTop && <motion.header initial={{opacity:0,height:0}} animate={{opacity:1, height:'100px'}} exit={{opacity:0,height:0}} transition={{duration:0.5}}  className={`bg-primary sticky top-0 z-50 rounded-b-md`} style={{position: 'fixed', width: '100%', zIndex: '999'}}>
       <div className="mx-auto flex  items-center justify-around p-0 lg:px-8" aria-label="Global">
         <div>
           <a href="#" className="-m-1.5 p-1.5">
@@ -202,7 +204,9 @@ export function Header() {
         </div>
       </div>
 
-    </header>
+    </motion.header>
+}
+    </AnimatePresence>
   )
 }
 

@@ -19069,6 +19069,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-sticky-box@npm:^2.0.5":
+  version: 2.0.5
+  resolution: "react-sticky-box@npm:2.0.5"
+  peerDependencies:
+    react: ">=16.8.0"
+  checksum: 54d79e4d6b8bbff1bd0102ab3e2e5778fbad68575e36726de2c94b8b25d9767ce6e146fa094143b9b18027afae94a4f71bf6a2265930798e7fb7fa3ff1b51b33
+  languageName: node
+  linkType: hard
+
 "react-style-singleton@npm:^2.2.1":
   version: 2.2.1
   resolution: "react-style-singleton@npm:2.2.1"
@@ -20047,6 +20056,7 @@ __metadata:
     react-icons: ^4.12.0
     react-redux: ^8.1.3
     react-simple-image-viewer: ^1.2.2
+    react-sticky-box: ^2.0.5
     redux: ^4.2.1
     web3: ^4.4.0
   languageName: unknown

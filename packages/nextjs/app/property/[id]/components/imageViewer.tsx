@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import ImageViewer from "react-simple-image-viewer";
+import { CardBox } from "~~/components/custom_components/cardComponent";
 
 function ImageGallery({ imageUrls }: any) {
   const [currentImage, setCurrentImage] = useState(0);
@@ -28,39 +29,44 @@ function ImageGallery({ imageUrls }: any) {
   }, [imageUrls]);
 
   return (
-    <div className="flex flex-col w-[100%] mr-5 ">
-      <div className="flex " style={{ overflowX: "scroll" }}>
-        <div className="w-[300px] h-[300px] min-w-[300px] mr-5 ">
-          <img src={imageUrls[0]} onClick={() => openImageViewer(0)} key={0} className="w-[300px] h-[300px]" />
+    <CardBox
+      className='w-[100%] bg-transparent'
+    >
+      <h1 className="text-3xl font-bold">My real Estates</h1>
+      <div className="flex flex-col w-[100%]  ">
+        <div className="flex " style={{ overflowX: "scroll" }}>
+          <div className="w-[300px] h-[300px] min-w-[300px] mr-5 ">
+            <img src={imageUrls[0]} onClick={() => openImageViewer(0)} key={0} className="w-[300px] h-[300px]" />
+          </div>
+          <div
+            className="inline w-fit"
+            style={{ display: "grid", gridTemplateRows: "auto auto", gridAutoFlow: "column" }}
+          >
+            {imageUrls.slice(1).map((src, index) => (
+              <div className="w-[200px] m3 flex">
+                <img
+                  src={src}
+                  onClick={() => openImageViewer(index + 1)}
+                  style={{ height: "150px", width: "auto" }} // Adjusted width here
+                  key={index}
+                  className="rounded-md m-2  "
+                  alt=""
+                />
+              </div>
+            ))}
+          </div>
         </div>
-        <div
-          className="inline w-fit"
-          style={{ display: "grid", gridTemplateRows: "auto auto", gridAutoFlow: "column" }}
-        >
-          {imageUrls.slice(1).map((src, index) => (
-            <div className="w-[200px] m3 flex">
-              <img
-                src={src}
-                onClick={() => openImageViewer(index + 1)}
-                style={{ height: "150px", width: "auto" }} // Adjusted width here
-                key={index}
-                className="rounded-md m-2  "
-                alt=""
-              />
-            </div>
-          ))}
-        </div>
+        {isViewerOpen && (
+          <ImageViewer
+            src={imageUrls}
+            currentIndex={currentImage}
+            disableScroll={true}
+            closeOnClickOutside={true}
+            onClose={closeImageViewer}
+          />
+        )}
       </div>
-      {isViewerOpen && (
-        <ImageViewer
-          src={imageUrls}
-          currentIndex={currentImage}
-          disableScroll={true}
-          closeOnClickOutside={true}
-          onClose={closeImageViewer}
-        />
-      )}
-    </div>
+    </CardBox>
   );
 }
 

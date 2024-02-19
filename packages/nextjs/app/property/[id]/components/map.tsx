@@ -1,19 +1,19 @@
 
 import mapboxgl, { LngLatLike } from 'mapbox-gl';
 import { useEffect, useRef } from 'react';
+import { CardBox } from '~~/components/custom_components/cardComponent';
 
-export default function Map(){
+export default function Map() {
     const mapContainerRef = useRef(null);
-    const ACCESS_TOKEN='pk.eyJ1IjoiYW51cmFnODYiLCJhIjoiY2xtcjdvemQ5MDRnaDJqcXZmdmwzZGk0NCJ9.Rtfd_h0kJc3kwbHuEYUPyw'
     useEffect(() => {
-        mapboxgl.accessToken = ACCESS_TOKEN;
+        mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_API_KEY;
         const map = new mapboxgl.Map({
-          container: 'map',
+            container: 'map',
             style: 'mapbox://styles/mapbox/streets-v12',
             center: [-73.99209, 40.68933],
             zoom: 8.8,
-            width:100,
-            height:100
+            width: 100,
+            height: 100
 
 
 
@@ -25,28 +25,28 @@ export default function Map(){
         //     marker: true,
         //     types: 'address,poi',
         //     proximity: [-73.99209, 40.68933],
-            
-            
+
+
         // });
-        
+
         map.on('load', function () {
             map.resize();
         });
 
-        // map.addControl(geocoder);
-      
-        // map.on('click', function (e) {
-        //     const coordinates = e.lngLat;
-        //     reverseGeocode(coordinates,geocoder,map);
-        // });
+
 
         return () => map.remove();
     }, []);
 
 
     return (
-        <div className='h-[200px] w-auto'>
-            <div id='map' ref={mapContainerRef} style={{width: '100%', height: '100%'}} />
-        </div>
+        <CardBox
+            className='w-[100%] '
+        >
+            <h1 className="text-3xl font-bold">Location </h1>
+            <div className='h-[300px] w-[300px] rounded-xl'>
+                <div id='map' ref={mapContainerRef} style={{ width: '100%', height: '100%', }} />
+            </div>
+        </CardBox>
     )
 }

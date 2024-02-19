@@ -41,7 +41,7 @@ export const AppComponent = ({ children }: { children: React.ReactNode }) => {
           <ChakraProvider>
             <div className="flex flex-col min-h-screen">
               <Header />
-              <main className="relative flex flex-col flex-1">{children}</main>
+              <main className="relative pt-[90px] flex flex-col flex-1">{children}</main>
               {/* <Footer /> */}
             </div>
             <Toaster />

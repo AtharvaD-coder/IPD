@@ -98,6 +98,13 @@ contract RealEstateERC1155 is ERC1155 {
 		RentInfo rentInfo
 	);
 
+	event TokensTransfered(
+		uint256 tokenId,
+		address from,
+		address to,
+		uint256 noOfTokens
+	);
+
 	struct RealEstate {
 		uint256 noOfTokens;
 		uint256 priceOf1Token;
@@ -936,17 +943,22 @@ contract RealEstateERC1155 is ERC1155 {
 		}
 
 		_safeTransferFrom(from, to, tokenId, amount, "");
-
-		emit RealEstateUpdated(
+		emit TokensTransfered(
 			realEstate.tokenId,
-			realEstate.owners,
-			realEstate.noOfTokens,
-			realEstate.priceOf1Token,
-			realEstate.status,
-			realEstate.rentInfo,
-			realEstate.realEstateBalance,
-			tokenMetadataURIs[tokenId]
+			from,
+			to,
+			amount
 		);
+		// emit RealEstateUpdated(
+		// 	realEstate.tokenId,
+		// 	realEstate.owners,
+		// 	realEstate.noOfTokens,
+		// 	realEstate.priceOf1Token,
+		// 	realEstate.status,
+		// 	realEstate.rentInfo,
+		// 	realEstate.realEstateBalance,
+		// 	tokenMetadataURIs[tokenId]
+		// );
 	}
 
 	function recordRentalIncome(uint256 tokenId, uint256 rentalAmount) public {

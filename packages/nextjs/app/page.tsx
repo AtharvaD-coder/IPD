@@ -7,7 +7,7 @@ import CountUp from "react-countup";
 // import { motion } from "framer-motion"
 
 const Home: React.FC = () => (
-  <div className="flex bg-gray-800">
+  <div className="flex bg-gray-800  ">
     <div className="flex-1 h-screen ">
       <div className="flex flex-col items-center justify-center h-full">
         {/* <motion.h1

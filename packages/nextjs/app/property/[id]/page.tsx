@@ -26,6 +26,7 @@ import { useAccount } from "wagmi";
 import Button from "~~/components/custom_components/button";
 import { useScaffoldContractRead, useScaffoldContractWrite } from "~~/hooks/scaffold-eth";
 import Map from "./components/map";
+import StickyBox from "react-sticky-box";
 
 const PropertyDetails = ({ params }: any) => {
   const [data, setData] = useState<any>({});
@@ -174,14 +175,14 @@ const PropertyDetails = ({ params }: any) => {
   }, [data]);
 
   return (
-    <div className="m-20">
-      <div className="flex">
-        <div className="w-[100%]">
-          <div className="mb-20 flex w-full items-center ">
+    <div className="m-10  ">
+      <div className=" flex items-start w-[100%]  ">
+        <div className="overflow-y-auto max-h-[100%] h-full w-[100%]   ">
+          <div className=" mb-6 flex w-full items-center ">
             <ImageGallery imageUrls={images} />
           </div>
 
-          <div>
+          <div className=" flex  ">
             <PropertyDetailCard
               price={price}
               bhkTypes={BhkType}
@@ -190,61 +191,69 @@ const PropertyDetails = ({ params }: any) => {
               noOfBedrooms={noOfBedrooms}
             />
           </div>
-
-          <DetailsTabs
-            TabComponents={[
-              {
-                title: "Description",
-                Component: () => <div>{description}</div>,
-              },
-              {
-                title: "Price History",
-                Component: () => (
-                  <div>
-                    <PriceHistory tokenId={params?.id ?? 0} />
-                  </div>
-                ),
-              },
-              {
-                title: "Facilities",
-                Component: () => (
-                  <div>
-                    {amenities?.length > 0 && (
-                      <Text fontSize="2xl" fontWeight="black" marginTop="5">
-                        Facilities:
-                      </Text>
-                    )}
-                    <div className="grid-cols-3 gap-4 h-50 inline-grid" style={{ flexDirection: "column" }}>
-                      {amenities?.map((amenity: any, index: any) => (
-                        <Text
-                          key={`${index}-${amenity}`}
-                          fontWeight="bold"
-                          color="blue.400"
-                          fontSize="l"
-                          p="2"
-                          bg="gray.200"
-                          m="1"
-                          borderRadius="5"
-                        >
-                          {amenity}
-                        </Text>
-                      ))}
+          <div className=" flex  ">
+            <DetailsTabs
+              TabComponents={[
+                {
+                  title: "Description",
+                  Component: () => <div>{description}</div>,
+                },
+                {
+                  title: "Price History",
+                  Component: () => (
+                    <div className="w-[700px] h-[300px]">
+                      <PriceHistory tokenId={params?.id ?? 0} />
                     </div>
-                  </div>
-                ),
-              },
-            ]}
-          />
+                  ),
+                },
+                {
+                  title: "Facilities",
+                  Component: () => (
+                    <div>
+                      {amenities?.length > 0 && (
+                        <Text fontSize="2xl" fontWeight="black" marginTop="5">
+                          Facilities:
+                        </Text>
+                      )}
+                      <div className="grid-cols-3 gap-4 h-50 inline-grid" style={{ flexDirection: "column" }}>
+                        {amenities?.map((amenity: any, index: any) => (
+                          <Text
+                            key={`${index}-${amenity}`}
+                            fontWeight="bold"
+                            color="blue.400"
+                            fontSize="l"
+                            p="2"
+                            bg="gray.200"
+                            m="1"
+                            borderRadius="5"
+                          >
+                            {amenity}
+                          </Text>
+                        ))}
+                      </div>
+                    </div>
+                  ),
+                },
+              ]}
+            />
+          </div>
+          <div className=" flex  ">
+            <CustomizedTimeline tokenId={params?.id} />
+
+          </div>
         </div>
-        <div>
+
+        <StickyBox className="w-[100%" offsetTop={5} offsetBottom={5}>
+
           <OwnerShip id={params?.id ?? 0} />
-         
-            <Map />
-        
-        </div>
+
+          <Map />
+
+
+        </StickyBox>
       </div>
 
-      <CustomizedTimeline tokenId={params?.id} />
+
 
       <button
         onClick={() => {

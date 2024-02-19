@@ -34,6 +34,8 @@ interface ListDetails {
   rentProps?: RentProps;
 }
 
+
+
 export default function ListRealEstate() {
   const { address } = useAccount();
   const [files, setFiles] = useState<any>([]);
@@ -154,11 +156,11 @@ export default function ListRealEstate() {
 
     <div className="p-5">
       <div className="horizontal-1 flex justify-between items-center w-[100%] ">
-        <div className="m-2 w-1/3 ">
+        <div className="m-2 ml-4 w-1/3 ">
           <ImageUploader files={files} setFiles={setFiles} label={"Upload Image"} />
           {/* <ImageUploader/> */}
         </div>
-        <div className=" w-1/3 justify-center items-center flex flex-col ">
+        <div className=" w-2/5 pr-5 mr-20 justify-center items-center flex flex-col ">
           <CardBox className="w-[100%]">
             <NumberInput
               value={ListDetails.initialAmountOfTokens}

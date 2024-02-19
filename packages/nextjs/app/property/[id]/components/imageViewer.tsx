@@ -35,8 +35,8 @@ function ImageGallery({ imageUrls }: any) {
       <h1 className="text-3xl font-bold">My real Estates</h1>
       <div className="flex flex-col w-[100%]  ">
         <div className="flex items-center " style={{ overflowX: "scroll" }}>
-          <div className="w-[320px] h-[320px] min-w-[320px] mr-5 rounded-xl ">
-            <img src={imageUrls[0]} onClick={() => openImageViewer(0)} key={0} className="w-[320px] h-[320px]" />
+          <div className="w-[320px] h-[320px] min-w-[320px] mr-5  ">
+            <img src={imageUrls[0]} onClick={() => openImageViewer(0)} key={0} className="w-[320px] h-[320px] rounded-xl  " />
           </div>
           <div
             className="inline w-fit"

@@ -30,9 +30,9 @@ function ImageGallery({ imageUrls }: any) {
 
   return (
     <CardBox
-      className='w-[100%] bg-transparent'
+      className='w-[98%] bg-transparent'
     >
-      <h1 className="text-3xl font-bold">My real Estates</h1>
+      <h1 className="text-3xl font-bold">Images </h1>
       <div className="flex flex-col w-[100%]  ">
         <div className="flex items-center " style={{ overflowX: "scroll" }}>
           <div className="w-[320px] h-[320px] min-w-[320px] mr-5  ">

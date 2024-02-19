@@ -178,7 +178,7 @@ const PropertyDetails = ({ params }: any) => {
     <div className="m-10  ">
       <div className=" flex items-start w-[100%]  ">
         <div className="overflow-y-auto max-h-[100%] h-full w-[100%]   ">
-          <div className=" mb-6 flex w-full items-center ">
+          <div className=" mb-6 flex  items-center ">
             <ImageGallery imageUrls={images} />
           </div>
 

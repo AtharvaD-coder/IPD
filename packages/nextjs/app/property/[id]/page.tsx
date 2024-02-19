@@ -191,12 +191,12 @@ const PropertyDetails = ({ params }: any) => {
               noOfBedrooms={noOfBedrooms}
             />
           </div>
-          <div className=" flex  ">
+          <div className=" flex w-[100%] ">
             <DetailsTabs
               TabComponents={[
                 {
                   title: "Description",
-                  Component: () => <div>{description}</div>,
+                  Component: () => <div><div className="w-[100%] max-w-[900px]   ">{description}</div></div>,
                 },
                 {
                   title: "Price History",

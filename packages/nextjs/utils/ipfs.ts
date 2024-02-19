@@ -6,9 +6,7 @@ import { Readable } from "stream";
 // Pinata API endpoint for uploading files
 const PINATA_UPLOAD_ENDPOINT = "https://api.pinata.cloud/pinning/pinFileToIPFS";
 
-// Pinata API key and secret
-const PINATA_API_KEY = "f032f8a9c673beb3d67b";
-const PINATA_API_SECRET = "263848db7f281438ea58988526e894e2b65d1b4e1cb82b3aff106432b2893739";
+
 
 // Function to upload a single file to Pinata
 export async function uploadToPinata(files: any, tokenId: any, metadata: any) {
@@ -34,8 +32,8 @@ export async function uploadToPinata(files: any, tokenId: any, metadata: any) {
       maxContentLength: -1,
       headers: {
         "Content-Type": "multipart/form-data",
-        pinata_api_key: PINATA_API_KEY,
-        pinata_secret_api_key: PINATA_API_SECRET,
+        pinata_api_key: process.env.NEXT_PUBLIC_IPFS_API_KEY,
+        pinata_secret_api_key: process.env.NEXT_PUBLIC_IPFS_API_SECRET,
       },
       params: {
         pinataOptions: {

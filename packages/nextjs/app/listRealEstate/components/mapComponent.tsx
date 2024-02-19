@@ -4,7 +4,6 @@ import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
 import { CardBox } from '~~/components/custom_components/cardComponent';
 
-const ACCESS_TOKEN = 'pk..';
 
 const MapWithSearchBox = () => {
     const mapContainerRef = useRef(null);
@@ -33,7 +32,7 @@ const MapWithSearchBox = () => {
     };
 
     useEffect(() => {
-        mapboxgl.accessToken = ACCESS_TOKEN;
+        mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_API_KEY;
         const map = new mapboxgl.Map({
             container: 'map',
             style: 'mapbox://styles/mapbox/streets-v12',
@@ -44,7 +43,7 @@ const MapWithSearchBox = () => {
         });
 
         const geocoder = new MapboxGeocoder({
-            accessToken: ACCESS_TOKEN,
+            accessToken: process.env.NEXT_PUBLIC_MAPBOX_API_KEY,
             mapboxgl: mapboxgl,
             marker: true,
             types: 'address,poi',

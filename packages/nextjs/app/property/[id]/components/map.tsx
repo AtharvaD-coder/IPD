@@ -5,9 +5,8 @@ import { CardBox } from '~~/components/custom_components/cardComponent';
 
 export default function Map() {
     const mapContainerRef = useRef(null);
-    const ACCESS_TOKEN = 'pk..'
     useEffect(() => {
-        mapboxgl.accessToken = ACCESS_TOKEN;
+        mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_API_KEY;
         const map = new mapboxgl.Map({
             container: 'map',
             style: 'mapbox://styles/mapbox/streets-v12',

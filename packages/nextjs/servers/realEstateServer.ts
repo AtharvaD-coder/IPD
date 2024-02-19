@@ -185,7 +185,7 @@ async function run() {
       };
       try {
         console.log("hello");
-        const res = await axios.post("http://localhost:3000/api/upsertProposal", { data: proposalData });
+        const res = await axios.post(`${process.env.NEXT_PUBLIC_VERCEL_URL}/api/upsertProposal`, { data: proposalData });
         console.log(res.data);
       } catch (error) {
         console.log(error);

@@ -58,7 +58,7 @@ const PropertyDetails = ({ params }: any) => {
 
   console.log(params.id);
   async function getData() {
-    const d = await axios.post(`http://localhost:3000/api/getRealEstateById`, {
+    const d = await axios.post(`${process.env.NEXT_PUBLIC_VERCEL_URL}/api/getRealEstateById`, {
       id: params.id,
     });
     setData(d.data);
@@ -166,9 +166,9 @@ const PropertyDetails = ({ params }: any) => {
   console.log(noOfBedrooms, "totalImages dataaa");
   useEffect(() => {
     const images: any = [];
-    for (let i = 0; i < totalImages; i++) {
-      console.log(`https://ipfs.io/ipfs/${metadataUri}/image/${photos[i]}`);
-      images.push(`https://ipfs.io/ipfs/${metadataUri}/image/${photos[i]}`);
+    for (let i = 0; i < photos?.length??0; i++) {
+      console.log(photos[i], "photos[i]"    );
+      images.push(photos[i]);
     }
 
     setImages(images);

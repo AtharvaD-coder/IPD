@@ -13,7 +13,7 @@ export default function Properties() {
   useEffect(() => {
     async function fetchForomDb() {
       try {
-        const res = await axios.post("http://localhost:3000/api/getAllRealEstatesWithAddress", { address });
+        const res = await axios.post(`${process.env.NEXT_PUBLIC_VERCEL_URL}/api/getAllRealEstatesWithAddress`, { address });
         console.log(res.data.data, "sadfsdfdsfdsfdf");
         setRealEstates(res?.data?.data);
       } catch (error) {

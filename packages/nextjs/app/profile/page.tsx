@@ -28,7 +28,7 @@ export default function MyRealEstates() {
   useEffect(() => {
     async function fetchName() {
       try {
-        const res = await axios.post("http://localhost:3000/api/getUserName", { address });
+        const res = await axios.post(`${process.env.NEXT_PUBLIC_VERCEL_URL}/api/getUserName`, { address });
         console.log(res.data.name, "pleaseee pleasee")
         setName(res?.data?.name);
 

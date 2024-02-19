@@ -3,7 +3,7 @@ import { formatEther, parseUnits } from "ethers";
 import { CardBox } from "~~/components/custom_components/cardComponent";
 import { useScaffoldContractRead, useScaffoldContractWrite } from "~~/hooks/scaffold-eth";
 
-export default function ProposalsAndBids({ tokenIds }) {
+export default function ProposalsAndBids({ tokenIds }:any) {
     const { data: proposals } = useScaffoldContractRead({
         contractName: "RealEstateERC1155",
         functionName: "getProposalsForTokenIds",

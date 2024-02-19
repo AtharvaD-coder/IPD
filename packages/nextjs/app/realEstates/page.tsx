@@ -115,7 +115,7 @@ const realEstates = () => {
   const propertiesForRent = useSelector((state: RootState) => state.propertiesForRent);
 
   const { data, error } = useFetch<any>(`${process.env.NEXT_PUBLIC_URLL}/api/getAllRealEstates`);
-  console.log(data, "dataaawww");
+  console.log(data,process.env.NEXT_PUBLIC_URLL,process.env.NEXT_PUBLIC_VERCEL_URL, "dataaawww");
 
   useEffect(() => {
     dispatch(setLoading(true));

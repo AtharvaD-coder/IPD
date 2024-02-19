@@ -1,11 +1,11 @@
 const contracts = {
-  31337: [
+  11155111: [
     {
-      chainId: "31337",
-      name: "localhost",
+      chainId: "11155111",
+      name: "sepolia",
       contracts: {
         RealEstateERC1155: {
-          address: "0x2279B7A0a67DB372996a5FaB50D91eAA73d2eBe6",
+          address: "0x85ec99747b0f6f7906692044004121f7f0D7D51C",
           abi: [
             {
               inputs: [],

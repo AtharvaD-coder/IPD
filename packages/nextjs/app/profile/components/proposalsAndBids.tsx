@@ -38,7 +38,7 @@ export default function ProposalsAndBids({ tokenIds }) {
         args: [BigInt(0), BigInt(0)],
     });
 
-    console.log(status, "status");
+   
 
     const flattenedProposals = proposals?.flatMap((proposalsArray, index) =>
         proposalsArray.map(proposal => ({ ...proposal, tokenId: tokenIds[index] })),

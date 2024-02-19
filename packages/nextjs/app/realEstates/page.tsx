@@ -10,12 +10,8 @@ import { Box, Flex, Select, Text, cookieStorageManager } from "@chakra-ui/react"
 import { useDispatch, useSelector } from "react-redux";
 import { useFetch, useLocalStorage } from "usehooks-ts";
 
-interface HomeProps {
-  propertiesForSale: Array<any>;
-  propertiesForRent: Array<any>;
-}
 
-const realEstates: React.FC<HomeProps> = () => {
+const realEstates = () => {
   const containerStyle: React.CSSProperties = {
     display: "flex",
     flexDirection: "row",

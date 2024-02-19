@@ -58,7 +58,7 @@ const PropertyDetails = ({ params }: any) => {
 
   console.log(params.id);
   async function getData() {
-    const d = await axios.post(`${process.env.NEXT_PUBLIC_VERCEL_URL}/api/getRealEstateById`, {
+    const d = await axios.post(`${process.env.NEXT_PUBLIC_URLL}/api/getRealEstateById`, {
       id: params.id,
     });
     setData(d.data);

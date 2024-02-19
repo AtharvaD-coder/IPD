@@ -26,7 +26,7 @@ const NameModal = ({ isOpen, onClose }) => {
     
 
     const handleSubmit= async ()=>{
-        const data=await axios.post(`${process.env.NEXT_PUBLIC_VERCEL_URL}/api/updateName`,{address:address,name:name})
+        const data=await axios.post(`${process.env.NEXT_PUBLIC_URLL}/api/updateName`,{address:address,name:name})
         console.log(data.data,"dataaaa")
     }
 

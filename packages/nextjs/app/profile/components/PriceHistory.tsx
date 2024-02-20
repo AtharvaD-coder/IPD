@@ -70,12 +70,12 @@ const PriceHistory = ({ tokenIds }) => {
         gradient.addColorStop(1, colors[index % colors.length][1]);
         return gradient;
       },
-      borderColor: colors[index][2],
+      borderColor: colors[index % colors.length][2],
       borderWidth: 2,
       pointColor: "#fff",
-      pointStrokeColor: colors[index][2],
+      pointStrokeColor: colors[index % colors.length][2],
       pointHighlightFill: "#fff",
-      pointHighlightStroke: colors[index][2],
+      pointHighlightStroke: colors[index % colors.length][2],
       fill: "start",
       data: priceHistory.map(entry => ({
         x: formatDateTimeLabel(entry.timestamp),

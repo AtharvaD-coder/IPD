@@ -110,12 +110,21 @@ export default function ListRealEstate() {
   console.log(parseUnits(`${1}`, "ether"), "data asfasf");
 
   const onSubmit = async () => {
-    console.log("hello");
-    const data: string = await uploadToPinata(files, tokenIdCounter, {
+    console.log("hello",{
       purpose: isForRent ? "for-rent" : "for-sale",
       totalImages: files.length,
       description: additionalDetails.description,
       amenities: amenities,
+      BhkType: additionalDetails.BhkType,
+      noOfBathrooms: additionalDetails.noOfBathrooms,
+      noOfBedrooms: additionalDetails.noOfBedrooms,
+    
+    });
+    const data: string = await uploadToPinata(files, tokenIdCounter, {
+      purpose: isForRent ? "for-rent" : "for-sale",
+      totalImages: files.length,
+      description: additionalDetails.description,
+      amenities: additionalDetails.amenities,
       BhkType: additionalDetails.BhkType,
       noOfBathrooms: additionalDetails.noOfBathrooms,
       noOfBedrooms: additionalDetails.noOfBedrooms,
@@ -201,7 +210,7 @@ export default function ListRealEstate() {
               label={"BHK"}
               value={additionalDetails.bhk}
               onChange={(e: any, val: any) => {
-                setAdditionalDetails((prev: any) => ({ ...prev, bhk: val }));
+                setAdditionalDetails((prev: any) => ({ ...prev, BhkType: val+" Bhk" }));
               }}
             />
 
@@ -288,7 +297,7 @@ export default function ListRealEstate() {
 
 
       <div>
-        <MapboxMap/>
+        <MapboxMap />
       </div>
 
       <Button

@@ -77,6 +77,8 @@ async function run() {
         area: metadata.area,
         noOfBathrooms: metadata.noOfBathrooms,
         noOfBedrooms: metadata.noOfBedrooms,
+        latitude: metadata.latitude,
+        longitude: metadata.longitude,
       });
       await data.save();
       console.log("done");

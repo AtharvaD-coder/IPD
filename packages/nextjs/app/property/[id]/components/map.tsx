@@ -3,14 +3,14 @@ import mapboxgl, { LngLatLike } from 'mapbox-gl';
 import { useEffect, useRef } from 'react';
 import { CardBox } from '~~/components/custom_components/cardComponent';
 
-export default function Map() {
+export default function Map({latitude,longitude}) {
     const mapContainerRef = useRef(null);
     useEffect(() => {
         mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_API_KEY;
         const map = new mapboxgl.Map({
             container: 'map',
             style: 'mapbox://styles/mapbox/streets-v12',
-            center: [-73.99209, 40.68933],
+            center: [latitude, longitude],
             zoom: 8.8,
             width: 100,
             height: 100

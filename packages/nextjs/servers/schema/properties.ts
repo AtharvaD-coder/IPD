@@ -51,6 +51,12 @@ const PropertiesSchema = new mongoose.Schema({
   noOfBathrooms: {
     type: Number,
   },
+  latitude:{
+    type: Number,
+  },
+  longitude:{
+    type: Number,
+  },
 });
 
 // Define a virtual property for 'price'

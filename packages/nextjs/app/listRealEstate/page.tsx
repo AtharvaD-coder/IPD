@@ -52,6 +52,8 @@ export default function ListRealEstate() {
     area: 0,
     noOfBathrooms: 0,
     noOfBedrooms: 0,
+    latitude:0,
+    longitude:0,
   });
 
   console.log(additionalDetails, "additi");
@@ -61,12 +63,7 @@ export default function ListRealEstate() {
     setListDetails({ ...ListDetails, owner: address ?? "" });
   }, [address]);
 
-  const handleTypeChange = (value: string) => {
-    setIsForRent(value === "Rent");
-  };
-  const handleBHKTypeChange = (value: string) => {
-    setAdditionalDetails((prev: any) => ({ ...prev, BhkType: value }));
-  };
+  
 
   const { writeAsync: listRealEstateForSale } = useScaffoldContractWrite({
     contractName: "RealEstateERC1155",
@@ -297,7 +294,7 @@ export default function ListRealEstate() {
 
 
       <div>
-        <MapboxMap />
+        <MapboxMap latitude={additionalDetails.latitude} longitude={additionalDetails.longitude} setLatitude={(val)=>setAdditionalDetails((prev)=>({...prev,latitude:val}))} setLongitude={(val)=>setAdditionalDetails((prev)=>({...prev,longitude:val}))} />
       </div>
 
       <Button

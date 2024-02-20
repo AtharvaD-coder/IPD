@@ -165,6 +165,8 @@ const PropertyDetails = ({ params }: any) => {
     longitude
   } = data;
 
+ 
+
   console.log(noOfBedrooms, "totalImages dataaa");
   useEffect(() => {
     const images: any = [];

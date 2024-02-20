@@ -3,7 +3,7 @@ import mapboxgl, { LngLatLike } from 'mapbox-gl';
 import { useEffect, useRef } from 'react';
 import { CardBox } from '~~/components/custom_components/cardComponent';
 
-export default function Map({latitude,longitude}) {
+export default function Map({latitude,longitude}:any) {
     const mapContainerRef = useRef(null);
     useEffect(() => {
         mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_API_KEY;

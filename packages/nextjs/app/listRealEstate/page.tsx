@@ -155,6 +155,24 @@ export default function ListRealEstate() {
     setAdditionalDetails({ ...additionalDetails, amenities: selectedAmenities });
   };
 
+  useEffect(() => {
+    // Get user's current location
+    console.log('aaaaaaaaaaaaaaaaaa')
+    if(navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          console.log("User's Latitude is :", position.coords.latitude);
+          setAdditionalDetails((prev:any)=>({...prev,latitude:position.coords.latitude}));
+          setAdditionalDetails((prev:any)=>({...prev,longitude:position.coords.latitude}));
+        },
+        (error) => {
+          console.error("Error getting user's location:", error.message);
+        }
+      );
+    }
+    } 
+  , [navigator.geolocation]);
+
   console.log(files, "files");
   console.log(ListDetails, "listDetails");
 

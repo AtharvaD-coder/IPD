@@ -1,5 +1,4 @@
 import * as React from "react";
-import { localhost } from "wagmi/dist/chains";
 import Web3 from "web3";
 import { CardBox } from "~~/components/custom_components/cardComponent";
 import contracts from "~~/generated/deployedContracts";
@@ -8,7 +7,8 @@ import { realEstateStatus } from "~~/utils/utils";
 
 export default function CustomizedTimeline({ tokenId }: any) {
   const [events, setEvents] = React.useState([]);
-  const localhostUrl = process.env.NEXT_PUBLIC_RPC??'http://127.0.0.1:8545/'; // Update the port if needed
+  const localhostUrl = "https://sepolia.gateway.tenderly.co"; // Update the port if needed
+  console.log(localhostUrl   ,"urlll www")
   const web3 = new Web3(localhostUrl); // Replace 'YOUR_PROVIDER_URL' with your Ethereum node provider URL
   const targetNetwork = getTargetNetwork();
   console.log(targetNetwork,"targetNetwork")

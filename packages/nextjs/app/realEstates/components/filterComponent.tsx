@@ -15,6 +15,7 @@ const FilterComponent: React.FC<FilterComponentProps> = () => {
   const filterValues = useSelector((state: RootState) => state.filterValues);
 
   const handleFilterChange = (keyValue: string, value: any) => {
+    console.log(value,"valllaa")
     dispatch(setFilterValues({ ...filterValues, [keyValue]: value }));
   };
 
@@ -37,34 +38,28 @@ const FilterComponent: React.FC<FilterComponentProps> = () => {
           handleButtonClick={handleButtonClick}
         />
       </div>
-      <div className="horizontal-1 p-3 ">
-        <div className="text-sm">Property Type :</div>
-        <ToggleButtonSizes
-          keyValue={"type"}
-          setFilterValues={handleFilterChange}
-          filterValues={filterValues}
-          options={[
-            { value: "house", text: "House" },
-            { value: "commercial", text: "Commercial" },
-            { value: "appartment", text: "Apartment" },
-            { value: "landplot", text: "LandPlot" },
-          ]}
-        />
-      </div>
+     
       <div className="horizontal-1 p-3 ">
         <div className="text-sm">Price :</div>
         <RangeSlider
           value={filterValues.price}
-          SetValue={value => handleFilterChange("price", value)}
+          // SetValue={value => handleFilterChange("price", value)}
           keyValue={"price"}
+          onChange={(value)=>{
+            console.log(value,"value")
+            handleFilterChange("price", value)
+          
+          }}
+          max={1000}
         />
       </div>
       <div className="horizontal-1 p-3 ">
         <div className="text-sm">Area :</div>
         <RangeSlider
           value={filterValues.area}
-          SetValue={value => handleFilterChange("area", value)}
+          onChange={(value) => handleFilterChange("area", value)}
           keyValue={"area"}
+          max={2000}
         />
       </div>
       <div className="horizontal-1 p-4 ">

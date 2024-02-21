@@ -161,7 +161,11 @@ const PropertyDetails = ({ params }: any) => {
     BhkType,
     noOfBathrooms,
     noOfBedrooms,
+    latitude,
+    longitude
   } = data;
+
+ 
 
   console.log(noOfBedrooms, "totalImages dataaa");
   useEffect(() => {
@@ -247,7 +251,7 @@ const PropertyDetails = ({ params }: any) => {
 
           <OwnerShip id={params?.id ?? 0} />
 
-          <Map />
+          <Map latitude={latitude} longitude={longitude} />
 
 
         </StickyBox>

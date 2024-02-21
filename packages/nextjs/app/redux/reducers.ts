@@ -10,7 +10,7 @@ interface State {
 }
 
 const initialState: State = {
-  filterValues: { purpose: "", type: "", price: [0, 100], area: [0, 100], rooms: 0 },
+  filterValues: { purpose: "", type: "", price: [0, 1000], area: [0, 100], rooms: 0 },
   loading: false,
   propertiesForSale: [],
   propertiesForRent: [],

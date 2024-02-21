@@ -9,6 +9,7 @@ import FilterComponent from "./components/filterComponent";
 import { Box, Flex, Select, Text, cookieStorageManager } from "@chakra-ui/react";
 import { useDispatch, useSelector } from "react-redux";
 import { useFetch, useLocalStorage } from "usehooks-ts";
+import { Salsa } from "next/font/google";
 
 
 const realEstates = () => {
@@ -106,7 +107,12 @@ const realEstates = () => {
   const textStyle = {
     fontSize: "1.25rem",
   };
-
+  const filterPropertiesByPrice = (properties: any[], price: any) => {
+    return properties.filter((property: any) => property.price/10**18 <= price[1] && property.price/10**18  >= price[0]);
+  }
+  const filterPropertiesByArea = (properties: any[], area:any) => {
+    return properties.filter((property: any) => (property.area <= area[1] && property.area >= area[0])  );
+  }
   const dispatch = useDispatch();
 
   const filterValues = useSelector((state: RootState) => state.filterValues);
@@ -120,8 +126,10 @@ const realEstates = () => {
   useEffect(() => {
     dispatch(setLoading(true));
     if (data?.data?.length > 0) {
-      const propertiesForSale = data.data.filter((property: any) => property.purpose === "for-sale");
-      const propertiesForRent = data.data.filter((property: any) => property.purpose === "for-rent");
+      let propertiesForSale = data.data.filter((property: any) => property.purpose === "for-sale");
+      let propertiesForRent = data.data.filter((property: any) => property.purpose === "for-rent");
+        console.log(data.data,"aaaaaaaaaaadddddddddddd")
+    
 
       dispatch(setPropertiesForSale(propertiesForSale));
       dispatch(setPropertiesForRent(propertiesForRent));
@@ -132,6 +140,25 @@ const realEstates = () => {
 
     dispatch(setLoading(false));
   }, [data, dispatch]);
+  useEffect(() => {
+    if (data?.data?.length > 0) {
+    console.log("whoooo",filterValues.price)
+    let propertiesForSale = data.data.filter((property: any) => property.purpose === "for-sale");
+      let propertiesForRent = data.data.filter((property: any) => property.purpose === "for-rent");
+    
+   let  pRent = filterPropertiesByPrice(propertiesForRent,filterValues.price );
+    let pSale = filterPropertiesByPrice(propertiesForSale,filterValues.price );
+
+
+    pRent=filterPropertiesByArea(pRent,filterValues.area)
+    pSale=filterPropertiesByArea(pSale,filterValues.area)
+    console.log(pRent,"propertiesForSale")
+
+    dispatch(setPropertiesForSale(pSale));
+    dispatch(setPropertiesForRent(pRent));
+    }
+  }
+  , [filterValues])
   // useEffect(() => {
   //   dispatch(setLoading(true));
   //   if (data?.data?.length > 0) {

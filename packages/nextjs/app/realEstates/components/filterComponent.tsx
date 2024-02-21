@@ -23,6 +23,16 @@ const FilterComponent: React.FC<FilterComponentProps> = () => {
     dispatch(setFilterValues({ ...filterValues, purpose: value }));
   };
 
+  const handleBathroomsButtonClick = (numBathrooms: number) => {
+
+    if (numBathrooms === 4) {
+      dispatch(setFilterValues({ ...filterValues, bathrooms: { min: 4 } }));
+    } else {
+
+      dispatch(setFilterValues({ ...filterValues, bathrooms: numBathrooms }));
+    }
+  };
+
   return (
     <div className="w-[20vw] h-[85vh] overflow-y-scroll [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none']">
       <div className="horizontal-1 p-3">
@@ -50,42 +60,35 @@ const FilterComponent: React.FC<FilterComponentProps> = () => {
             { text: "3", value: 3 },
             { text: "4", value: 4 },
           ]}
-          handleButtonClick={handleButtonClick}
+          handleButtonClick={handleBathroomsButtonClick}
         />
       </div>
-      <div className="horizontal-1 p-3 ">
-        <div className="text-sm">Property Type :</div>
-        <ToggleButtonSizes
-          keyValue={"type"}
-          setFilterValues={handleFilterChange}
-          filterValues={filterValues}
-          options={[
-            { value: "house", text: "House" },
-            { value: "commercial", text: "Commercial" },
-            { value: "appartment", text: "Apartment" },
-            { value: "landplot", text: "LandPlot" },
-          ]}
-        />
-      </div>
+     
       <div className="horizontal-1 p-3 ">
         <div className="text-sm">Price :</div>
         <RangeSlider
           value={filterValues.price}
-          SetValue={value => handleFilterChange("price", value)}
+          // SetValue={value => handleFilterChange("price", value)}
           keyValue={"price"}
+          onChange={(value)=>{
+            console.log(value,"value")
+            handleFilterChange("price", value)
+
+          }}
+          max={1000}
         />
       </div>
       <div className="horizontal-1 p-3 ">
         <div className="text-sm">Area :</div>
         <RangeSlider
           value={filterValues.area}
-          SetValue={value => handleFilterChange("area", value)}
+          // SetValue={value => handleFilterChange("area", value)}
+          onChange={(value) => handleFilterChange("area", value)}
           keyValue={"area"}
+          max={2000}
         />
       </div>
-      <div className="horizontal-1 p-4 ">
-        <NumberInput label={"Minimum Rooms"} labelStyle={"text-sm"} />
-      </div>
+      
     </div>
   );
 };

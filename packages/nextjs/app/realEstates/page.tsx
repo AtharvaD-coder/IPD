@@ -9,6 +9,7 @@ import FilterComponent from "./components/filterComponent";
 import { Box, Flex, Select, Text, cookieStorageManager } from "@chakra-ui/react";
 import { useDispatch, useSelector } from "react-redux";
 import { useFetch, useLocalStorage } from "usehooks-ts";
+import { CardBox } from "~~/components/custom_components/cardComponent";
 
 interface HomeProps {
   propertiesForSale: Array<any>;
@@ -147,7 +148,9 @@ const realEstates: React.FC<HomeProps> = () => {
 
   return (
     <div style={containerStyle}>
+      <CardBox>
       <FilterComponent />
+      </CardBox>
       {!loading ? (
         <div
           style={cardContainerStyle}

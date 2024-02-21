@@ -14,6 +14,7 @@ const FilterComponent: React.FC<FilterComponentProps> = () => {
   const dispatch = useDispatch();
   const filterValues = useSelector((state: RootState) => state.filterValues);
 
+
   const handleFilterChange = (keyValue: string, value: any) => {
     dispatch(setFilterValues({ ...filterValues, [keyValue]: value }));
   };
@@ -33,6 +34,21 @@ const FilterComponent: React.FC<FilterComponentProps> = () => {
           options={[
             { text: "Buy", value: "for-sale" },
             { text: "Rent", value: "for-rent" },
+          ]}
+          handleButtonClick={handleButtonClick}
+        />
+      </div>
+      <div className="horizontal-1 p-3">
+        <div className="text-sm">Bathrooms :</div>
+        <ToggleButtonSizes
+          keyValue={"bathrooms"}
+          setFilterValues={handleFilterChange}
+          filterValues={filterValues}
+          options={[
+            { text: "1", value: 1 },
+            { text: "2", value: 2 },
+            { text: "3", value: 3 },
+            { text: "4", value: 4 },
           ]}
           handleButtonClick={handleButtonClick}
         />

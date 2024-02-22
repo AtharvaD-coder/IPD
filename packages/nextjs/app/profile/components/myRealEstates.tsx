@@ -25,7 +25,7 @@ export default function Properties() {
   return (
     <CardBox className={"w-[100%]"}>
       <h1 className="text-3xl font-bold">My real Estates</h1>
-    <div className="w-[90%] flex flex-wrap justify-around">
+    <div className="w-[100%] flex flex-wrap justify-around">
 
       {realEstates?.map((data: any, index) => {
         return (

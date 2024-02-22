@@ -43,7 +43,7 @@ export default function MyRealEstates() {
 
 
   return (
-    <div className="w-[100%] h-[100%] m-5 flex">
+    <div className="w-[100%] h-[100%] p-5 flex">
       <NameModal isOpen={modalOpen} onClose={() => setModalOpen(false)} />
       <div className=" w-[25vw] max-w-[25vw]  h-full">
         <CardBox>

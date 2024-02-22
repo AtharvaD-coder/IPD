@@ -95,6 +95,7 @@ const PriceHistory = ({ tokenIds }) => {
     responsive: true,
     datasetStrokeWidth: 3,
     pointDotStrokeWidth: 4,
+    
     scales: {
       x: {
         title: {
@@ -122,7 +123,7 @@ const PriceHistory = ({ tokenIds }) => {
     <CardBox>
     <h1 className="text-3xl font-bold">Price History</h1>
 
-      <Line data={chartData} options={options} />
+      <Line data={chartData} options={options} className="w-[100%]" />
     </CardBox>
   );
 };

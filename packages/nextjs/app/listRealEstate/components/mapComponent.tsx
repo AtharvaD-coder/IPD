@@ -53,14 +53,14 @@ const MapWithSearchBox = ({ latitude, longitude,setLatitude,setLongitude }: any)
             setLatitude(coordinates.lat);
             setLongitude(coordinates.lng);
 
-            // if (markerRef.current) {
-            //     markerRef.current.setLngLat(coordinates);
-            // } else {
-            //     const marker = new mapboxgl.Marker()
-            //         .setLngLat(coordinates)
-            //         .addTo(map);
-            //     markerRef.current = marker;
-            // }
+            if (markerRef.current) {
+                markerRef.current.setLngLat(coordinates);
+            } else {
+                const marker = new mapboxgl.Marker()
+                    .setLngLat(coordinates)
+                    .addTo(map);
+                markerRef.current = marker;
+            }
         });
 
         map.on('load', function () {

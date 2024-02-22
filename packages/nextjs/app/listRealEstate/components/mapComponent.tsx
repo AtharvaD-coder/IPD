@@ -34,7 +34,7 @@ const MapWithSearchBox = ({ latitude, longitude,setLatitude,setLongitude }: any)
         const map = new mapboxgl.Map({
             container: mapContainerRef.current,
             style: 'mapbox://styles/mapbox/streets-v12',
-            center: [latitude, longitude],
+            center: [longitude, latitude],
             zoom: 8.8,
         });
 
@@ -42,7 +42,7 @@ const MapWithSearchBox = ({ latitude, longitude,setLatitude,setLongitude }: any)
             accessToken: process.env.NEXT_PUBLIC_MAPBOX_API_KEY,
             mapboxgl: mapboxgl,
             types: 'address,poi',
-            proximity: [latitude, longitude],
+            proximity: [longitude, latitude],
         });
 
         map.addControl(geocoder);

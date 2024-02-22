@@ -1,5 +1,5 @@
 // reducers.ts
-import { setFilterValues, setLoading, setPropertiesForRent, setPropertiesForSale } from "./actions";
+import { setFilterValues, setLoading, setPropertiesForRent, setPropertiesForSale, setBathrooms } from "./actions";
 import { createReducer } from "@reduxjs/toolkit";
 
 interface State {
@@ -10,7 +10,7 @@ interface State {
 }
 
 const initialState: State = {
-  filterValues: { purpose: "", type: "", price: [0, 1000], area: [0, 100], rooms: 0 },
+  filterValues: { purpose: "", type: "", price: [0, 1000], area: [0, 5000], bathrooms: 0,beds:0 },
   loading: false,
   propertiesForSale: [],
   propertiesForRent: [],
@@ -29,7 +29,11 @@ export const rootReducer = createReducer(initialState, builder => {
     })
     .addCase(setPropertiesForRent, (state, action) => {
       state.propertiesForRent = action.payload;
-    });
+    })
+    .addCase(setBathrooms, (state, action) => {
+      state.filterValues.bathrooms = action.payload;
+    });;
+
 });
 
 export type RootState = ReturnType<typeof rootReducer>;

@@ -33,14 +33,14 @@ const PropertyDetails = ({ params }: any) => {
   const status = (realEstateArray as bigint[] | undefined)?.[3];
   const rentInfo = (realEstateArray as bigint[] | undefined)?.[5];
   const realEstateBalance = (realEstateArray as bigint[] | undefined)?.[6];
-  console.log(rentInfo, "rentInfo", status);
+  // console.log(rentInfo, "rentInfo", status);
 
 
 
 
 
 
-  console.log(status, "status");
+  // console.log(status, "status");
 
   // Filter proposals into executed, active, and expired categories
 

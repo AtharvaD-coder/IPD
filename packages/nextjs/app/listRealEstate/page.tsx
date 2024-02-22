@@ -52,8 +52,8 @@ export default function ListRealEstate() {
     area: 0,
     noOfBathrooms: 0,
     noOfBedrooms: 0,
-    latitude:0,
-    longitude:0,
+    latitude:19.0760,
+    longitude:72.8777,
   });
 
   console.log(additionalDetails, "additi");

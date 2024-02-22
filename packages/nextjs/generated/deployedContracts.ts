@@ -5,7 +5,7 @@ const contracts = {
       name: "sepolia",
       contracts: {
         RealEstateERC1155: {
-          address: "0x483A027423f2e4b9Bfb51ab01a102016f2216Afe",
+          address: "0x5ff6c721D74C47E037bC1ca6a88e2ba73ea3a4f9",
           abi: [
             {
               inputs: [],
@@ -2299,7 +2299,6 @@ const contracts = {
       },
     },
   ],
-}as const;
-
+} as const;
 
 export default contracts;

@@ -59,7 +59,7 @@ const FilterComponent: React.FC<FilterComponentProps> = () => {
           value={filterValues.area}
           onChange={(value) => handleFilterChange("area", value)}
           keyValue={"area"}
-          max={2000}
+          max={5000}
         />
       </div>
       <div className="horizontal-1 p-4 ">

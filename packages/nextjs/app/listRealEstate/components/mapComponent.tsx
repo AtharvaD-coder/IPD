@@ -3,6 +3,7 @@ import mapboxgl, { LngLatLike } from 'mapbox-gl';
 import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
 import { CardBox } from '~~/components/custom_components/cardComponent';
+import 'mapbox-gl/dist/mapbox-gl.css'
 
 const MapWithSearchBox = ({ latitude, longitude,setLatitude,setLongitude }: any) => {
     const mapContainerRef = useRef(null);

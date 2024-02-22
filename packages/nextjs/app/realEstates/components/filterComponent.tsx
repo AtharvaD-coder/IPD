@@ -33,6 +33,16 @@ const FilterComponent: React.FC<FilterComponentProps> = () => {
     }
   };
 
+  const handleBedButtonClick = (numBathrooms: number) => {
+
+    if (numBathrooms === 4) {
+      dispatch(setFilterValues({ ...filterValues, bathrooms: { min: 4 } }));
+    } else {
+
+      dispatch(setFilterValues({ ...filterValues, bathrooms: numBathrooms }));
+    }
+  };
+
   return (
     <div className="w-[20vw] h-[85vh] overflow-y-scroll [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none']">
       <div className="horizontal-1 p-3">
@@ -61,6 +71,22 @@ const FilterComponent: React.FC<FilterComponentProps> = () => {
             { text: "4", value: 4 },
           ]}
           handleButtonClick={handleBathroomsButtonClick}
+        />
+      </div>
+
+      <div className="horizontal-1 p-3">
+        <div className="text-sm">Bedrooms :</div>
+        <ToggleButtonSizes
+          keyValue={"bedrooms"}
+          setFilterValues={handleFilterChange}
+          filterValues={filterValues}
+          options={[
+            { text: "1", value: 1 },
+            { text: "2", value: 2 },
+            { text: "3", value: 3 },
+            { text: "4", value: 4 },
+          ]}
+          handleButtonClick={handleBedButtonClick}
         />
       </div>
      

@@ -5,6 +5,9 @@ import React from "react";
 import Accordion from "./component/accordion";
 import { motion } from "framer-motion";
 import { FaceSmileIcon } from "@heroicons/react/24/solid";
+import blockImage from './block.png';
+import houseImage from './house.png';
+
 
 const accordionData = [
   {
@@ -98,13 +101,16 @@ const About = () => {
 
       <motion.div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8" whileHover={{ scale: 1.02 }}>
         <motion.img
-          src="blockchain.jpeg"
+          src={blockImage.src}
           alt="Blockchain Illustration"
-          className="rounded-md object-cover w-full h-full"
+          className="rounded-md object-cover w-full h-[500px]"
+
+
+
         />
         <motion.p className="text-xl leading-loose">
           Our use of blockchain ensures transparency, security, and efficiency in every real estate transaction. Whether
-          you're a seasoned investor or a first-time homebuyer, [Your Company Name] makes real estate accessible to
+          you're a seasoned investor or a first-time homebuyer, OpenEstate makes real estate accessible to
           everyone.
         </motion.p>
       </motion.div>
@@ -137,7 +143,7 @@ const About = () => {
           Join us in revolutionizing the real estate industry. We are not just a platform; we are a community dedicated
           to making real estate transactions efficient, secure, and accessible to all.
         </motion.p>
-        <motion.img src="/images/team-image.jpg" alt="Team Photo" className="rounded-md object-cover w-full h-full" />
+        <motion.img src={houseImage.src} alt="House Photo" className="rounded-md object-cover w-full h-full" />
       </motion.div>
 
       <motion.p className="text-xl leading-loose mb-6" whileHover={{ scale: 1.02 }}>

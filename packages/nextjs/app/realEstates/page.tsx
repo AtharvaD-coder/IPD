@@ -131,10 +131,16 @@ const realEstates: React.FC<HomeProps> = () => {
 
   const filterPropertiesByBathrooms = (properties: any[], selectedBathrooms: number): any[] => {
     if (selectedBathrooms === 4) {
-      // Filter properties with 4 or more bathrooms
       return properties.filter((property: any) => property.bathrooms >= 4);
     } else {
-      // Filter properties with the exact number of bathrooms
+      return properties.filter((property: any) => property.bathrooms === selectedBathrooms);
+    }
+  };
+
+  const filterPropertiesByBeds = (properties: any[], selectedBathrooms: number): any[] => {
+    if (selectedBathrooms === 4) {
+      return properties.filter((property: any) => property.bathrooms >= 4);
+    } else {
       return properties.filter((property: any) => property.bathrooms === selectedBathrooms);
     }
   };
@@ -181,7 +187,12 @@ const realEstates: React.FC<HomeProps> = () => {
 
     pRent = filterPropertiesByBathrooms(pRent, filterValues.bathrooms);
     pSale = filterPropertiesByBathrooms(pSale, filterValues.bathrooms);
-    console.log(pRent,"its working yaaay!");
+    console.log(pRent,"its baths yaaay!");
+
+
+    pRent = filterPropertiesByBeds(pRent, filterValues.beds);
+    pSale = filterPropertiesByBeds(pSale, filterValues.beds);
+    console.log(pRent,"its beds yaaay!");
 
     dispatch(setPropertiesForSale(pSale));
     dispatch(setPropertiesForRent(pRent));

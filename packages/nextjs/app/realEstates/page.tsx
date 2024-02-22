@@ -137,11 +137,11 @@ const realEstates: React.FC<HomeProps> = () => {
     }
   };
 
-  const filterPropertiesByBeds = (properties: any[], selectedBathrooms: number): any[] => {
-    if (selectedBathrooms === 4) {
-      return properties.filter((property: any) => property.bathrooms >= 4);
+  const filterPropertiesByBeds = (properties: any[], selectedBedrooms: number): any[] => {
+    if (selectedBedrooms === 4) {
+      return properties.filter((property: any) => property.bedrooms >= 4);
     } else {
-      return properties.filter((property: any) => property.bathrooms === selectedBathrooms);
+      return properties.filter((property: any) => property.bathrooms === selectedBedrooms);
     }
   };
   

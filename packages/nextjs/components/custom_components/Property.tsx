@@ -30,7 +30,7 @@ const Property: React.FC<{ property: any }> = ({ property }) => {
     
     const ethAmount = weiAmount / 10**18;
     console.log(ethAmount,"ethAmounttt")
-    const api_key = process.env.NEXT_PUBLIC_EXCHANGE_API_KEY;
+    const api_key = '23e8773154c7058e89e5cd814c46adf13122c90253a00c486d98f6905899dd0b';
     // const api_key = '23e8773154c7058e89e5cd814c46adf13122c90253a00c486d98f6905899dd0b';
     // const response = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd');
     // const response = await fetch(`https://min-api.cryptocompare.com/data/price?fsym=ETH&tsyms=USD&api_key=${api_key} `);

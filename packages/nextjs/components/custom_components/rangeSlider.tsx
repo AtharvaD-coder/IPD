@@ -36,6 +36,16 @@ export default function RangeSlider({ value, onChange, keyValue, step = 1, min =
         getAriaValueText={valuetext}
         min={min}
         max={max}
+
+        sx={{
+          '& .MuiSlider-thumb': {
+            borderColor: '#495464', // Set the thumb's border color
+            backgroundColor: '#495464', // Set the thumb's background color
+          },
+          '& .MuiSlider-active': {
+            color: '#495464', // This adjusts the color of the active track
+          },
+        }}
       />
     </Box>
   );

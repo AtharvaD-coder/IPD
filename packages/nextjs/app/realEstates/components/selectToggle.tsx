@@ -50,6 +50,7 @@ export default function ToggleButtonSizes({
                 handleButtonClick(options[index].value);
               }}
               className="border-solid border-2 p-3 m-3 rounded-3xl text-white"
+              
             >
               <div className="text-sm">{data.text}</div>
             </motion.button>

@@ -44,9 +44,9 @@ const FilterComponent: React.FC<FilterComponentProps> = () => {
   };
 
   return (
-    <div className="w-[20vw] h-[85vh] overflow-y-scroll [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none']">
+    <div className="w-[20vw] h-[85vh]  overflow-y-scroll [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none']">
       <div className="horizontal-1 p-3">
-        <div className="text-sm">Purpose :</div>
+        <div className="text-lg font-bold text-gray-800">Purpose :</div>
         <ToggleButtonSizes
           keyValue={"purpose"}
           setFilterValues={handleFilterChange}
@@ -58,8 +58,11 @@ const FilterComponent: React.FC<FilterComponentProps> = () => {
           handleButtonClick={handleButtonClick}
         />
       </div>
+      <div className="border-t border-gray-300 mx-1 p-1"></div>
       <div className="horizontal-1 p-3">
-        <div className="text-sm">Bathrooms :</div>
+      <div className="text-lg font-bold text-gray-800 ">Bathrooms :</div>
+
+        {/* <div className="text-sm">Bathrooms :</div> */}
         <ToggleButtonSizes
           keyValue={"bathrooms"}
           setFilterValues={handleFilterChange}
@@ -73,9 +76,9 @@ const FilterComponent: React.FC<FilterComponentProps> = () => {
           handleButtonClick={handleBathroomsButtonClick}
         />
       </div>
-
+      <div className="border-t border-gray-300 mx-1 p-1"></div>
       <div className="horizontal-1 p-3">
-        <div className="text-sm">Bedrooms :</div>
+        <div className="text-lg font-bold text-gray-800">Bedrooms :</div>
         <ToggleButtonSizes
           keyValue={"bedrooms"}
           setFilterValues={handleFilterChange}
@@ -89,9 +92,9 @@ const FilterComponent: React.FC<FilterComponentProps> = () => {
           handleButtonClick={handleBedButtonClick}
         />
       </div>
-     
+      <div className="border-t border-gray-300 mx-1 p-1"></div>
       <div className="horizontal-1 p-3 ">
-        <div className="text-sm">Price :</div>
+        <div className="text-lg font-bold text-gray-800">Price :</div>
         <RangeSlider
           value={filterValues.price}
           // SetValue={value => handleFilterChange("price", value)}
@@ -104,8 +107,11 @@ const FilterComponent: React.FC<FilterComponentProps> = () => {
           max={1000}
         />
       </div>
+
+      <div className="border-t border-gray-300 mx-1 p-1"></div>
+
       <div className="horizontal-1 p-3 ">
-        <div className="text-sm">Area :</div>
+        <div className="text-lg font-bold text-gray-800">Area :</div>
         <RangeSlider
           value={filterValues.area}
           // SetValue={value => handleFilterChange("area", value)}

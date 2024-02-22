@@ -33,13 +33,13 @@ const FilterComponent: React.FC<FilterComponentProps> = () => {
     }
   };
 
-  const handleBedButtonClick = (numBathrooms: number) => {
+  const handleBedButtonClick = (numBedrooms: number) => {
 
-    if (numBathrooms === 4) {
-      dispatch(setFilterValues({ ...filterValues, bathrooms: { min: 4 } }));
+    if (numBedrooms === 4) {
+      dispatch(setFilterValues({ ...filterValues, bedrooms: { min: 4 } }));
     } else {
 
-      dispatch(setFilterValues({ ...filterValues, bathrooms: numBathrooms }));
+      dispatch(setFilterValues({ ...filterValues, bedrooms: numBedrooms }));
     }
   };
 

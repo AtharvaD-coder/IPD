@@ -1,8 +1,10 @@
+'use client';
 import React, { useEffect, useRef, useState } from 'react';
 import mapboxgl, { LngLatLike } from 'mapbox-gl';
 import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
 import { CardBox } from '~~/components/custom_components/cardComponent';
+import 'mapbox-gl/dist/mapbox-gl.css'
 
 const MapWithSearchBox = ({ latitude, longitude,setLatitude,setLongitude }: any) => {
     const mapContainerRef = useRef(null);
@@ -33,7 +35,7 @@ const MapWithSearchBox = ({ latitude, longitude,setLatitude,setLongitude }: any)
         const map = new mapboxgl.Map({
             container: mapContainerRef.current,
             style: 'mapbox://styles/mapbox/streets-v12',
-            center: [latitude, longitude],
+            center: [longitude, latitude],
             zoom: 8.8,
         });
 
@@ -41,7 +43,7 @@ const MapWithSearchBox = ({ latitude, longitude,setLatitude,setLongitude }: any)
             accessToken: process.env.NEXT_PUBLIC_MAPBOX_API_KEY,
             mapboxgl: mapboxgl,
             types: 'address,poi',
-            proximity: [latitude, longitude],
+            proximity: [longitude, latitude],
         });
 
         map.addControl(geocoder);
@@ -52,14 +54,14 @@ const MapWithSearchBox = ({ latitude, longitude,setLatitude,setLongitude }: any)
             setLatitude(coordinates.lat);
             setLongitude(coordinates.lng);
 
-            // if (markerRef.current) {
-            //     markerRef.current.setLngLat(coordinates);
-            // } else {
-            //     const marker = new mapboxgl.Marker()
-            //         .setLngLat(coordinates)
-            //         .addTo(map);
-            //     markerRef.current = marker;
-            // }
+            if (markerRef.current) {
+                markerRef.current.setLngLat(coordinates);
+            } else {
+                const marker = new mapboxgl.Marker()
+                    .setLngLat(coordinates)
+                    .addTo(map);
+                markerRef.current = marker;
+            }
         });
 
         map.on('load', function () {

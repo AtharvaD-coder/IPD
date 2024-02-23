@@ -23,9 +23,9 @@ export default function Properties() {
     fetchForomDb();
   }, [address]);
   return (
-    <CardBox>
+    <CardBox className={"w-[100%]"}>
       <h1 className="text-3xl font-bold">My real Estates</h1>
-    <div className="w-full flex justify-center grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-4 ">
+    <div className="w-[100%] flex flex-wrap justify-around">
 
       {realEstates?.map((data: any, index) => {
         return (

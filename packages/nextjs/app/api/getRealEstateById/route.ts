@@ -29,7 +29,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Document not found" }, { status: 400 });
     }
 
-    console.log("Document:", document);
+    // console.log("Document:", document);
 
     return NextResponse.json(document, { status: 200 });
   } catch (error) {

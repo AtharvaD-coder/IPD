@@ -8,7 +8,7 @@ import { uri } from "~~/utils/mongoose-utils";
 export async function POST(req: Request) {
   try {
     let { address } = await req.json();
-    console.log(address, "address");
+    // console.log(address, "address");
 
     await mongoose.connect(uri, {
       useNewUrlParser: true,
@@ -22,7 +22,7 @@ export async function POST(req: Request) {
         },
       },
     });
-    console.log("documents", documents);
+    // console.log("documents", documents);
 
     return NextResponse.json({ data: documents }, { status: 200 });
   } catch (error) {

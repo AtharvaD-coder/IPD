@@ -5,7 +5,7 @@ import { connectToDatabase } from "~~/servers/connect";
 
 export async function POST(req: NextRequest) {
   try {
-    console.log(req.body);
+    // console.log(req.body);
     let { data } = await req.json();
 
     const db = await connectToDatabase("OpenEstate");
@@ -17,7 +17,7 @@ export async function POST(req: NextRequest) {
     const update = { $set: data };
 
     const result = await coll.updateOne(query, update);
-    console.log("done");
+    // console.log("done");
 
     return NextResponse.json({ messsge: "done" }, { status: 200 });
   } catch (error) {

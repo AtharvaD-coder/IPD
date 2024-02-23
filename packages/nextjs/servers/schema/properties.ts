@@ -57,6 +57,9 @@ const PropertiesSchema = new mongoose.Schema({
   longitude:{
     type: Number,
   },
+  area:{
+    type: Number,
+  }
 });
 
 // Define a virtual property for 'price'

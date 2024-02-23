@@ -8,7 +8,7 @@ export const fetchFilters = createAsyncThunk("fetchFilters", async () => {
 const filterSlice = createSlice({
   name: "filter",
   initialState: {
-    filterValues: { purpose: "", type: "", price: [0, 100], area: [0, 100], rooms: 0 },
+    filterValues: { purpose: "", type: "", price: [0, 100], area: [0, 100], bedrooms: 0, bathrooms: 0 },
     loading: false,
   },
   reducers: {},

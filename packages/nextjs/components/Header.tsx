@@ -158,7 +158,7 @@ function classNames(...classes) {
 export function Header() {
   const isNearTop = useScrollDirection();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-  console.log(isNearTop,"isNea")
+  // console.log(isNearTop,"isNea")
 
   return (
     <AnimatePresence>
@@ -171,9 +171,9 @@ export function Header() {
         </div>
         <div>
           <Popover.Group className="hidden lg:flex lg:gap-x-12">
-            <NavLink href="/">
+            <NavLink href="/profile">
               <UserIcon className="h-4 w-4" />
-              Home
+              Profile
             </NavLink>
 
             <NavLink href="/listRealEstate">

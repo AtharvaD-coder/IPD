@@ -79,6 +79,7 @@ async function run() {
         noOfBedrooms: metadata.noOfBedrooms,
         latitude: metadata.latitude,
         longitude: metadata.longitude,
+        
       });
       await data.save();
       console.log("done");
@@ -196,6 +197,7 @@ async function run() {
     },
   );
 }
+
 
 mongoose.connect(uri).then(() => {
   console.log("connected");

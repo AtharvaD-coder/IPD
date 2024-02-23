@@ -15,7 +15,7 @@ export async function POST(req: NextRequest) {
         const { address } = await req.json();
         console.log(address, "address,name")    
         const nameData = await Name.findOne({ address: address });
-        console.log(nameData, "nameData")
+        // console.log(nameData, "nameData")
 
         if (!nameData) {
             return NextResponse.json({ name: address }, { status: 200 });

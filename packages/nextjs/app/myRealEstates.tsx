@@ -12,7 +12,7 @@ export default function MyRealEstates() {
     async function fetchForomDb() {
       try {
         const res = await axios.post(`${process.env.NEXT_PUBLIC_URLL}/api/getAllRealEstatesWithAddress`, { address });
-        console.log(res.data.data);
+        // console.log(res.data.data);
         setRealEstates(res?.data?.data);
       } catch (error) {
         console.log(error);

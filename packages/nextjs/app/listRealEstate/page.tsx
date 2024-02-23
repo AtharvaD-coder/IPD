@@ -158,7 +158,7 @@ export default function ListRealEstate() {
   useEffect(() => {
     // Get user's current location
     console.log('aaaaaaaaaaaaaaaaaa')
-    if(navigator.geolocation) {
+    if(navigator?.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           console.log("User's Latitude is :", position.coords.latitude);

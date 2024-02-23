@@ -20,7 +20,6 @@ import { CardBox } from "~~/components/custom_components/cardComponent";
 import ToggleButtonSizes from "./components/toggleButton";
 import { motion, AnimatePresence } from 'framer-motion'
 import { useRouter } from 'next/navigation';
-import dynamic from 'next/dynamic
 
 interface RentProps {
   numberOfMonths?: number;

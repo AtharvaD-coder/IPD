@@ -28,6 +28,7 @@ import { useScaffoldContractRead, useScaffoldContractWrite } from "~~/hooks/scaf
 import Map from "./components/map";
 import StickyBox from "react-sticky-box";
 import { convertEthToUsd } from "~~/components/custom_components/Property";
+import RentInfoCard from "./components/rentInfoCard";
 
 const PropertyDetails = ({ params }: any) => {
   const [data, setData] = useState<any>({});
@@ -79,7 +80,7 @@ const PropertyDetails = ({ params }: any) => {
     contractName: "RealEstateERC1155",
     functionName: "getRealEstate",
     args: [params?.id ?? 0],
-    watch: true,
+    watch: false,
   });
   const noOfTokens = (realEstate as bigint[] | undefined)?.[0];
   const priceOf1Token = (realEstate as bigint[] | undefined)?.[1];
@@ -165,6 +166,8 @@ const PropertyDetails = ({ params }: any) => {
     latitude,
     longitude
   } = data;
+
+  console.log(rentInfo,"rent infoo")
   const [priceInUsd,setPriceInUsd]=useState(`${price}`);
   useEffect( () => {
     async function get(){
@@ -203,6 +206,16 @@ const PropertyDetails = ({ params }: any) => {
               area={area}
               noOfBathrooms={noOfBathrooms}
               noOfBedrooms={noOfBedrooms}
+            />
+          </div>
+          <div className=" flex  ">
+            <RentInfoCard
+
+              noOfMonths={Number(rentInfo?.noOfMonths)}
+              rentof1Month={Number(rentInfo?.rentof1Month)}
+              depositAmount={Number(rentInfo?.depositAmount)}
+              
+              feesForLateInstallments={Number(rentInfo?.feesForLateInstallments)}
             />
           </div>
           <div className=" flex w-[100%] ">

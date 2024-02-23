@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   CategoryScale,
   Chart as ChartJS,
@@ -18,6 +18,10 @@ import { letterSpacing } from "@mui/system";
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler);
 
 const PriceHistory = ({ tokenId }) => {
+  const [chartData, setChartData] = useState({
+    datasets: [],
+  });
+  const chartRef = useRef(null);
   const { data: priceHistory } = useScaffoldContractRead({
     contractName: "RealEstateERC1155",
     functionName: "getPriceHistory",
@@ -38,55 +42,70 @@ const PriceHistory = ({ tokenId }) => {
 
   // Function to convert price from Wei to Ether
   const convertWeiToEther = wei => {
-    return wei / 10 ** 18; // 1 Ether = 10^18 Wei
+    return (wei / 10 ** 18); // 1 Ether = 10^18 Wei
   };
 
   // Extract timestamps and prices from price historylet label
   
-  let labels = ['start'];
-
-  if (priceHistory) {
-      labels.push(...priceHistory.map(entry => formatDateTimeLabel(entry.timestamp)));
-  }
+  
 
   const pricesInWei = priceHistory?.map(entry => Number(entry.price));
   let  pricesInEther = [0];
   if(pricesInWei){
     pricesInEther.push(...pricesInWei.map(convertWeiToEther));
+   
   }
-  console.log(labels,"labelsss")
-  const data = () => {
-    return {
-      labels: labels,
-      datasets: [
-        {
-          backgroundColor: context => {
-            if (!context.chart.chartArea) {
-              return;
-            }
-            const {
-              ctx,
-              data,
-              chartArea: { top, bottom },
-            } = context.chart;
-            const gradient = ctx.createLinearGradient(0, top, 0, bottom);
-            gradient.addColorStop(0, "rgba(250,174,50,1)");
-            gradient.addColorStop(1, "rgba(250,174,50,0)");
-            return gradient;
+
+  useEffect(()=>{
+    const chart = chartRef.current;
+    if (chart) {
+      let labels = ['start'];
+
+  if (priceHistory) {
+      labels.push(...priceHistory.map(entry => formatDateTimeLabel(entry.timestamp)));
+  }
+      const data =  {
+        labels: labels,
+        datasets: [
+          {
+            backgroundColor: context => {
+              if (!context.chart.chartArea) {
+                return;
+              }
+              const {
+                ctx,
+                chartArea: { top, bottom },
+              } = context.chart;
+              const gradient = ctx.createLinearGradient(0, top, 0, bottom);
+              gradient.addColorStop(0, "rgba(250,174,50,1)");
+              gradient.addColorStop(0.2, "rgba(250,174,50,0.8)");
+              gradient.addColorStop(0.4, "rgba(250,174,50,0.6)");
+              gradient.addColorStop(0.6, "rgba(250,174,50,0.4)");
+              gradient.addColorStop(0.8, "rgba(250,174,50,0.2)");
+              gradient.addColorStop(1, "rgba(250,174,50,0)");
+              return gradient;
+            },
+            borderColor: "#ff6c23",
+            borderWidth: 2,
+            pointColor: "#fff",
+            pointStrokeColor: "#ff6c23",
+            pointHighlightFill: "#fff",
+            pointHighlightStroke: "#ff6c23",
+            fill: "start",
+            data: pricesInEther,
+           
           },
-          borderColor: "#ff6c23",
-          borderWidth: 2,
-          pointColor: "#fff",
-          pointStrokeColor: "#ff6c23",
-          pointHighlightFill: "#fff",
-          pointHighlightStroke: "#ff6c23",
-          fill: "start",
-          data: pricesInEther,
-          tension: 0.4, // Adjust the curve tension here
-        },
-      ],
-    };
-  };
+        ],
+      };
+
+      console.log(data, "datasaaaa")
+      setChartData(data)
+    }
+
+  },[priceHistory])
+
+  
+  
 
   var options = {
     responsive: true,
@@ -96,15 +115,20 @@ const PriceHistory = ({ tokenId }) => {
       legend: {
           display: false
       },
-    }
+    },
+    elements: {
+      line: {
+          tension: 0.4
+      }
+  }
   
     
   };
 
   return (
-    <div className="w-[100%] h-[100%] ">
-      <Line data={data()} options={options} />
-    </div>
+    
+      <Line ref={chartRef} height={'200px'} width={'400px'} data={chartData} options={options} />
+  
   );
 };
 

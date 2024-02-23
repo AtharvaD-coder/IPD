@@ -72,7 +72,7 @@ const MapWithSearchBox = ({ latitude, longitude,setLatitude,setLongitude }: any)
     }, []);
 
     return (
-        <CardBox className='w-[100%] h-[600px] '>
+        <CardBox className='w-[100%] h-[500px] '>
             <h1 className="text-3xl font-bold">Location </h1>
             <div id='map' ref={mapContainerRef} style={{ position: 'absolute', width: '90%', height: '400px' }} />
         </CardBox>

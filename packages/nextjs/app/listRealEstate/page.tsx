@@ -19,6 +19,9 @@ import MapboxMap from "./components/mapComponent";
 import { CardBox } from "~~/components/custom_components/cardComponent";
 import ToggleButtonSizes from "./components/toggleButton";
 import { motion, AnimatePresence } from 'framer-motion'
+import { useRouter } from 'next/navigation';
+import dynamic from 'next/dynamic
+
 interface RentProps {
   numberOfMonths?: number;
   rentPerMonth?: number;
@@ -44,6 +47,8 @@ export default function ListRealEstate() {
     initialAmountOfTokens: 0,
     priceOf1Token: 0,
   });
+  const router = useRouter();
+
   const [additionalDetails, setAdditionalDetails] = useState<any>({
     description: "",
     BhkType: "",
@@ -52,8 +57,8 @@ export default function ListRealEstate() {
     area: 0,
     noOfBathrooms: 0,
     noOfBedrooms: 0,
-    latitude:19.0760,
-    longitude:72.8777,
+    latitude: 19.0760,
+    longitude: 72.8777,
   });
 
   console.log(additionalDetails, "additi");
@@ -63,7 +68,11 @@ export default function ListRealEstate() {
     setListDetails({ ...ListDetails, owner: address ?? "" });
   }, [address]);
 
-  
+  const { data: tokenIdCounter } = useScaffoldContractRead({
+    contractName: "RealEstateERC1155",
+    functionName: "getTokenIdCounter",
+
+  });
 
   const { writeAsync: listRealEstateForSale } = useScaffoldContractWrite({
     contractName: "RealEstateERC1155",
@@ -75,7 +84,7 @@ export default function ListRealEstate() {
       "",
     ],
     onBlockConfirmation: txnReceipt => {
-      console.log("📦 Transaction blockHash", txnReceipt.blockHash);
+      router.push('/dashboard/' + tokenIdCounter)
     },
   });
 
@@ -98,16 +107,12 @@ export default function ListRealEstate() {
     },
   });
 
-  const { data: tokenIdCounter } = useScaffoldContractRead({
-    contractName: "RealEstateERC1155",
-    functionName: "getTokenIdCounter",
-    watch: true,
-  });
+
 
   console.log(parseUnits(`${1}`, "ether"), "data asfasf");
 
   const onSubmit = async () => {
-    console.log("hello",{
+    console.log("hello", {
       purpose: isForRent ? "for-rent" : "for-sale",
       totalImages: files.length,
       description: additionalDetails.description,
@@ -115,7 +120,7 @@ export default function ListRealEstate() {
       BhkType: additionalDetails.BhkType,
       noOfBathrooms: additionalDetails.noOfBathrooms,
       noOfBedrooms: additionalDetails.noOfBedrooms,
-    
+
     });
     const data: string = await uploadToPinata(files, tokenIdCounter, {
       purpose: isForRent ? "for-rent" : "for-sale",
@@ -125,6 +130,10 @@ export default function ListRealEstate() {
       BhkType: additionalDetails.BhkType,
       noOfBathrooms: additionalDetails.noOfBathrooms,
       noOfBedrooms: additionalDetails.noOfBedrooms,
+      latitude: additionalDetails.latitude,
+      longitude: additionalDetails.longitude,
+      area: additionalDetails.area,
+
     });
     if (isForRent) {
       listRealEstateForRent({
@@ -155,23 +164,7 @@ export default function ListRealEstate() {
     setAdditionalDetails({ ...additionalDetails, amenities: selectedAmenities });
   };
 
-  useEffect(() => {
-    // Get user's current location
-    console.log('aaaaaaaaaaaaaaaaaa')
-    if(navigator?.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          console.log("User's Latitude is :", position.coords.latitude);
-          setAdditionalDetails((prev:any)=>({...prev,latitude:position.coords.latitude}));
-          setAdditionalDetails((prev:any)=>({...prev,longitude:position.coords.latitude}));
-        },
-        (error) => {
-          console.error("Error getting user's location:", error.message);
-        }
-      );
-    }
-    } 
-  , [navigator.geolocation]);
+
 
   console.log(files, "files");
   console.log(ListDetails, "listDetails");
@@ -225,7 +218,7 @@ export default function ListRealEstate() {
               label={"BHK"}
               value={additionalDetails.bhk}
               onChange={(e: any, val: any) => {
-                setAdditionalDetails((prev: any) => ({ ...prev, BhkType: val+" Bhk" }));
+                setAdditionalDetails((prev: any) => ({ ...prev, BhkType: val + " Bhk" }));
               }}
             />
 
@@ -312,7 +305,7 @@ export default function ListRealEstate() {
 
 
       <div>
-        <MapboxMap latitude={additionalDetails.latitude} longitude={additionalDetails.longitude} setLatitude={(val)=>setAdditionalDetails((prev)=>({...prev,latitude:val}))} setLongitude={(val)=>setAdditionalDetails((prev)=>({...prev,longitude:val}))} />
+        <MapboxMap latitude={additionalDetails.latitude} longitude={additionalDetails.longitude} setLatitude={(val) => setAdditionalDetails((prev) => ({ ...prev, latitude: val }))} setLongitude={(val) => setAdditionalDetails((prev) => ({ ...prev, longitude: val }))} />
       </div>
 
       <Button

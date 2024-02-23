@@ -34,26 +34,26 @@ const BidModal = ({ isOpen, onClose, onSubmit }: any) => {
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
+    <Modal  isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
-      <ModalContent>
-        <ModalHeader>Create Rent Proposal</ModalHeader>
-        <ModalCloseButton />
+      <ModalContent className="bg-secondary">
+        <ModalHeader className="text-white">Create Bid Proposal</ModalHeader>
+        <ModalCloseButton color={'white'} />
         <ModalBody>
           <FormControl mt={4}>
-            <FormLabel>Amount to Bid</FormLabel>
-            <Input type="number" value={amount} onChange={handleAmountChange} />
+            <FormLabel className="text-white">Amount to Bid</FormLabel>
+            <Input color={'white'} type="number" value={amount} onChange={handleAmountChange} />
           </FormControl>
           <FormControl mt={4}>
-            <FormLabel>Number of Tokens</FormLabel>
-            <Input type="number" value={numberOfTokens} onChange={handleTokensChange} />
+            <FormLabel className="text-white">Number of Tokens</FormLabel>
+            <Input color={'white'} type="number" value={numberOfTokens} onChange={handleTokensChange} />
           </FormControl>
         </ModalBody>
         <ModalFooter>
           <Button colorScheme="blue" mr={3} onClick={handleSubmit}>
             Submit
           </Button>
-          <Button onClick={onClose}>Cancel</Button>
+          <Button backgroundColor={'red'} color={'red'} onClick={onClose}>Cancel</Button>
         </ModalFooter>
       </ModalContent>
     </Modal>

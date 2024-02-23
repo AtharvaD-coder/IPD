@@ -27,6 +27,8 @@ export async function GET(req: Request) {
     //     );
     // }
 
+    console.log("documents", documents);
+
     return NextResponse.json({ data: documents }, { status: 200 });
   } catch (error) {
     console.error(error);

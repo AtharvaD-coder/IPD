@@ -27,6 +27,7 @@ import Button from "~~/components/custom_components/button";
 import { useScaffoldContractRead, useScaffoldContractWrite } from "~~/hooks/scaffold-eth";
 import Map from "./components/map";
 import StickyBox from "react-sticky-box";
+import { convertEthToUsd } from "~~/components/custom_components/Property";
 
 const PropertyDetails = ({ params }: any) => {
   const [data, setData] = useState<any>({});
@@ -164,6 +165,15 @@ const PropertyDetails = ({ params }: any) => {
     latitude,
     longitude
   } = data;
+  const [priceInUsd,setPriceInUsd]=useState(`${price}`);
+  useEffect( () => {
+    async function get(){
+      console.log(await convertEthToUsd(price),"ppppprrrr")
+      setPriceInUsd(await convertEthToUsd(price));
+    }
+    get()
+  }, [ price]);
+
 
  
 
@@ -188,7 +198,7 @@ const PropertyDetails = ({ params }: any) => {
 
           <div className=" flex  ">
             <PropertyDetailCard
-              price={price}
+              price={priceInUsd}
               bhkTypes={BhkType}
               area={area}
               noOfBathrooms={noOfBathrooms}

@@ -13,6 +13,7 @@ import {
 } from "chart.js";
 import { Line } from "react-chartjs-2";
 import { useScaffoldContractRead } from "~~/hooks/scaffold-eth";
+import { letterSpacing } from "@mui/system";
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler);
 
@@ -40,11 +41,20 @@ const PriceHistory = ({ tokenId }) => {
     return wei / 10 ** 18; // 1 Ether = 10^18 Wei
   };
 
-  // Extract timestamps and prices from price history
-  const labels = priceHistory?.map(entry => formatDateTimeLabel(entry.timestamp));
-  const pricesInWei = priceHistory?.map(entry => Number(entry.price));
-  const pricesInEther = pricesInWei?.map(convertWeiToEther);
+  // Extract timestamps and prices from price historylet label
+  
+  let labels = ['start'];
 
+  if (priceHistory) {
+      labels.push(...priceHistory.map(entry => formatDateTimeLabel(entry.timestamp)));
+  }
+
+  const pricesInWei = priceHistory?.map(entry => Number(entry.price));
+  let  pricesInEther = [0];
+  if(pricesInWei){
+    pricesInEther.push(...pricesInWei.map(convertWeiToEther));
+  }
+  console.log(labels,"labelsss")
   const data = () => {
     return {
       labels: labels,
@@ -82,7 +92,13 @@ const PriceHistory = ({ tokenId }) => {
     responsive: true,
     datasetStrokeWidth: 3,
     pointDotStrokeWidth: 4,
-    legend: false, // Remove legend,
+    plugins: {
+      legend: {
+          display: false
+      },
+    }
+  
+    
   };
 
   return (

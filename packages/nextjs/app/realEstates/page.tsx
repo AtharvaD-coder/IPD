@@ -10,9 +10,26 @@ import { Box, Flex, Select, Text, cookieStorageManager } from "@chakra-ui/react"
 import { useDispatch, useSelector } from "react-redux";
 import { useDebounce, useFetch, useLocalStorage } from "usehooks-ts";
 import { Salsa } from "next/font/google";
+import { formatEther } from "viem";
 
 
 const realEstates = () => {
+  const [conversionRate, setConversionRate] = useState(0);
+
+  useEffect(()=>{
+    async function a() {
+      const api_key = '23e8773154c7058e89e5cd814c46adf13122c90253a00c486d98f6905899dd0b';
+
+      const response = await fetch(`https://min-api.cryptocompare.com/data/price?fsym=ETH&tsyms=USD&api_key=${api_key} `);
+      const data = await response.json();
+    
+      // Extract the exchange rate from the API response
+      const exchangeRate = data.USD;
+      setConversionRate(exchangeRate);
+    
+    }
+    a();
+  },[])
   const containerStyle: React.CSSProperties = {
     display: "flex",
     flexDirection: "row",
@@ -108,8 +125,7 @@ const realEstates = () => {
     fontSize: "1.25rem",
   };
   const filterPropertiesByPrice = (properties: any[], price: any) => {
-    return properties.filter((property: any) => property.price / 10 ** 18 <= price[1] && property.price / 10 ** 18 >= price[0]);
-  }
+    return properties.filter((property: any) => (Number(formatEther(property.price))*Number(conversionRate)) <= price[1] && (Number(formatEther(property.price))*Number(conversionRate))>= price[0]);  }
   const filterPropertiesByArea = (properties: any[], area: any) => {
     return properties.filter((property: any) => (property.area <= area[1] && property.area >= area[0]));
   }
@@ -168,16 +184,19 @@ const realEstates = () => {
       let propertiesForSale = data.data.filter((property: any) => property.purpose === "for-sale");
       let propertiesForRent = data.data.filter((property: any) => property.purpose === "for-rent");
 
-      let pRent = filterPropertiesByPrice(propertiesForRent, debouncedFilterValues.price);
-      let pSale = filterPropertiesByPrice(propertiesForSale, debouncedFilterValues.price);
+      // let pRent = filterPropertiesByPrice(propertiesForRent, debouncedFilterValues.price);
+      // let pSale = filterPropertiesByPrice(propertiesForSale, debouncedFilterValues.price);
+      let pRent=propertiesForRent;
+      let pSale=propertiesForSale;
+      console.log(propertiesForSale,"saleee")
 
       pRent = filterPropertiesByArea(pRent, debouncedFilterValues.area);
       pSale = filterPropertiesByArea(pSale, debouncedFilterValues.area);
-      console.log(pRent, "propertiesForSale");
+      // console.log(pRent, "propertiesForSale");
 
       pRent = filterPropertiesByBathrooms(pRent, debouncedFilterValues.bathrooms);
       pSale = filterPropertiesByBathrooms(pSale, debouncedFilterValues.bathrooms);
-      // console.log(pRent,"its baths yaaay!");
+      // // console.log(pRent,"its baths yaaay!");
   
   
       pRent = filterPropertiesByBeds(pRent, debouncedFilterValues.beds);

@@ -1,4 +1,5 @@
 import { Box, Flex, Text } from "@chakra-ui/react";
+import { formatEther, parseUnits } from "ethers";
 
 function getStatusString(status: any): string {
     switch (status) {
@@ -27,7 +28,7 @@ export default function Details({noOfTokens,priceOf1Token,status}:any){
         </Box>
         <Box className="bg-secondary"  borderRadius="lg" p={4} textAlign="center" mb={5} minWidth="200px">
             <Text className="text-white" fontSize="lg" fontWeight="bold">
-                Price of 1 Token : {Number(priceOf1Token)}
+                Price of 1 Token : {Number(formatEther(`${Number(priceOf1Token??0)}`))}
             </Text>
         </Box>
         <Box className={`bg-secondary text-green-400`}  borderRadius="lg" p={4} textAlign="center" minWidth="200px">

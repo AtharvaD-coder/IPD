@@ -13,7 +13,7 @@ export default function Properties() {
   useEffect(() => {
     async function fetchForomDb() {
       try {
-        const res = await axios.post("http://localhost:3000/api/getAllRealEstatesWithAddress", { address });
+        const res = await axios.post(`${process.env.NEXT_PUBLIC_URLL}/api/getAllRealEstatesWithAddress`, { address });
         console.log(res.data.data, "sadfsdfdsfdsfdf");
         setRealEstates(res?.data?.data);
       } catch (error) {
@@ -23,9 +23,9 @@ export default function Properties() {
     fetchForomDb();
   }, [address]);
   return (
-    <CardBox>
+    <CardBox className={"w-[100%]"}>
       <h1 className="text-3xl font-bold">My real Estates</h1>
-    <div className="w-full flex justify-center grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-4 ">
+    <div className="w-[100%] flex flex-wrap justify-around">
 
       {realEstates?.map((data: any, index) => {
         return (

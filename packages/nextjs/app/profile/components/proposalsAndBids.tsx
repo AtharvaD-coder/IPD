@@ -3,7 +3,7 @@ import { formatEther, parseUnits } from "ethers";
 import { CardBox } from "~~/components/custom_components/cardComponent";
 import { useScaffoldContractRead, useScaffoldContractWrite } from "~~/hooks/scaffold-eth";
 
-export default function ProposalsAndBids({ tokenIds }) {
+export default function ProposalsAndBids({ tokenIds }:any) {
     const { data: proposals } = useScaffoldContractRead({
         contractName: "RealEstateERC1155",
         functionName: "getProposalsForTokenIds",
@@ -38,7 +38,7 @@ export default function ProposalsAndBids({ tokenIds }) {
         args: [BigInt(0), BigInt(0)],
     });
 
-    console.log(status, "status");
+   
 
     const flattenedProposals = proposals?.flatMap((proposalsArray, index) =>
         proposalsArray.map(proposal => ({ ...proposal, tokenId: tokenIds[index] })),

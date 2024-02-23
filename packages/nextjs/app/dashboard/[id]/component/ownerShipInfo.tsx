@@ -22,7 +22,7 @@ export default function Ownership({ id, realEstateArray }: any) {
     // Extract owners and percentages from ownersAndPercentages data
     const owners: string[] = (ownersAndPercentages?.[0] as unknown as string[]) ?? [];
     const percentages: string[] = (ownersAndPercentages?.[1] as unknown as string[]) ?? [];
-    console.log(owners, "owners", percentages, "percentages");
+    // console.log(owners, "owners", percentages, "percentages");
 
     // Prepare data for the pie chart
     const pieChartData = {

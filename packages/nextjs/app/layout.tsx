@@ -11,9 +11,9 @@ import "~~/styles/globals.css";
 
 config.autoAddCss = false;
 
-const baseUrl = process.env.NEXT_PUBLIC_VERCEL_URL
-  ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`
-  : `http://localhost:${process.env.PORT}`;
+const baseUrl = process.env.NEXT_PUBLIC_URLL
+  ? `https://${process.env.NEXT_PUBLIC_URLL}`
+  : `http://localhost:${3000}`;
 const imageUrl = `${baseUrl}/thumbnail.jpg`;
 export const metadata: Metadata = {
   metadataBase: new URL(baseUrl),

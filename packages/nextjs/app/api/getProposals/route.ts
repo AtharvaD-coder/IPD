@@ -16,7 +16,7 @@ export async function POST(req: NextRequest) {
     console.log(tokenId, "tokenid");
 
     const result = await coll.find({ tokenId: Number(tokenId) }).toArray();
-    console.log(result);
+    // console.log(result);
     return NextResponse.json({ data: result });
   } catch (error) {
     console.error(error);

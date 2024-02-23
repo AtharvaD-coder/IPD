@@ -6,7 +6,7 @@ const Accordion = ({ question, answer, index }) => {
   const toggleAccordion = () => {
     setIsOpen(!isOpen);
   };
-  console.log("isOpen", isOpen);
+  // console.log("isOpen", isOpen);
 
   return (
     <div tabIndex={index} className="collapse collapse-arrow border border-base-300 bg-base-200">

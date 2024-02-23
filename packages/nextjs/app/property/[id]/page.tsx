@@ -58,7 +58,7 @@ const PropertyDetails = ({ params }: any) => {
 
   console.log(params.id);
   async function getData() {
-    const d = await axios.post(`http://localhost:3000/api/getRealEstateById`, {
+    const d = await axios.post(`${process.env.NEXT_PUBLIC_URLL}/api/getRealEstateById`, {
       id: params.id,
     });
     setData(d.data);
@@ -161,14 +161,18 @@ const PropertyDetails = ({ params }: any) => {
     BhkType,
     noOfBathrooms,
     noOfBedrooms,
+    latitude,
+    longitude
   } = data;
+
+ 
 
   console.log(noOfBedrooms, "totalImages dataaa");
   useEffect(() => {
     const images: any = [];
-    for (let i = 0; i < totalImages; i++) {
-      console.log(`https://ipfs.io/ipfs/${metadataUri}/image/${photos[i]}`);
-      images.push(`https://ipfs.io/ipfs/${metadataUri}/image/${photos[i]}`);
+    for (let i = 0; i < photos?.length??0; i++) {
+      console.log(photos[i], "photos[i]"    );
+      images.push(photos[i]);
     }
 
     setImages(images);
@@ -178,7 +182,7 @@ const PropertyDetails = ({ params }: any) => {
     <div className="m-10  ">
       <div className=" flex items-start w-[100%]  ">
         <div className="overflow-y-auto max-h-[100%] h-full w-[100%]   ">
-          <div className=" mb-6 flex w-full items-center ">
+          <div className=" mb-6 flex  items-center ">
             <ImageGallery imageUrls={images} />
           </div>
 
@@ -191,12 +195,12 @@ const PropertyDetails = ({ params }: any) => {
               noOfBedrooms={noOfBedrooms}
             />
           </div>
-          <div className=" flex  ">
+          <div className=" flex w-[100%] ">
             <DetailsTabs
               TabComponents={[
                 {
                   title: "Description",
-                  Component: () => <div>{description}</div>,
+                  Component: () => <div><div className="w-[100%] max-w-[900px]   ">{description}</div></div>,
                 },
                 {
                   title: "Price History",
@@ -247,7 +251,7 @@ const PropertyDetails = ({ params }: any) => {
 
           <OwnerShip id={params?.id ?? 0} />
 
-          <Map />
+          <Map latitude={latitude} longitude={longitude} />
 
 
         </StickyBox>

@@ -27,7 +27,7 @@ export default function ViewProposals() {
       }
       try {
         console.log(tokenId);
-        const result = await axios.post("http://localhost:3000/api/getProposals", { tokenId });
+        const result = await axios.post(`${process.env.NEXT_PUBLIC_URLL}/api/getProposals`, { tokenId });
         console.log(result.data);
         setProposals(result?.data?.data);
       } catch (error) {

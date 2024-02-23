@@ -11,8 +11,8 @@ export default function MyRealEstates() {
   useEffect(() => {
     async function fetchForomDb() {
       try {
-        const res = await axios.post("http://localhost:3000/api/getAllRealEstatesWithAddress", { address });
-        console.log(res.data.data);
+        const res = await axios.post(`${process.env.NEXT_PUBLIC_URLL}/api/getAllRealEstatesWithAddress`, { address });
+        // console.log(res.data.data);
         setRealEstates(res?.data?.data);
       } catch (error) {
         console.log(error);

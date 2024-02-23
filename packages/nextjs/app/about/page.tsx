@@ -5,6 +5,10 @@ import React from "react";
 import Accordion from "./component/accordion";
 import { motion } from "framer-motion";
 import { FaceSmileIcon } from "@heroicons/react/24/solid";
+import blockImage from './block.png';
+import houseImage from './house.png';
+import Image from 'next/image';
+
 
 const accordionData = [
   {
@@ -97,19 +101,23 @@ const About = () => {
       </motion.p>
 
       <motion.div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8" whileHover={{ scale: 1.02 }}>
-        <motion.img
-          src="blockchain.jpeg"
-          alt="Blockchain Illustration"
-          className="rounded-md object-cover w-full h-full"
-        />
+
+        <Image
+      src={blockImage.src}
+      alt="Blockchain Illustration"
+      width={300}
+      height={300}
+      className="rounded-md object-cover ml-8"
+    />
+
         <motion.p className="text-xl leading-loose">
           Our use of blockchain ensures transparency, security, and efficiency in every real estate transaction. Whether
-          you're a seasoned investor or a first-time homebuyer, [Your Company Name] makes real estate accessible to
+          you're a seasoned investor or a first-time homebuyer, OpenEstate makes real estate accessible to
           everyone.
         </motion.p>
       </motion.div>
 
-      <motion.h2 className="text-5xl font-bold mb-10 text-center" whileHover={{ scale: 1.05 }}>
+      <motion.h2 className="text-5xl font-bold mb-10 text-center mr-8" whileHover={{ scale: 1.05 }}>
         How does it work?
       </motion.h2>
 
@@ -137,7 +145,13 @@ const About = () => {
           Join us in revolutionizing the real estate industry. We are not just a platform; we are a community dedicated
           to making real estate transactions efficient, secure, and accessible to all.
         </motion.p>
-        <motion.img src="/images/team-image.jpg" alt="Team Photo" className="rounded-md object-cover w-full h-full" />
+        <Image
+      src={houseImage.src}
+      alt="Blockchain Illustration"
+      width={300}
+      height={300}
+      className="rounded-md object-cover ml-8"
+    />
       </motion.div>
 
       <motion.p className="text-xl leading-loose mb-6" whileHover={{ scale: 1.02 }}>

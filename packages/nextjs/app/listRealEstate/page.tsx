@@ -34,6 +34,8 @@ interface ListDetails {
   rentProps?: RentProps;
 }
 
+
+
 export default function ListRealEstate() {
   const { address } = useAccount();
   const [files, setFiles] = useState<any>([]);
@@ -50,6 +52,8 @@ export default function ListRealEstate() {
     area: 0,
     noOfBathrooms: 0,
     noOfBedrooms: 0,
+    latitude:19.0760,
+    longitude:72.8777,
   });
 
   console.log(additionalDetails, "additi");
@@ -59,12 +63,7 @@ export default function ListRealEstate() {
     setListDetails({ ...ListDetails, owner: address ?? "" });
   }, [address]);
 
-  const handleTypeChange = (value: string) => {
-    setIsForRent(value === "Rent");
-  };
-  const handleBHKTypeChange = (value: string) => {
-    setAdditionalDetails((prev: any) => ({ ...prev, BhkType: value }));
-  };
+  
 
   const { writeAsync: listRealEstateForSale } = useScaffoldContractWrite({
     contractName: "RealEstateERC1155",
@@ -108,12 +107,21 @@ export default function ListRealEstate() {
   console.log(parseUnits(`${1}`, "ether"), "data asfasf");
 
   const onSubmit = async () => {
-    console.log("hello");
-    const data: string = await uploadToPinata(files, tokenIdCounter, {
+    console.log("hello",{
       purpose: isForRent ? "for-rent" : "for-sale",
       totalImages: files.length,
       description: additionalDetails.description,
       amenities: amenities,
+      BhkType: additionalDetails.BhkType,
+      noOfBathrooms: additionalDetails.noOfBathrooms,
+      noOfBedrooms: additionalDetails.noOfBedrooms,
+    
+    });
+    const data: string = await uploadToPinata(files, tokenIdCounter, {
+      purpose: isForRent ? "for-rent" : "for-sale",
+      totalImages: files.length,
+      description: additionalDetails.description,
+      amenities: additionalDetails.amenities,
       BhkType: additionalDetails.BhkType,
       noOfBathrooms: additionalDetails.noOfBathrooms,
       noOfBedrooms: additionalDetails.noOfBedrooms,
@@ -147,6 +155,24 @@ export default function ListRealEstate() {
     setAdditionalDetails({ ...additionalDetails, amenities: selectedAmenities });
   };
 
+  useEffect(() => {
+    // Get user's current location
+    console.log('aaaaaaaaaaaaaaaaaa')
+    if(navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          console.log("User's Latitude is :", position.coords.latitude);
+          setAdditionalDetails((prev:any)=>({...prev,latitude:position.coords.latitude}));
+          setAdditionalDetails((prev:any)=>({...prev,longitude:position.coords.latitude}));
+        },
+        (error) => {
+          console.error("Error getting user's location:", error.message);
+        }
+      );
+    }
+    } 
+  , [navigator.geolocation]);
+
   console.log(files, "files");
   console.log(ListDetails, "listDetails");
 
@@ -154,11 +180,11 @@ export default function ListRealEstate() {
 
     <div className="p-5">
       <div className="horizontal-1 flex justify-between items-center w-[100%] ">
-        <div className="m-2 w-1/3 ">
+        <div className="m-2 ml-4 w-1/3 ">
           <ImageUploader files={files} setFiles={setFiles} label={"Upload Image"} />
           {/* <ImageUploader/> */}
         </div>
-        <div className=" w-1/3 justify-center items-center flex flex-col ">
+        <div className=" w-2/5 pr-5 mr-20 justify-center items-center flex flex-col ">
           <CardBox className="w-[100%]">
             <NumberInput
               value={ListDetails.initialAmountOfTokens}
@@ -199,7 +225,7 @@ export default function ListRealEstate() {
               label={"BHK"}
               value={additionalDetails.bhk}
               onChange={(e: any, val: any) => {
-                setAdditionalDetails((prev: any) => ({ ...prev, bhk: val }));
+                setAdditionalDetails((prev: any) => ({ ...prev, BhkType: val+" Bhk" }));
               }}
             />
 
@@ -286,7 +312,7 @@ export default function ListRealEstate() {
 
 
       <div>
-        <MapboxMap/>
+        <MapboxMap latitude={additionalDetails.latitude} longitude={additionalDetails.longitude} setLatitude={(val)=>setAdditionalDetails((prev)=>({...prev,latitude:val}))} setLongitude={(val)=>setAdditionalDetails((prev)=>({...prev,longitude:val}))} />
       </div>
 
       <Button

@@ -1,7 +1,13 @@
 import React from "react";
 import { amenities } from "../../../utils/utils";
-import { CiDumbbell } from "react-icons/ci";
+import { CiDumbbell, CiParking1 } from "react-icons/ci";
 import { FaSwimmingPool } from "react-icons/fa";
+import { BiSolidParking } from "react-icons/bi";
+import { MdOutlineSecurity } from "react-icons/md";
+import { GiKidSlide } from "react-icons/gi";
+import { FaWifi } from "react-icons/fa";
+import { MdLocalLaundryService } from "react-icons/md";
+
 import { CardBox } from "~~/components/custom_components/cardComponent";
 
 export default function AmenitySelector({ selectedAmenities, setSelectedAmenities }) {
@@ -30,7 +36,19 @@ export default function AmenitySelector({ selectedAmenities, setSelectedAmenitie
             :
             amenity === "Swimming pool" ? <FaSwimmingPool color={selectedAmenities.includes(amenity)?'white':'black'} size={50} />
             :
-             amenity
+            amenity === "Parking" ? <BiSolidParking color={selectedAmenities.includes(amenity)?'white':'black'} size={50} />
+            :
+            amenity === "Security" ? <MdOutlineSecurity color={selectedAmenities.includes(amenity)?'white':'black'} size={50} />
+            :
+            amenity === "Playground" ? <GiKidSlide color={selectedAmenities.includes(amenity)?'white':'black'} size={50} />
+            :
+            amenity === "Common area WiFi" ? <FaWifi color={selectedAmenities.includes(amenity)?'white':'black'} size={50} />
+            :
+            amenity === "Laundry" ? <MdLocalLaundryService color={selectedAmenities.includes(amenity)?'white':'black'} size={50} />
+            :
+            amenity
+              
+
             
             }
               </button>

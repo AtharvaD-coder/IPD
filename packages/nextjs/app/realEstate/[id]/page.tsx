@@ -1,4 +1,4 @@
-'use client'
+'use client';
 import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/router"
@@ -23,7 +23,7 @@ export default function RealEstate(){
     const [tranferinfo,setTranferInfo]=useState({amount:0,to:''});
     useEffect(()=>{
         async function getData(){
-            const result =await axios.post('http://localhost:3000/api/getRealEstateById',{id:id});
+            const result =await axios.post(`${process.env.NEXT_PUBLIC_URLL}/api/getRealEstateById`,{id:id});
             console.log(result.data.data);
             setData(result?.data?.data)
         }

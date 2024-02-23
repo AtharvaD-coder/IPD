@@ -16,3 +16,6 @@ export const realEstateStatus = (status: number) => {
 export const convertWeiToEther = wei => {
   return Number(wei) / 10 ** 18; // 1 Ether = 10^18 Wei
 };
+
+
+export const Public_Url=process.env.NEXT_PUBLIC_VERCEL_URL;

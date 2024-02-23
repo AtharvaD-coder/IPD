@@ -1,3 +1,4 @@
+import { getTargetNetwork } from "~~/utils/scaffold-eth";
 import Rentinfo from "../classes/RentInfo";
 import Rentproposal from "../classes/rentProposal";
 import contracts from "../generated/deployedContracts";
@@ -9,12 +10,12 @@ import mongoose, { ConnectOptions } from "mongoose";
 import Web3 from "web3";
 
 async function run() {
-  const localhostUrl = `http://127.0.0.1:8545/`; // Update the port if needed
+  const localhostUrl = `https://sepolia.gateway.tenderly.co`; // Update the port if needed
   const provider = new ethers.JsonRpcProvider(localhostUrl);
   const web3 = new Web3(localhostUrl); // Replace 'YOUR_PROVIDER_URL' with your Ethereum node provider URL
-
-  const contractAddress = contracts[31337][0].contracts.RealEstateERC1155.address;
-  const contractAbi = contracts[31337][0].contracts.RealEstateERC1155.abi;
+  const id=11155111
+  const contractAddress = contracts[id][0].contracts.RealEstateERC1155.address;
+  const contractAbi = contracts[id][0].contracts.RealEstateERC1155.abi;
 
   const contract = new ethers.Contract(contractAddress, contractAbi, provider);
   const contractweb3 = new web3.eth.Contract(contractAbi, contractAddress);
@@ -57,7 +58,7 @@ async function run() {
       console.log(metadata, "metadata");
       let photos = [];
       for (let i = 0; i < metadata.totalImages; i++) {
-        photos.push(metadata["image" + i]);
+        photos.push(`https://ipfs.io/ipfs/${metadataUri}/image/${metadata["image" + i]}`);
       }
       console.log(photos, "phooootoo");
       const data = new Properties({
@@ -76,6 +77,9 @@ async function run() {
         area: metadata.area,
         noOfBathrooms: metadata.noOfBathrooms,
         noOfBedrooms: metadata.noOfBedrooms,
+        latitude: metadata.latitude,
+        longitude: metadata.longitude,
+        
       });
       await data.save();
       console.log("done");
@@ -185,7 +189,7 @@ async function run() {
       };
       try {
         console.log("hello");
-        const res = await axios.post("http://localhost:3000/api/upsertProposal", { data: proposalData });
+        const res = await axios.post(`${process.env.NEXT_PUBLIC_URLL}/api/upsertProposal`, { data: proposalData });
         console.log(res.data);
       } catch (error) {
         console.log(error);
@@ -193,6 +197,7 @@ async function run() {
     },
   );
 }
+
 
 mongoose.connect(uri).then(() => {
   console.log("connected");

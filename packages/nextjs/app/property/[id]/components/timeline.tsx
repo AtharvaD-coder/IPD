@@ -2,15 +2,18 @@ import * as React from "react";
 import Web3 from "web3";
 import { CardBox } from "~~/components/custom_components/cardComponent";
 import contracts from "~~/generated/deployedContracts";
+import { getTargetNetwork } from "~~/utils/scaffold-eth";
 import { realEstateStatus } from "~~/utils/utils";
 
 export default function CustomizedTimeline({ tokenId }: any) {
   const [events, setEvents] = React.useState([]);
-  const localhostUrl = `http://127.0.0.1:8545/`; // Update the port if needed
+  const localhostUrl = "https://sepolia.gateway.tenderly.co"; // Update the port if needed
+  console.log(localhostUrl   ,"urlll www")
   const web3 = new Web3(localhostUrl); // Replace 'YOUR_PROVIDER_URL' with your Ethereum node provider URL
-
-  const contractAddress = contracts[31337][0].contracts.RealEstateERC1155.address;
-  const contractAbi = contracts[31337][0].contracts.RealEstateERC1155.abi;
+  const targetNetwork = getTargetNetwork();
+  console.log(targetNetwork,"targetNetwork")
+  const contractAddress = contracts[targetNetwork.id][0].contracts.RealEstateERC1155.address;
+  const contractAbi = contracts[targetNetwork.id][0].contracts.RealEstateERC1155.abi;
 
   const contractweb3 = new web3.eth.Contract(contractAbi, contractAddress);
   async function getEvents() {

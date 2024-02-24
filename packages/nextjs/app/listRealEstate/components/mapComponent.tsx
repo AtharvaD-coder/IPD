@@ -21,7 +21,7 @@ const MapWithSearchBox = ({ latitude, longitude,setLatitude,setLongitude }: any)
                 geocoder.setFlyTo({ center: lngLat });
                 map.flyTo({
                     center: [lngLat.lng, lngLat.lat],
-                    zoom: 8.8,
+                    zoom: 14,
                     speed: 0.7,
                     curve: 1,
                 });
@@ -36,7 +36,7 @@ const MapWithSearchBox = ({ latitude, longitude,setLatitude,setLongitude }: any)
             container: mapContainerRef.current,
             style: 'mapbox://styles/mapbox/streets-v12',
             center: [longitude, latitude],
-            zoom: 8.8,
+            zoom: 13,
         });
 
         const geocoder = new MapboxGeocoder({

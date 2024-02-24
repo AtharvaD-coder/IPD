@@ -54,7 +54,7 @@ const PropertyDetails = ({ params }: any) => {
     console.log("Rent amount:", address);
     console.log("Number of months:", noOfMonths);
     // Close the modal after submission
-    createRentProposal({ args: [params.id ?? 0, address, noOfMonths, deadline] });
+    createRentProposal({ args: [params.id ?? 0, address, noOfMonths, deadline] ,value: BigInt(rentInfo?.depositAmount??0),});
     setIsRentModalOpen(false);
   };
 
@@ -93,7 +93,7 @@ const PropertyDetails = ({ params }: any) => {
     contractName: "RealEstateERC1155",
     functionName: "placeBidAndPay",
     args: [BigInt(params.id ?? 0), BigInt(5)],
-    value: BigInt(parseUnits(`${5}`, "ether")),
+    value: BigInt(rentInfo?.depositAmount??0),
 
     onBlockConfirmation: txnReceipt => {
       console.log("📦 Transaction blockHash", txnReceipt.blockHash);
@@ -112,7 +112,7 @@ const PropertyDetails = ({ params }: any) => {
     contractName: "RealEstateERC1155",
     functionName: "createRenteeProposal",
     args: [BigInt(params.id ?? 0), address, BigInt(5), BigInt(date.getTime())],
-    value: BigInt(parseUnits(`${5}`, "ether")),
+    value: BigInt(parseUnits(`${1}`, "ether")),
 
     onBlockConfirmation: txnReceipt => {
       console.log("📦 Transaction blockHash", txnReceipt.blockHash);

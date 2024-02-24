@@ -20,6 +20,7 @@ import { CardBox } from "~~/components/custom_components/cardComponent";
 import ToggleButtonSizes from "./components/toggleButton";
 import { motion, AnimatePresence } from 'framer-motion'
 import { useRouter } from 'next/navigation';
+import { convertEthToUsd } from "~~/components/custom_components/Property";
 
 interface RentProps {
   numberOfMonths?: number;
@@ -102,7 +103,7 @@ export default function ListRealEstate() {
       "",
     ],
     onBlockConfirmation: txnReceipt => {
-      console.log("📦 Transaction blockHash", txnReceipt.blockHash);
+      router.push('/dashboard/' + tokenIdCounter)
     },
   });
 
@@ -110,7 +111,29 @@ export default function ListRealEstate() {
 
   console.log(parseUnits(`${1}`, "ether"), "data asfasf");
 
+  const handleRentInputChange = (key: string, value: number) => {
+    setListDetails(prevState => ({
+      ...prevState,
+      rentProps: {
+        ...prevState.rentProps,
+        [key]: value
+      }
+    }));
+  };
+
   const onSubmit = async () => {
+  const api_key = '23e8773154c7058e89e5cd814c46adf13122c90253a00c486d98f6905899dd0b';
+  // const api_key = '23e8773154c7058e89e5cd814c46adf13122c90253a00c486d98f6905899dd0b';
+  // const response = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd');
+  // const response = await fetch(`https://min-api.cryptocompare.com/data/price?fsym=ETH&tsyms=USD&api_key=${api_key} `);
+  const response = await fetch(`https://min-api.cryptocompare.com/data/price?fsym=ETH&tsyms=USD&api_key=${api_key} `);
+  const dut = await response.json();
+
+  // Extract the exchange rate from the API response
+  const exchangeRate = dut.USD;
+
+  // Convert ETH to USD
+  
     console.log("hello", {
       purpose: isForRent ? "for-rent" : "for-sale",
       totalImages: files.length,
@@ -141,13 +164,25 @@ export default function ListRealEstate() {
           ListDetails.owner,
           BigInt(parseUnits(`${ListDetails?.priceOf1Token ?? 0}`, "ether")),
           BigInt(ListDetails.rentProps?.numberOfMonths ?? 0),
-          BigInt(ListDetails.rentProps?.rentPerMonth ?? 0),
-          BigInt(ListDetails.rentProps?.depositAmount ?? 0),
-          BigInt(ListDetails.rentProps?.lateInstallmentFees ?? 0),
-          BigInt(ListDetails.rentProps?.contractStartTimestamp ?? 0),
+          BigInt((Number(ListDetails.rentProps?.rentPerMonth ?? 0)/exchangeRate)*10**18),
+        BigInt((Number(ListDetails.rentProps?.depositAmount ?? 0)/exchangeRate)*10**18),
+        BigInt((Number(ListDetails.rentProps?.lateInstallmentFees ?? 0)/exchangeRate)*10**18),
+          BigInt(300000000000 ?? 0),
           data,
         ],
       });
+      console.log("weee",(Number(ListDetails.rentProps?.rentPerMonth )/exchangeRate)*10**18)
+      console.log("rerewent",
+        BigInt(ListDetails?.initialAmountOfTokens ?? 0),
+        ListDetails.owner,
+        BigInt(parseUnits(`${ListDetails?.priceOf1Token ?? 0}`, "ether")),
+        BigInt(ListDetails.rentProps?.numberOfMonths ?? 0),
+        BigInt((Number(ListDetails.rentProps?.rentPerMonth ?? 0)/exchangeRate)*10**18),
+        BigInt((Number(ListDetails.rentProps?.depositAmount ?? 0)/exchangeRate)*10**18),
+        BigInt((Number(ListDetails.rentProps?.lateInstallmentFees ?? 0)/exchangeRate)*10**18),
+        BigInt(300000000000 ?? 0),
+      )
+
     } else {
       listRealEstateForSale({
         args: [
@@ -167,6 +202,28 @@ export default function ListRealEstate() {
 
   console.log(files, "files");
   console.log(ListDetails, "listDetails");
+  const [loading, setLoading] = useState(false); // Loading state
+
+  const [priceInUsd, setPriceInUsd] = useState('0')
+
+  const debounce = (func: any, delay: number) => {
+    let timeoutId: any;
+    return function (...args: any) {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => func.apply(null, args), delay);
+    };
+  };
+  useEffect(() => {
+    setLoading(true);
+    const debouncedConvertEthToUsd = debounce(async () => {
+      const convertedPrice = await convertEthToUsd(Number(ListDetails.priceOf1Token * ListDetails.initialAmountOfTokens * 10 ** 18));
+      setPriceInUsd(convertedPrice);
+      setLoading(false);
+    }, 300); // Debounce delay of 300ms
+
+    debouncedConvertEthToUsd();
+  }, [ListDetails.priceOf1Token, ListDetails.initialAmountOfTokens]);
+
 
   return (
 
@@ -189,6 +246,17 @@ export default function ListRealEstate() {
               onChange={(e: any, val: any) => setListDetails({ ...ListDetails, priceOf1Token: Number(val) })}
               label={"Price of 1 Token"}
             />
+            <div className=" flex justify-between px-5">
+              <h1 className="text-lg font-bold">Price</h1>
+              {
+                loading ?
+                  (
+                    <h1 className="text-xl">Loading...</h1>
+                  ) : (
+                    <h1 className="text-xl">$ {priceInUsd}</h1>
+                  )
+              }
+            </div>
           </CardBox>
           <CardBox className="w-[100%]" >
             <NumberInput
@@ -264,36 +332,33 @@ export default function ListRealEstate() {
           >
 
 
-            <CardBox >
+            { isForRent&&<CardBox >
               <h1 className="text-xl font-bold" > Rent Info</h1>
 
               <div className="horizontal-2 w-[90vw] ">
-                <NumberInput label={"Number of Months"} />
-                <NumberInput label={"Rent per Month"} />
-                <NumberInput label={"Deposit Amount"} />
-                <NumberInput label={"Fees for Late Installments"} />
-                <Input
-                  label={"Contract Start Timestamp"}
-                  type="date"
-                  value={
-                    ListDetails.rentProps && ListDetails.rentProps.contractStartTimestamp
-                      ? new Date(ListDetails.rentProps.contractStartTimestamp).toISOString().slice(0, 10)
-                      : new Date().toISOString().slice(0, 10)
-                  }
-                  // value={new Date(ListDetails.rentProps?.contractStartTimestamp??'').toISOString().slice(0, 10) }
-                  onChange={(val: any) => {
-                    console.log("hello", val, new Date(val ?? 0).toISOString().slice(0, 10));
-                    setListDetails(prevGroup => ({
-                      ...prevGroup,
-                      rentProps: {
-                        ...prevGroup.rentProps,
-                        contractStartTimestamp: new Date(val).getTime(),
-                      },
-                    }));
-                  }}
+                <NumberInput
+                  label={"Number of Months"}
+                  value={ListDetails.rentProps?.numberOfMonths || 0}
+                  onChange={(e: any, val: any) => handleRentInputChange("numberOfMonths", val)}
                 />
+                <NumberInput
+                  label={"Rent per Month"}
+                  value={ListDetails.rentProps?.rentPerMonth || 0}
+                  onChange={(e: any, val: any) => handleRentInputChange("rentPerMonth", val)}
+                />
+                <NumberInput
+                  label={"Deposit Amount"}
+                  value={ListDetails.rentProps?.depositAmount || 0}
+                  onChange={(e: any, val: any) => handleRentInputChange("depositAmount", val)}
+                />
+                <NumberInput
+                  label={"Fees for Late Installments"}
+                  value={ListDetails.rentProps?.lateInstallmentFees || 0}
+                  onChange={(e: any, val: any) => handleRentInputChange("lateInstallmentFees", val)}
+                />
+
               </div>
-            </CardBox>
+            </CardBox>}
           </motion.div>
 
         )}

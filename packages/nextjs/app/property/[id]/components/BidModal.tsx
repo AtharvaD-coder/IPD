@@ -15,6 +15,7 @@ const BidModal = ({ isOpen, onClose, onSubmit }) => {
   };
 
   const handleSubmit = () => {
+    console.log("submitting bid", numberOfTokens, amount);
     onSubmit(numberOfTokens, amount);
   };
 

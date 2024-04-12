@@ -45,6 +45,7 @@ const PropertyDetails = ({ params }: any) => {
   };
   const handleBidModalSubmit = (noOfTokens: any, value: any) => {
     placeBid({ args: [params.id ?? 0, noOfTokens], value: BigInt(parseUnits(`${value}`, "ether")) });
+    console.log("Bid amount:", noOfTokens, BigInt(parseUnits(`${value}`, "ether")));
 
     setIsBidModalOpen(false);
   };

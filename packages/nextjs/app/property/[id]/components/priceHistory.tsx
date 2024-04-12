@@ -78,10 +78,10 @@ const PriceHistory = ({ tokenId }) => {
               } = context.chart;
               const gradient = ctx.createLinearGradient(0, top, 0, bottom);
               gradient.addColorStop(0, "rgba(250,174,50,1)");
-              gradient.addColorStop(0.2, "rgba(250,174,50,0.8)");
-              gradient.addColorStop(0.4, "rgba(250,174,50,0.6)");
-              gradient.addColorStop(0.6, "rgba(250,174,50,0.4)");
-              gradient.addColorStop(0.8, "rgba(250,174,50,0.2)");
+              // gradient.addColorStop(0.2, "rgba(250,174,50,0.8)");
+              // gradient.addColorStop(0.4, "rgba(250,174,50,0.6)");
+              // gradient.addColorStop(0.6, "rgba(250,174,50,0.4)");
+              // gradient.addColorStop(0.8, "rgba(250,174,50,0.2)");
               gradient.addColorStop(1, "rgba(250,174,50,0)");
               return gradient;
             },

@@ -21,6 +21,7 @@ export default function Bids({ id }: any) {
 
   const activeBids = bids?.filter((bid: any) => bid.status === 0);
   const executedBids = bids?.filter((bid: any) => bid.status === 1);
+  console.log(activeBids, "activeBids")
   return (
     <CardBox>
       <h1 className="text-3xl font-bold mb-5">Bids</h1>
@@ -52,13 +53,17 @@ export default function Bids({ id }: any) {
 
                 <div className="bg-secondary flex flex-col    w-[100%] rounded-2xl  ">
                   <div className="w-[100%] flex justify-between ">
-                    <div className=" p-5 m-3 rounded-lg flex flex-col items-center ">
-                      <div className="text-white text-2xl font-bold">
-                        Proposal ID
+                    <div className=" flex flex-col items-start">
+                      <div className=" p-5 m-3 rounded-lg flex flex-col items-center ">
+                        <div className="text-white text-2xl font-bold">
+                          Bid ID
+                        </div>
+                        <div className="text-white text-2xl font-bold"  >
+                          {Number(bid.id)}
+                        </div>
+
                       </div>
-                      <div className="text-white text-2xl font-bold"  >
-                        {Number(bid.id)}
-                      </div>
+                      <div className="  m-3 text-white text-xs font-bold " ><span className="text-lg  opacity-100">Bidder</span> :<a href={`/profile/${bid?.bidder}`} className="font-medium text-blue-600 dark:text-blue-500 hover:underline">{bid?.bidder}</a></div>
 
                     </div>
                     <div className="p-5 m-3 items-center flex flex-col ">
@@ -88,16 +93,22 @@ export default function Bids({ id }: any) {
               <Text>Executed Bids - {executedBids?.length}</Text>
               {executedBids?.map((bid: any) => (
                 <div className="bg-secondary flex flex-col    w-[100%] rounded-2xl  ">
-                  <div className="w-[100%] flex justify-between ">
-                    <div className=" p-5 m-3 rounded-lg flex flex-col items-center ">
-                      <div className="text-white text-2xl font-bold">
-                        Proposal ID
-                      </div>
-                      <div className="text-white text-2xl font-bold"  >
-                        {Number(bid.id)}
-                      </div>
+                  <div className="w-[100%]  ">
+                    <div className="flex">
+                      <div className=" p-5 m-3 rounded-lg flex flex-col items-center ">
+                        <div className="text-white text-2xl font-bold">
+                          Bid ID
+                        </div>
+                        <div className="text-white text-2xl font-bold"  >
+                          {Number(bid.id)}
+                        </div>
 
+                      </div>
+                      <div className="bg-red-400 w-[100%] h-[100%] text-white text-2xl  font-bold">
+                        Bidder - {bid?.bidder}
+                      </div>
                     </div>
+
                     <div className="p-5 m-3 items-center flex flex-col ">
                       <div className="text-white text-2xl font-bold" ><span className="text-lg  opacity-70">Bid Amount</span> : {Number(formatEther(bid.bidAmount))}</div>
                       <div className="text-white text-2xl font-bold"><span className="text-lg  opacity-70">Number of tokens </span>: {Number(bid.numberOfTokens)}</div>

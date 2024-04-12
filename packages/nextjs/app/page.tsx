@@ -3,9 +3,21 @@
 import React from "react";
 import pic from "../public/hero-image.png";
 import CountUp from "react-countup";
+import {
+  CategoryScale,
+  Chart as ChartJS,
+  Filler,
+  Legend,
+  LineElement,
+  LinearScale,
+  PointElement,
+  ScriptableContext,
+  Title,
+  Tooltip,
+} from "chart.js";  
 
 // import { motion } from "framer-motion"
-
+ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler);
 const Home: React.FC = () => (
   <div className="flex bg-gray-800  ">
     <div className="flex-1 h-screen ">

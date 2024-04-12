@@ -55,16 +55,32 @@ export default function Details({noOfTokens,priceOf1Token,status,rentInfo}:any){
                 Status : {getStatusString(Number(status))}
             </Text>
         </Box>
-        <Box className="bg-secondary"  borderRadius="lg" p={4} textAlign="center" minWidth="200px" marginTop={20}>
+        {
+            rentInfo?.rentPrice?
+            <Box className="bg-secondary"  borderRadius="lg" p={4} textAlign="center" minWidth="200px" marginTop={20}>
             <Text className="text-white" fontSize="lg" fontWeight="bold">
                 Rent of 1 Month : $ {rentprice}
             </Text>
         </Box>
-        <Box className="bg-secondary"  borderRadius="lg" p={4} textAlign="center" minWidth="200px" marginTop={20} >
+        :
+        null
+        }
+        {
+            rentInfo?.depositAmount?
+            <Box className="bg-secondary"  borderRadius="lg" p={4} textAlign="center" minWidth="200px" marginTop={20}>
             <Text className="text-white" fontSize="lg" fontWeight="bold">
                 Deposit : $ {deposit}
             </Text>
         </Box>
+        :
+        null
+        }
+      
+        {/* <Box className="bg-secondary"  borderRadius="lg" p={4} textAlign="center" minWidth="200px" marginTop={20} >
+            <Text className="text-white" fontSize="lg" fontWeight="bold">
+                Deposit : $ {deposit}
+            </Text>
+        </Box> */}
 
     </Flex>
     )

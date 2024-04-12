@@ -165,7 +165,9 @@ const realEstates = () => {
     async function a() {
       try{
         
-        const res= await fetch(`${process.env.NEXT_PUBLIC_URLL}/api/getAllRealEstates`);
+        const res= await fetch(`${process.env.NEXT_PUBLIC_URLL}/api/getAllRealEstates`,{
+          cache: "no-cache",
+        });
         const data = await res.json();
         if(data){
           console.log(data,"dataaaasdasdasdasd")

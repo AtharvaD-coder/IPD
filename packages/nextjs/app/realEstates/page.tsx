@@ -159,7 +159,7 @@ const realEstates = () => {
   const debouncedFilterValues = useDebounce(filterValues, 300); // 300ms debounce time
   console.log(debouncedFilterValues.beds,"bedsssssss")
   // const { data, error } = useFetch<any>(`${process.env.NEXT_PUBLIC_URLL}/api/getAllRealEstates`);
-  const [data, setData] = useLocalStorage('test-key', [])
+  const [data, setData] = useState<any>([]);
 
   useEffect(()=>{
     async function a() {

@@ -158,7 +158,30 @@ const realEstates = () => {
   const propertiesForRent = useSelector((state: RootState) => state.propertiesForRent);
   const debouncedFilterValues = useDebounce(filterValues, 300); // 300ms debounce time
   console.log(debouncedFilterValues.beds,"bedsssssss")
-  const { data, error } = useFetch<any>(`${process.env.NEXT_PUBLIC_URLL}/api/getAllRealEstates`);
+  // const { data, error } = useFetch<any>(`${process.env.NEXT_PUBLIC_URLL}/api/getAllRealEstates`);
+  const [data, setData] = useLocalStorage('test-key', [])
+
+  useEffect(()=>{
+    async function a() {
+      try{
+        
+        const res= await fetch(`${process.env.NEXT_PUBLIC_URLL}/api/getAllRealEstates`);
+        const data = await res.json();
+        if(data){
+          console.log(data,"dataaaasdasdasdasd")
+          setData(data);
+        }
+      }
+      catch (error){
+        console.log("no data", error.toString())
+
+
+      }
+    }
+    a()
+  },[])
+
+  
   console.log(data, process.env.NEXT_PUBLIC_URLL, process.env.NEXT_PUBLIC_VERCEL_URL, "dataaawww");
 
   useEffect(() => {

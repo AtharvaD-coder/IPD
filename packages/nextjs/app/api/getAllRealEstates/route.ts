@@ -14,7 +14,7 @@ export async function GET(req: Request) {
     } as ConnectOptions);
 
     const documents = await Properties.find({});
-    // console.log("documents", documents);
+    console.log("documents", documents);
 
     // Use Promise.all to perform asynchronous operations concurrently
     // const updatedDocuments = await Promise.all(documents.map(fetchAdditionalData));

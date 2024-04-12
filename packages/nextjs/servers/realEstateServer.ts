@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { getTargetNetwork } from "~~/utils/scaffold-eth";
 import Rentinfo from "../classes/RentInfo";
 import Rentproposal from "../classes/rentProposal";
@@ -55,8 +56,17 @@ async function run() {
       console.log(`Number of Tokens: ${noOfTokens}`);
       console.log(`Price of 1 Token: ${priceOf1Token}`);
       console.log("metadataUri", metadataUri);
-      let metadata: any = await axios.get(`https://ipfs.io/ipfs/${metadataUri}/metaData.txt`);
-      metadata = metadata.data;
+      // let metadata: any = await axios.get(`https://ipfs.io/ipfs/${metadataUri}/metaData.txt`);
+      let res=await fetch(`https://ipfs.io/ipfs/${metadataUri}/metaData.txt`,{
+        method:'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      
+      });
+      let metadata=await res.json();
+
+      // metadata = metadata.data;
       console.log(metadata, "metadata");
       let photos = [];
       for (let i = 0; i < metadata.totalImages; i++) {

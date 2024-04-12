@@ -2,7 +2,6 @@ import { getTargetNetwork } from "~~/utils/scaffold-eth";
 import Rentinfo from "../classes/RentInfo";
 import Rentproposal from "../classes/rentProposal";
 import contracts from "../generated/deployedContracts";
-import { uri } from "../utils/mongoose-utils";
 import { Properties } from "./schema/properties";
 import axios from "axios";
 import { ethers } from "ethers";
@@ -87,7 +86,7 @@ async function run() {
       await data.save();
       console.log("done");
     } catch (error) {
-      console.error(error);
+      console.error(error.toString());
     }
 
     // try{
@@ -202,7 +201,7 @@ async function run() {
 }
 
 
-mongoose.connect(uri).then(() => {
+mongoose.connect("mongodb+srv://admin:admin@cluster0.ainnpst.mongodb.net/OpenEstate?retryWrites=true&w=majority").then(() => {
   console.log("connected");
   run();
 });

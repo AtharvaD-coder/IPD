@@ -398,8 +398,8 @@ contract RealEstateERC1155 is ERC1155 {
 		tokenBids[tokenId][bidIndex].status = BidStatus.Executed;
 		transferTokens(
 			tokenId,
-			tokenBids[tokenId][bidIndex].bidder,
 			msg.sender,
+			tokenBids[tokenId][bidIndex].bidder,
 			tokenBids[tokenId][bidIndex].numberOfTokens
 		);
 		payable(msg.sender).transfer(tokenBids[tokenId][bidIndex].bidAmount);

@@ -41,7 +41,7 @@ const NameModal = ({ isOpen, onClose }) => {
         <Modal isOpen={isOpen} onClose={onClose}>
             <ModalOverlay />
             <ModalContent>
-                <ModalHeader>Chnage Name</ModalHeader>
+                <ModalHeader>Change Name</ModalHeader>
                 <ModalCloseButton />
                 <ModalBody>
                     <FormControl mt={4}>

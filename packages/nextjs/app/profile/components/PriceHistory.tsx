@@ -54,7 +54,7 @@ const PriceHistory = ({ tokenIds }) => {
   useEffect(() => {
     if (!priceHistories) return;
 
-    const datasets = priceHistories.map((priceHistory, index) => ({
+    const datasets = [0 ,...priceHistories.map((priceHistory, index) => ({
       label: `Token ${tokenIds[index]}`,
       backgroundColor: context => {
         if (!context.chart.chartArea) {
@@ -82,11 +82,11 @@ const PriceHistory = ({ tokenIds }) => {
         y: convertWeiToEther(entry.price),
       })),
       tension: 0.4, // Adjust the curve tension here
-    }));
+    }))];
 
-    const labels = priceHistories
+    const labels = ['start',priceHistories
       .flatMap(priceHistory => priceHistory.map(entry => formatDateTimeLabel(entry.timestamp)))
-      .sort((a, b) => new Date(a) - new Date(b));
+      .sort((a, b) => new Date(a) - new Date(b))];
 
     setChartData({ datasets, labels });
   }, [priceHistories, tokenIds]);

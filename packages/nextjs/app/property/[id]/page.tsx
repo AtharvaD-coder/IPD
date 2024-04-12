@@ -27,6 +27,8 @@ import Button from "~~/components/custom_components/button";
 import { useScaffoldContractRead, useScaffoldContractWrite } from "~~/hooks/scaffold-eth";
 import Map from "./components/map";
 import StickyBox from "react-sticky-box";
+import { convertEthToUsd } from "~~/components/custom_components/Property";
+import RentInfoCard from "./components/rentInfoCard";
 
 const PropertyDetails = ({ params }: any) => {
   const [data, setData] = useState<any>({});
@@ -43,6 +45,7 @@ const PropertyDetails = ({ params }: any) => {
   };
   const handleBidModalSubmit = (noOfTokens: any, value: any) => {
     placeBid({ args: [params.id ?? 0, noOfTokens], value: BigInt(parseUnits(`${value}`, "ether")) });
+    console.log("Bid amount:", noOfTokens, BigInt(parseUnits(`${value}`, "ether")));
 
     setIsBidModalOpen(false);
   };
@@ -52,7 +55,7 @@ const PropertyDetails = ({ params }: any) => {
     console.log("Rent amount:", address);
     console.log("Number of months:", noOfMonths);
     // Close the modal after submission
-    createRentProposal({ args: [params.id ?? 0, address, noOfMonths, deadline] });
+    createRentProposal({ args: [params.id ?? 0, address, noOfMonths, deadline] ,value: BigInt(rentInfo?.depositAmount??0),});
     setIsRentModalOpen(false);
   };
 
@@ -78,7 +81,7 @@ const PropertyDetails = ({ params }: any) => {
     contractName: "RealEstateERC1155",
     functionName: "getRealEstate",
     args: [params?.id ?? 0],
-    watch: true,
+    watch: false,
   });
   const noOfTokens = (realEstate as bigint[] | undefined)?.[0];
   const priceOf1Token = (realEstate as bigint[] | undefined)?.[1];
@@ -91,7 +94,7 @@ const PropertyDetails = ({ params }: any) => {
     contractName: "RealEstateERC1155",
     functionName: "placeBidAndPay",
     args: [BigInt(params.id ?? 0), BigInt(5)],
-    value: BigInt(parseUnits(`${5}`, "ether")),
+    value: BigInt(rentInfo?.depositAmount??0),
 
     onBlockConfirmation: txnReceipt => {
       console.log("📦 Transaction blockHash", txnReceipt.blockHash);
@@ -110,7 +113,7 @@ const PropertyDetails = ({ params }: any) => {
     contractName: "RealEstateERC1155",
     functionName: "createRenteeProposal",
     args: [BigInt(params.id ?? 0), address, BigInt(5), BigInt(date.getTime())],
-    value: BigInt(parseUnits(`${5}`, "ether")),
+    value: BigInt(parseUnits(`${1}`, "ether")),
 
     onBlockConfirmation: txnReceipt => {
       console.log("📦 Transaction blockHash", txnReceipt.blockHash);
@@ -165,6 +168,17 @@ const PropertyDetails = ({ params }: any) => {
     longitude
   } = data;
 
+  console.log(rentInfo,"rent infoo")
+  const [priceInUsd,setPriceInUsd]=useState(`${price}`);
+  useEffect( () => {
+    async function get(){
+      console.log(await convertEthToUsd(price),"ppppprrrr")
+      setPriceInUsd(await convertEthToUsd(price));
+    }
+    get()
+  }, [ price]);
+
+
  
 
   console.log(noOfBedrooms, "totalImages dataaa");
@@ -188,11 +202,21 @@ const PropertyDetails = ({ params }: any) => {
 
           <div className=" flex  ">
             <PropertyDetailCard
-              price={price}
+              price={priceInUsd}
               bhkTypes={BhkType}
               area={area}
               noOfBathrooms={noOfBathrooms}
               noOfBedrooms={noOfBedrooms}
+            />
+          </div>
+          <div className=" flex  ">
+            <RentInfoCard
+
+              noOfMonths={Number(rentInfo?.noOfMonths)}
+              rentof1Month={Number(rentInfo?.rentof1Month)}
+              depositAmount={Number(rentInfo?.depositAmount)}
+              
+              feesForLateInstallments={Number(rentInfo?.feesForLateInstallments)}
             />
           </div>
           <div className=" flex w-[100%] ">

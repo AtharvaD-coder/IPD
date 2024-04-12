@@ -33,7 +33,7 @@ const PropertyDetails = ({ params }: any) => {
   const status = (realEstateArray as bigint[] | undefined)?.[3];
   const rentInfo = (realEstateArray as bigint[] | undefined)?.[5];
   const realEstateBalance = (realEstateArray as bigint[] | undefined)?.[6];
-  // console.log(rentInfo, "rentInfo", status);
+  console.log(rentInfo, "rentInfo", status);
 
 
 
@@ -52,7 +52,7 @@ const PropertyDetails = ({ params }: any) => {
         <div className=" flex  flex-grow justify-between" >
           <div className=" flex  m-3">
 
-            <Details noOfTokens={noOfTokens} priceOf1Token={priceOf1Token} status={status} />
+            <Details noOfTokens={noOfTokens} priceOf1Token={priceOf1Token} status={status} rentInfo={rentInfo} />
           </div>
           <div className=" flex  m-3 ">
             <Ownership id={params?.id ?? 0} realEstateArray={realEstateArray} />

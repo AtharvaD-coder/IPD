@@ -31,8 +31,8 @@ const RentProposalModal = ({ isOpen, onClose, onSubmit }) => {
   };
 
   const handleDeadlineChange = date => {
-    const newDate = new Date();
-    newDate.setMinutes(newDate.getMinutes() + 1);
+    const newDate = new Date(date);
+   
     setDeadline(newDate);
   };
 
@@ -43,24 +43,24 @@ const RentProposalModal = ({ isOpen, onClose, onSubmit }) => {
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
-      <ModalContent>
-        <ModalHeader>Create Rent Proposal</ModalHeader>
+      <ModalContent className="bg-secondary">
+        <ModalHeader className="text-white" >Create Rent Proposal</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
           <FormControl mt={4}>
-            <FormLabel>Number of Months</FormLabel>
-            <Input type="number" value={noOfMonths} onChange={handleMonthsChange} />
+            <FormLabel className="text-white">Number of Months</FormLabel>
+            <Input className="text-white p-3 b " type="number" value={noOfMonths} onChange={handleMonthsChange} />
           </FormControl>
           <FormControl mt={4}>
-            <FormLabel>Deadline</FormLabel>
-            <DatePicker selected={deadline} onChange={handleDeadlineChange} />
+            <FormLabel className="text-white">Deadline</FormLabel>
+            <DatePicker className="text-white bg-secondary p-3 border-1 rounded-xl" selected={deadline} onChange={handleDeadlineChange} />
           </FormControl>
         </ModalBody>
         <ModalFooter>
           <Button colorScheme="blue" mr={3} onClick={handleSubmit}>
             Submit
           </Button>
-          <Button onClick={onClose}>Cancel</Button>
+          <Button className="text-red-500" onClick={onClose}>Cancel</Button>
         </ModalFooter>
       </ModalContent>
     </Modal>

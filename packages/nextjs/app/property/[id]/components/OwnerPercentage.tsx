@@ -12,7 +12,7 @@ export default function OwnerShip({ id ,realEstateArray}) {
     contractName: "RealEstateERC1155",
     functionName: "getOwnersAndPercentage",
     args: [id ?? 0],
-    watch: true,
+    watch: false,
   });
 
   // Extract owners and percentages from ownersAndPercentages data

@@ -8,7 +8,27 @@ import BedroomChildOutlinedIcon from "@mui/icons-material/BedroomChildOutlined";
 import CompareArrowsOutlinedIcon from "@mui/icons-material/CompareArrowsOutlined";
 import VerifiedOutlinedIcon from "@mui/icons-material/VerifiedOutlined";
 import millify from "millify";
+import { useScaffoldContractRead } from '~~/hooks/scaffold-eth';
 
+export async function convertEthToUsd(weiAmount) {
+    
+  const ethAmount = weiAmount / 10**18;
+  console.log(ethAmount,"ethAmounttt")
+  const api_key = '23e8773154c7058e89e5cd814c46adf13122c90253a00c486d98f6905899dd0b';
+  // const api_key = '23e8773154c7058e89e5cd814c46adf13122c90253a00c486d98f6905899dd0b';
+  // const response = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd');
+  // const response = await fetch(`https://min-api.cryptocompare.com/data/price?fsym=ETH&tsyms=USD&api_key=${api_key} `);
+  const response = await fetch(`https://min-api.cryptocompare.com/data/price?fsym=ETH&tsyms=USD&api_key=${api_key} `);
+  const data = await response.json();
+
+  // Extract the exchange rate from the API response
+  const exchangeRate = data.USD;
+
+  // Convert ETH to USD
+  const usdAmount = ethAmount * exchangeRate;
+
+  return millify(usdAmount);
+}
 
 const Property: React.FC<{ property: any }> = ({ property }) => {
   const {
@@ -24,34 +44,34 @@ const Property: React.FC<{ property: any }> = ({ property }) => {
   } = property;
 
   const [priceInUsd, setPriceInUsd] = useState<number | null>(null);
-
-
-  async function convertEthToUsd(weiAmount) {
+  const {data:rentInfo}=useScaffoldContractRead({
+    contractName: "RealEstateERC1155",
+    functionName: "getRealEstate",
+    args: [tokenId]
     
-    const ethAmount = weiAmount / 10**18;
-    console.log(ethAmount,"ethAmounttt")
-    const api_key = '23e8773154c7058e89e5cd814c46adf13122c90253a00c486d98f6905899dd0b';
-    // const api_key = '23e8773154c7058e89e5cd814c46adf13122c90253a00c486d98f6905899dd0b';
-    // const response = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd');
-    // const response = await fetch(`https://min-api.cryptocompare.com/data/price?fsym=ETH&tsyms=USD&api_key=${api_key} `);
-    const response = await fetch(`https://min-api.cryptocompare.com/data/price?fsym=ETH&tsyms=USD&api_key=${api_key} `);
-    const data = await response.json();
   
-    // Extract the exchange rate from the API response
-    const exchangeRate = data.USD;
-  
-    // Convert ETH to USD
-    const usdAmount = ethAmount * exchangeRate;
-  
-    return millify(usdAmount);
+  })
+  if(purpose==='for-sale'){
+
+    console.log(purpose==='for-rent'?price:Number(rentInfo?.[5]?.rentof1Month??0),"purposss")
   }
+
+
   
 
   useEffect(() => {
-    if (price) {
+    if(purpose === 'for-rent'){
+      // console.log(rentInfo?.[5]?.rentof1Month, "rentInfo")
+      }
+    // console.log(purpose==='for-sale'?price:Number(rentInfo?.[5]?.rentof1Month??0),"purposss")
+    if(purpose==='for-sale'){
       convertEthToUsd(price).then(setPriceInUsd);
     }
-  }, [price]);
+    else{
+      convertEthToUsd(Number(rentInfo?.[5]?.rentof1Month)*10**18).then(setPriceInUsd);
+    }
+    
+  }, [rentInfo,price]);
   
 
 
@@ -65,7 +85,7 @@ const Property: React.FC<{ property: any }> = ({ property }) => {
 
         <Box w="full">
           <Text fontWeight="bold" fontSize="lg" >
-            {purpose === 'for-sale' ? `Price: $ ${priceInUsd}` : 'Rent'}
+            {purpose === 'for-sale' ? `Price: $ ${priceInUsd}` : `Rent: $ ${priceInUsd} /month` }
           </Text>
           {/* <Text fontWeight="bold" fontSize="lg" >
             {purpose === 'for-sale' ? `Price: ${priceOf1Token}` : 'Rent'}

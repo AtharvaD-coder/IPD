@@ -100,12 +100,13 @@ const FilterComponent: React.FC<FilterComponentProps> = () => {
           value={filterValues.price}
           // SetValue={value => handleFilterChange("price", value)}
           keyValue={"price"}
+          step={1000}
           onChange={(value)=>{
             // console.log(value,"value")
             handleFilterChange("price", value)
 
           }}
-          max={1000}
+          max={10000000}
         />
       </div>
 

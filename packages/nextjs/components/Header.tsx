@@ -165,7 +165,7 @@ export function Header() {
     {isNearTop && <motion.header initial={{opacity:0,height:0}} animate={{opacity:1, height:'100px'}} exit={{opacity:0,height:0}} transition={{duration:0.5}}  className={`bg-primary sticky top-0 z-50 rounded-b-md`} style={{position: 'fixed', width: '100%', zIndex: '999'}}>
       <div className="mx-auto flex  items-center justify-around p-0 lg:px-8" aria-label="Global">
         <div>
-          <a href="#" className="-m-1.5 p-1.5">
+          <a href="/" className="-m-1.5 p-1.5">
             <Logo />
           </a>
         </div>

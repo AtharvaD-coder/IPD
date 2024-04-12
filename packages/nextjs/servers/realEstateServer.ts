@@ -2,18 +2,20 @@ import { getTargetNetwork } from "~~/utils/scaffold-eth";
 import Rentinfo from "../classes/RentInfo";
 import Rentproposal from "../classes/rentProposal";
 import contracts from "../generated/deployedContracts";
-import { uri } from "../utils/mongoose-utils";
 import { Properties } from "./schema/properties";
 import axios from "axios";
 import { ethers } from "ethers";
 import mongoose, { ConnectOptions } from "mongoose";
 import Web3 from "web3";
+import { baseUrl, fetchApi } from "~~/app/utils/fetchApi";
 
 async function run() {
   const localhostUrl = `https://sepolia.gateway.tenderly.co`; // Update the port if needed
+  // const localhostUrl = `http://localhost:8545`; // Update the port if needed
   const provider = new ethers.JsonRpcProvider(localhostUrl);
   const web3 = new Web3(localhostUrl); // Replace 'YOUR_PROVIDER_URL' with your Ethereum node provider URL
   const id=11155111
+  // const id=31337
   const contractAddress = contracts[id][0].contracts.RealEstateERC1155.address;
   const contractAbi = contracts[id][0].contracts.RealEstateERC1155.abi;
 
@@ -84,7 +86,7 @@ async function run() {
       await data.save();
       console.log("done");
     } catch (error) {
-      console.error(error);
+      console.error(error.toString());
     }
 
     // try{
@@ -199,7 +201,7 @@ async function run() {
 }
 
 
-mongoose.connect(uri).then(() => {
+mongoose.connect("mongodb+srv://admin:admin@cluster0.ainnpst.mongodb.net/OpenEstate?retryWrites=true&w=majority").then(() => {
   console.log("connected");
   run();
 });

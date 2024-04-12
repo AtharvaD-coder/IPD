@@ -23,7 +23,7 @@ export default function VotesComponent({ address }: any) {
     })
 
 
-
+    console.log(votesData, "votesData")
     const positiveVotes = Number(votesData?.[0] ?? 0);
     const negativeVotes = Number(votesData?.[1] ?? 0);
     const max = Number(positiveVotes) + Number(negativeVotes);
@@ -44,7 +44,7 @@ export default function VotesComponent({ address }: any) {
                         </div>
                         <div>
                             {
-                                (positiveVotes / max) * 100 + ' %'
+                                max===0?"0 %":(positiveVotes / max) * 100 + ' %'
                             }
                             
                         </div>
@@ -59,7 +59,7 @@ export default function VotesComponent({ address }: any) {
                         </div>
                         <div>
                             {
-                                (negativeVotes / max) * 100 + ' %'
+                                max===0?"0 %":Number(negativeVotes / max) * 100 + ' %'
                             }
                         </div>
 

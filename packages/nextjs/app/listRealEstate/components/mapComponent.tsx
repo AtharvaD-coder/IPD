@@ -1,3 +1,4 @@
+'use client';
 import React, { useEffect, useRef, useState } from 'react';
 import mapboxgl, { LngLatLike } from 'mapbox-gl';
 import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
@@ -20,7 +21,7 @@ const MapWithSearchBox = ({ latitude, longitude,setLatitude,setLongitude }: any)
                 geocoder.setFlyTo({ center: lngLat });
                 map.flyTo({
                     center: [lngLat.lng, lngLat.lat],
-                    zoom: 8.8,
+                    zoom: 14,
                     speed: 0.7,
                     curve: 1,
                 });
@@ -35,7 +36,7 @@ const MapWithSearchBox = ({ latitude, longitude,setLatitude,setLongitude }: any)
             container: mapContainerRef.current,
             style: 'mapbox://styles/mapbox/streets-v12',
             center: [longitude, latitude],
-            zoom: 8.8,
+            zoom: 13,
         });
 
         const geocoder = new MapboxGeocoder({
@@ -71,7 +72,7 @@ const MapWithSearchBox = ({ latitude, longitude,setLatitude,setLongitude }: any)
     }, []);
 
     return (
-        <CardBox className='w-[100%] h-[600px] '>
+        <CardBox className='w-[100%] h-[500px] '>
             <h1 className="text-3xl font-bold">Location </h1>
             <div id='map' ref={mapContainerRef} style={{ position: 'absolute', width: '90%', height: '400px' }} />
         </CardBox>

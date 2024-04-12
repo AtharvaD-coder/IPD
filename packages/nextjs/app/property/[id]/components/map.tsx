@@ -55,7 +55,7 @@ export default function Map({ latitude, longitude }: any) {
             className='w-[100%] '
         >
             <h1 className="text-3xl font-bold">Location </h1>
-            <div className='h-[300px] w-[300px] rounded-xl'>
+            <div className='h-[300px] w-[400px] rounded-xl'>
                 <div id='map' ref={mapContainerRef} style={{ width: '100%', height: '100%', }} />
             </div>
         </CardBox>

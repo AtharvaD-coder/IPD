@@ -18,16 +18,16 @@ const imageUrl = `${baseUrl}/thumbnail.jpg`;
 export const metadata: Metadata = {
   metadataBase: new URL(baseUrl),
   title: {
-    default: "Scaffold-ETH 2 App",
-    template: "%s | Scaffold-ETH 2",
+    default: "Open Estate",
+    template: "%s | Open Estate",
   },
-  description: "Built with 🏗 Scaffold-ETH 2",
+  description: " Open Estate",
   openGraph: {
     title: {
-      default: "Scaffold-ETH 2 App",
-      template: "%s | Scaffold-ETH 2",
+      default: "Open Estate",
+      template: "%s | Open Estate",
     },
-    description: "Built with 🏗 Scaffold-ETH 2",
+    description: "Open Estate",
     images: [
       {
         url: imageUrl,
@@ -38,10 +38,10 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     images: [imageUrl],
     title: {
-      default: "Scaffold-ETH 2",
+      default: "Open Estate",
       template: "%s | Scaffold-ETH 2",
     },
-    description: "Built with 🏗 Scaffold-ETH 2",
+    description: "Open Estate",
   },
   icons: {
     icon: [{ url: "/favicon.png", sizes: "32x32", type: "image/png" }],
@@ -51,7 +51,7 @@ export const metadata: Metadata = {
 const ScaffoldEthApp = ({ children }: { children: React.ReactNode }) => {
   return (
     <html>
-      <body>
+      <body >
         <AppComponent>{children}</AppComponent>
       </body>
     </html>

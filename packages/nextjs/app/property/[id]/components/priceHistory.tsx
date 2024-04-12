@@ -93,6 +93,7 @@ const PriceHistory = ({ tokenId }) => {
             pointHighlightStroke: "#ff6c23",
             fill: "start",
             data: pricesInEther,
+            
            
           },
         ],
@@ -120,6 +121,20 @@ const PriceHistory = ({ tokenId }) => {
       line: {
           tension: 0.4
       }
+  },
+  scales: {
+    y: {
+      title: {
+        display: true,
+        text: 'Price of 1 Token'
+      }
+    },
+    x:{
+      title:{
+        display: true,
+        text: 'Time'
+      }
+    }
   }
   
     

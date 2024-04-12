@@ -73,15 +73,16 @@ export default function Bids({ id }: any) {
                     </div>
                   </div>
 
-                  <div className="flex self-end items-center m-3 mr-6">
-                    <Button
+                  <div className="flex self-end items-center m-3 mr-6 ">
+                    <div
+                    className="btn btn-primary"
                       onClick={() => {
                         selectBid({ args: [BigInt(id), BigInt(bid.id)] });
                       }}
 
                     >
                       Select Bid
-                    </Button>
+                    </div>
                   </div>
 
                 </div>

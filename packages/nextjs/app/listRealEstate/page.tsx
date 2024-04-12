@@ -86,7 +86,7 @@ export default function ListRealEstate() {
     onBlockConfirmation: txnReceipt => {
       console.log(tokenIdCounter, "tokenIdCounter")
 
-      // router.push('/dashboard/' + tokenIdCounter)
+      router.push('/dashboard/' + tokenIdCounter)
     },
   });
 
@@ -106,7 +106,7 @@ export default function ListRealEstate() {
     ],
     onBlockConfirmation: txnReceipt => {
       console.log(tokenIdCounter, "tokenIdCounter")
-      // router.push('/dashboard/' + tokenIdCounter)
+      router.push('/dashboard/' + tokenIdCounter)
     },
   });
 
